@@ -3333,19 +3333,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Ha\\.nuget\\packages\\": {}
+    "C:\\Users\\Vanniee\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\hoc\\HK4_1\\PTUDHD\\bartender_BHYT\\backend\\BaoHiemYTe\\BaoHiemYTe\\BaoHiemYTe.csproj",
+      "projectUniqueName": "D:\\GitHub\\bartender_BHYT\\backend\\BaoHiemYTe\\BaoHiemYTe\\BaoHiemYTe.csproj",
       "projectName": "BaoHiemYTe",
-      "projectPath": "D:\\hoc\\HK4_1\\PTUDHD\\bartender_BHYT\\backend\\BaoHiemYTe\\BaoHiemYTe\\BaoHiemYTe.csproj",
-      "packagesPath": "C:\\Users\\Ha\\.nuget\\packages\\",
-      "outputPath": "D:\\hoc\\HK4_1\\PTUDHD\\bartender_BHYT\\backend\\BaoHiemYTe\\BaoHiemYTe\\obj\\",
+      "projectPath": "D:\\GitHub\\bartender_BHYT\\backend\\BaoHiemYTe\\BaoHiemYTe\\BaoHiemYTe.csproj",
+      "packagesPath": "C:\\Users\\Vanniee\\.nuget\\packages\\",
+      "outputPath": "D:\\GitHub\\bartender_BHYT\\backend\\BaoHiemYTe\\BaoHiemYTe\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Ha\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Vanniee\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
