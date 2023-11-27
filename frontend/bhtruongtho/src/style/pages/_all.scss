@@ -1,0 +1,91 @@
+@use "sass:map";
+@import "theme";
+@import "./responsive";
+html,
+body{
+    margin: 0;
+}
+
+*{
+    font-family: Arial, Helvetica, sans-serif;
+    padding: 0;
+    margin: 0;
+}
+.container__header__footer{
+    max-width: 1201px;
+    width: 100%;
+    padding-left: 15px;
+    padding-right: 15px;
+    //background: map.get($theme-colors, "main");
+    margin: auto;
+}
+
+.container__body{
+    max-width: 1201px;
+    width: 100%;
+    padding-left: 15px;
+    padding-right: 15px;
+    //background: map.get($theme-colors, "main");
+    margin: auto;
+    margin-top: 120px;
+}
+.row{
+    display: flex;
+    flex-wrap: wrap;
+}
+.col-lg-3 {
+    flex: 0 0 25%;
+    max-width: 25%;   
+}
+.col-lg-6 {
+    flex: 0 0 50%;
+    max-width: 50%;   
+}
+.col-6 {
+    flex: 0 0 50%;
+    max-width: 50%;
+
+}
+@include Responsive($DESKTOP){
+    .col-xl-3 {
+        flex: 0 0 25%;
+        max-width: 25%;   
+    }
+    .col-xl-6 {
+        flex: 0 0 50%;
+        max-width: 50%;   
+    }
+}
+@include Responsive($MEDIUM-DEVICE){
+    .col-lg-3 {
+        flex: 0 0 25%;
+        max-width: 25%;   
+    }
+}
+
+@include Responsive($TABLET-DEVICE){
+    .col-md-6 {
+        flex: 0 0 50%;
+        max-width: 50%;   
+    }
+    .col-md-12 {
+        flex: 0 0 100%;
+        max-width: 100%;   
+    }
+}
+@include Responsive($WIDE-MOBILE){
+    .col-sm-6 {
+        flex: 0 0 50%;
+        max-width: 50%;   
+    }
+    .col-sm-12 {
+        flex: 0 0 100%;
+        max-width: 100%;   
+    }
+}
+@include Responsive($SMALL-DEVICE){
+    .col-xs-12 {
+        flex: 0 0 100%;
+        max-width: 100%;   
+    }
+}
