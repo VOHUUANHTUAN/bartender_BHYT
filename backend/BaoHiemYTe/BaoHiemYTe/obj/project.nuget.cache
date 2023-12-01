@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Cam5teWuyT0uZYXImLHLu6gBBiye2WnZA+dWChGKPkb51AmyxwnH90T1GXOyuIGVmioKnFDSILKnwdf/lXvEXA==",
+  "dgSpecHash": "l0BGvnQm2cLt24aqm6mj/Zn5nevDUwFop+wp194tI9ruxsOmx5y8tRCKBaXQ54+tNXd2YI7+NZLBRfo2qMGqjw==",
   "success": true,
-  "projectFilePath": "D:\\GitHub\\bartender_BHYT\\backend\\BaoHiemYTe\\BaoHiemYTe\\BaoHiemYTe.csproj",
+  "projectFilePath": "D:\\GitHub\\Bartender_BHYT\\backend\\BaoHiemYTe\\BaoHiemYTe\\BaoHiemYTe.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Vanniee\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
     "C:\\Users\\Vanniee\\.nuget\\packages\\azure.identity\\1.7.0\\azure.identity.1.7.0.nupkg.sha512",

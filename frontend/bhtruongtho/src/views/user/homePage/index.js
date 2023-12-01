@@ -1,7 +1,7 @@
-import { memo, useEffect, useState } from "react"
+import { memo, useEffect, useState } from "react";
 import { getBookAPI } from "../../../api/connect";
-import "./style.scss"
-import { Link } from 'react-router-dom';
+import "./style.scss";
+import { Link } from "react-router-dom";
 
 const HomePage = () => {
     const [books, setBooks] = useState([]);
@@ -10,11 +10,13 @@ const HomePage = () => {
     }, []);
     const fetchData = async () => {
         setBooks(await getBookAPI());
-
-    }
-    return <> <div className="container__body">Day la Home Page</div>
-
-    </>
+    };
+    return (
+        <>
+            {" "}
+            <div className="container__body">Day la Home Page</div>
+        </>
+    );
 };
 
 export default memo(HomePage);

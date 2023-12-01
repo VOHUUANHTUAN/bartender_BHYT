@@ -1,7 +1,8 @@
 ﻿using BaoHiemYTe.Data;
 using BaoHiemYTe.DTOs;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Linq;
 
 namespace BaoHiemYTe.Controllers
 {
@@ -15,52 +16,53 @@ namespace BaoHiemYTe.Controllers
         {
             this.userDbContext = userDbContext;
         }
+
         //====================================================READ============================================
+
         [HttpGet]
         public IActionResult GetAll()
         {
             try
             {
-                // Kết nối với cơ sở dữ liệu và lấy danh sách tất cả User.
-                var Users = userDbContext.Users.ToList();
-            
-                if (Users.Count == 0)
+                var users = userDbContext.Users.ToList();
+
+                if (users.Count == 0)
                 {
                     return NotFound("Không tìm thấy bất kỳ user nào.");
                 }
-                return Ok(Users);
+
+                return Ok(users);
             }
             catch (Exception ex)
             {
-                // Xử lý ngoại lệ nếu có lỗi xảy ra (ví dụ: lỗi kết nối cơ sở dữ liệu).
                 return StatusCode(500, $"Lỗi trong quá trình lấy dữ liệu: {ex.Message}");
             }
         }
 
-        [HttpGet]
-        [Route("{username}")]
+        [HttpGet("{username}")]
         public IActionResult GetByUsername(string username)
         {
             try
             {
-                // Tìm User trong cơ sở dữ liệu theo username.
-                var user_ = userDbContext.Users.FirstOrDefault(g => g.username == username);
-                // Kiểm tra nếu không tìm thấy User với username cung cấp.
-                if (user_ == null)
+                var user = userDbContext.Users.FirstOrDefault(u => u.username == username);
+
+                if (user == null)
                 {
                     return NotFound("Không tìm thấy username");
                 }
-                // Chuyển dữ liệu sách thành dạng DTO để trả về cho người dùng.
-                UserDTO dto = new UserDTO();
-                dto.username = user_.username;
-                dto.password = user_.password;
-                dto.role= user_.role;
-                dto.FirstLogin = user_.FirstLogin;
-                return Ok(dto);
+
+                var userDTO = new UserDTO
+                {
+                    username = user.username,
+                    password = user.password,
+                    role = user.role,
+                    FirstLogin = user.FirstLogin
+                };
+
+                return Ok(userDTO);
             }
             catch (Exception ex)
             {
-                // Xử lý lỗi nếu có lỗi xảy ra và trả về mã trạng thái 500 (Internal Server Error) cùng với thông báo lỗi.
                 return StatusCode(500, $"Lỗi trong quá trình lấy dữ liệu: {ex.Message}");
             }
         }
