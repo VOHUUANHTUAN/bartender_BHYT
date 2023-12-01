@@ -1,6 +1,6 @@
 // Login.js
 
-import React, { memo, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import "./index.scss";
 import { getTaiKhoanByUsername } from "../../../api/connect";
 import { useNavigate } from "react-router-dom";
@@ -10,8 +10,13 @@ const Login = () => {
     username: "",
     password: "",
   });
-
-  // const navigate = useNavigate();
+  useEffect(() => {
+    let token = localStorage.getItem("token");
+    if (token) {
+      navigate("/");
+    }
+  }, []);
+  const navigate = useNavigate();
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -21,15 +26,13 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       const user = await getTaiKhoanByUsername(formData.username);
 
       if (user && user.password === formData.password) {
         // Đăng nhập thành công
-        console.log("Login successful!");
-        alert("Login successful!");
-        // navigate("/home");
+        localStorage.setItem("token", "vanniee");
+        navigate("/");
       } else {
         // Đăng nhập không thành công
         console.log("Login failed. Please check your credentials.");
@@ -87,7 +90,6 @@ const Login = () => {
         </div>
       </div>
     </div>
-
   );
 };
 

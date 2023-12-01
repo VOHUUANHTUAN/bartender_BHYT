@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\GitHub\\bartender_BHYT\\backend\\BaoHiemYTe\\BaoHiemYTe\\BaoHiemYTe.csproj": {}
+    "D:\\GitHub\\Bartender_BHYT\\backend\\BaoHiemYTe\\BaoHiemYTe\\BaoHiemYTe.csproj": {}
   },
   "projects": {
-    "D:\\GitHub\\bartender_BHYT\\backend\\BaoHiemYTe\\BaoHiemYTe\\BaoHiemYTe.csproj": {
+    "D:\\GitHub\\Bartender_BHYT\\backend\\BaoHiemYTe\\BaoHiemYTe\\BaoHiemYTe.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\GitHub\\bartender_BHYT\\backend\\BaoHiemYTe\\BaoHiemYTe\\BaoHiemYTe.csproj",
+        "projectUniqueName": "D:\\GitHub\\Bartender_BHYT\\backend\\BaoHiemYTe\\BaoHiemYTe\\BaoHiemYTe.csproj",
         "projectName": "BaoHiemYTe",
-        "projectPath": "D:\\GitHub\\bartender_BHYT\\backend\\BaoHiemYTe\\BaoHiemYTe\\BaoHiemYTe.csproj",
+        "projectPath": "D:\\GitHub\\Bartender_BHYT\\backend\\BaoHiemYTe\\BaoHiemYTe\\BaoHiemYTe.csproj",
         "packagesPath": "C:\\Users\\Vanniee\\.nuget\\packages\\",
-        "outputPath": "D:\\GitHub\\bartender_BHYT\\backend\\BaoHiemYTe\\BaoHiemYTe\\obj\\",
+        "outputPath": "D:\\GitHub\\Bartender_BHYT\\backend\\BaoHiemYTe\\BaoHiemYTe\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Vanniee\\AppData\\Roaming\\NuGet\\NuGet.Config",
