@@ -1,4 +1,5 @@
 /backend/BaoHiemYTe/BaoHiemYTe.sln/appsettings.json
 /backend/BaoHiemYTe/.vs
-/obj/
-/bin/
+/frontend/bhtruongtho/node_modules
+/backend/BaoHiemYTe/BaoHiemYTe/bin
+/backend/BaoHiemYTe/BaoHiemYTe/obj
