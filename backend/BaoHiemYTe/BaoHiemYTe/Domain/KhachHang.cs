@@ -1,0 +1,22 @@
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace BaoHiemYTe.Domain
+{
+    public class KhachHang
+    {
+        [Key]
+        public int MaKH { get; set; }
+        public string HoTen { get; set; }
+        public string DiaChi { get; set; }
+        public string SDT { get; set; }
+        public string Email { get; set; }
+        public int SoDu { get; set; }
+
+        // Khai báo khóa ngoại với User
+        [ForeignKey("username")]
+        public User User { get; set; }
+
+        public string username { get; set; }
+    }
+}
