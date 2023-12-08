@@ -20,7 +20,7 @@ namespace BaoHiemYTe.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var goiBH = userDbContext.GoiBaoHiems.ToList();
+            var goiBH = userDbContext.GoiBaoHiem.ToList();
             return Ok(goiBH);
         }
         [HttpGet]
