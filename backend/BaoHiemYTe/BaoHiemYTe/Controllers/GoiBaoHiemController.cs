@@ -1,4 +1,5 @@
 ﻿using BaoHiemYTe.Data;
+using BaoHiemYTe.DTOs;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -21,6 +22,23 @@ namespace BaoHiemYTe.Controllers
         {
             var goiBH = userDbContext.GoiBaoHiem.ToList();
             return Ok(goiBH);
+        }
+        [HttpGet]
+        [Route("{id}")]
+        public IActionResult GetGoiBHById(int id)
+        {
+            var goiBH = userDbContext.GoiBaoHiems.FirstOrDefault(x => x.MaGoiBH == id);
+            if (goiBH == null)
+            {
+                return NotFound();
+            }
+            var goiBHDTO = new GoiBaoHiemDTO();
+            goiBHDTO.MaGoiBH = goiBH.MaGoiBH;
+            goiBHDTO.TenGoiBH = goiBH.TenGoiBH;
+            goiBHDTO.MotaGoiBH = goiBH.MotaGoiBH;
+            goiBHDTO.Gia = goiBH.Gia;
+            goiBHDTO.TiLeHoanTien = goiBH.TiLeHoanTien;
+            return Ok(goiBHDTO);
         }
         /*
         [HttpGet]
