@@ -1,20 +1,35 @@
-import { memo, useState } from "react";
+import { memo, useState, useEffect } from "react";
 import "./style.scss";
 import { ROUTERS } from "../../../../utils/router";
 import { Link, useNavigate } from "react-router-dom";
+import { useUser } from "../../../../context/UserContext";
 
 const Header = () => {
     const navigate = useNavigate();
+
+    // Gọi hàm để lấy thông tin người dùng
+    const { user, login, logout } = useUser();
+
     const handleLogout = () => {
-        localStorage.removeItem("token");
+        logout();
         navigate("/");
     };
+
+    useEffect(() => {
+        // Kiểm tra xem có thông tin người dùng trong local storage không
+        login({
+            username: localStorage.getItem("username"),
+            token: localStorage.getItem("token"),
+        });
+
+        // console.log(user);
+    }, []);
+
     const [menus, setMenus] = useState([
         {
             name: "Trang chủ",
             path: ROUTERS.USER.HOME,
         },
-
         {
             name: "Sản phẩm",
             path: ROUTERS.USER.PRODUCT,
@@ -30,12 +45,12 @@ const Header = () => {
                 },
             ],
         },
-
         {
             name: "Tin tức",
             path: ROUTERS.USER.NEWS,
         },
     ]);
+
     return (
         <>
             <div className="section">
@@ -53,27 +68,32 @@ const Header = () => {
                             </div>
                             <div className="col-6 header_top_right">
                                 <ul>
-                                    <li></li>
-                                    <li></li>
-                                    <li onClick={() => handleLogout()}>
-                                        Đăng xuất
-                                    </li>
-                                    <li>
-                                        <Link to={ROUTERS.USER.LOGIN}>
-                                            Đăng nhập
-                                        </Link>
-                                    </li>
-
-                                    <ul className="header_menu_dropdown">
-                                        <li onClick={() => handleLogout()}>
-                                            Đăng xuất
-                                        </li>
-                                        <li>
-                                            <Link to={ROUTERS.USER.LOGIN}>
-                                                Đăng nhập
-                                            </Link>
-                                        </li>
-                                    </ul>
+                                    {user ? (
+                                        <>
+                                            <li>Xin chào, {user.username}!</li>
+                                            <li>
+                                                <button
+                                                    onClick={handleLogout}
+                                                    className="logout-button"
+                                                >
+                                                    Đăng xuất
+                                                </button>
+                                            </li>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <li>
+                                                <Link to="/login">
+                                                    Đăng nhập
+                                                </Link>
+                                            </li>
+                                            <li>
+                                                <Link to="/register">
+                                                    Đăng ký
+                                                </Link>
+                                            </li>
+                                        </>
+                                    )}
                                 </ul>
                             </div>
                         </div>

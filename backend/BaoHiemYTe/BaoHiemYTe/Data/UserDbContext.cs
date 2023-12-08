@@ -1,5 +1,6 @@
 ﻿using BaoHiemYTe.Domain;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace BaoHiemYTe.Data
 {

@@ -150,3 +150,5 @@ D:\GitHub\bartender_BHYT\backend\BaoHiemYTe\BaoHiemYTe\obj\Debug\net7.0\refint\B
 D:\GitHub\bartender_BHYT\backend\BaoHiemYTe\BaoHiemYTe\obj\Debug\net7.0\BaoHiemYTe.pdb
 D:\GitHub\bartender_BHYT\backend\BaoHiemYTe\BaoHiemYTe\obj\Debug\net7.0\BaoHiemYTe.genruntimeconfig.cache
 D:\GitHub\bartender_BHYT\backend\BaoHiemYTe\BaoHiemYTe\obj\Debug\net7.0\ref\BaoHiemYTe.dll
+D:\GitHub\bartender_BHYT\backend\BaoHiemYTe\BaoHiemYTe\obj\Debug\net7.0\BaoHiemYTe.sourcelink.json
+D:\GitHub\Bartender_BHYT\backend\BaoHiemYTe\BaoHiemYTe\bin\Debug\net7.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
