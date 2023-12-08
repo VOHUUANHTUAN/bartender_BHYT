@@ -49,7 +49,8 @@ const Login = () => {
                     auth: true,
                     // userID: res.data.userID, // Thêm thông tin userID nếu có
                 });
-
+                localStorage.setItem("token", res.token);
+                localStorage.setItem("username", formData.username);
                 console.log("Login successful.");
                 // console.log("all: ", user);
                 // console.log("username: ", user.username);
