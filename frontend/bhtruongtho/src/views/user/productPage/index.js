@@ -3,7 +3,7 @@ import { getGoiBHAPI } from "../../../api/connect";
 import "./style.scss"
 import { Link } from 'react-router-dom';
 
-const HomePage = () => {
+const ProductPage = () => {
     const [goiBHs, setgoiBHs] = useState([]);
     useEffect(() => {
         fetchData();
@@ -15,43 +15,35 @@ const HomePage = () => {
     return <>
         <div className="container__body">
             <div className="productPage">
-
                 <ul>
-                    <div className="cards-container">
-                    
+                    <div className="cards__container">
                         {goiBHs?.map((goiBH, goiBHKey) => (
-                            <li key={goiBHKey} className={`card-container ${goiBHKey === 0 ? "active" : ""}`}>
-
-                                    <div className="img-container">
-                                        <img src="" alt=""></img>
+                            <li key={goiBHKey} className={`card__container ${goiBHKey === 0 ? "active" : ""}`}>
+                                <div className="img-container">
+                                    <img src="" alt=""></img>
+                                </div>
+                                <div className="card__content">
+                                    <div className="card__title">
+                                        <h3> {goiBH.tenGoiBH}</h3>
                                     </div>
-                                    <div className="card-content">
-                                        <div className="card-title">
-                                            <h3> {goiBH.tenGoiBH}</h3>
-                                        </div>
-                                        <div className="card-body">
-                                            <p>{goiBH.motaGoiBH}</p>
-                                            <p>Giá: {goiBH.gia} VND</p>
-                                            <p>Tỉ lệ hoàn tiền: {goiBH.tiLeHoanTien}%</p>
-                                        </div>
-
+                                    <div className="card__body">
+                                        <p>{goiBH.motaGoiBH}</p>
+                                        <p>Giá: {goiBH.gia} VND</p>
+                                        <p>Tỉ lệ hoàn tiền: {goiBH.tiLeHoanTien}%</p>
                                     </div>
-                                    <div className="card-btn">
-                                        <Link to="">
-                                            <p>Xem thêm</p>
-                                        </Link>
-                                    </div>
-
+                                </div>
+                                <div className="card__btn">
+                                    <Link to={`detail/${goiBH.maGoiBH}`}>
+                                        <p>Xem thêm</p>
+                                    </Link>
+                                </div>
                             </li>
-                               
-                        )
-                        )}
-                         </div>
-                   
-                    </ul>
+                        ))}
+                    </div>
+                </ul>
             </div>
         </div>
     </>
 };
 
-export default memo(HomePage);
+export default memo(ProductPage);

@@ -2,17 +2,12 @@ import axiosClient from "./axiosClient";
 
 const END_POINT = {
     GOIBAOHIEM: "GoiBaoHiem",
-    BOOK: "Book",
-    BOOKBYID: "Book/id:Guid",
     TaiKhoan: "User",
     LOGIN: "Auth/login",
     info: "Auth/userinfo",
 };
 export const getGoiBHAPI = () => {
     return axiosClient.get(`${END_POINT.GOIBAOHIEM}`);
-};
-export const getBookAPI = () => {
-    return axiosClient.get(`${END_POINT.BOOK}`);
 };
 export const getTaiKhoanByUsername = (username) => {
     return axiosClient.get(`${END_POINT.TaiKhoan}/${username}`);
@@ -28,3 +23,7 @@ export const logingettoken = (username, password) => {
 export const getInfoByToken = () => {
     return axiosClient.get(`${END_POINT.info}`);
 };
+
+export const getGoiBHByMaGBH = (MaGBH) => {
+    return axiosClient.get(`${END_POINT.GOIBAOHIEM}/${MaGBH}`);
+  };
