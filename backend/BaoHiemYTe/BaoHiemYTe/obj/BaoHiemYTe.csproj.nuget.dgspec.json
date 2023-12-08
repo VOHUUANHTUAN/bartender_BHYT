@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\GitHub\\Bartender_BHYT\\backend\\BaoHiemYTe\\BaoHiemYTe\\BaoHiemYTe.csproj": {}
+    "D:\\hoc\\HK4_1\\PTUDHD\\project_BHYT\\bartender_BHYT\\backend\\BaoHiemYTe\\BaoHiemYTe\\BaoHiemYTe.csproj": {}
   },
   "projects": {
-    "D:\\GitHub\\Bartender_BHYT\\backend\\BaoHiemYTe\\BaoHiemYTe\\BaoHiemYTe.csproj": {
+    "D:\\hoc\\HK4_1\\PTUDHD\\project_BHYT\\bartender_BHYT\\backend\\BaoHiemYTe\\BaoHiemYTe\\BaoHiemYTe.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\GitHub\\Bartender_BHYT\\backend\\BaoHiemYTe\\BaoHiemYTe\\BaoHiemYTe.csproj",
+        "projectUniqueName": "D:\\hoc\\HK4_1\\PTUDHD\\project_BHYT\\bartender_BHYT\\backend\\BaoHiemYTe\\BaoHiemYTe\\BaoHiemYTe.csproj",
         "projectName": "BaoHiemYTe",
-        "projectPath": "D:\\GitHub\\Bartender_BHYT\\backend\\BaoHiemYTe\\BaoHiemYTe\\BaoHiemYTe.csproj",
-        "packagesPath": "C:\\Users\\Vanniee\\.nuget\\packages\\",
-        "outputPath": "D:\\GitHub\\Bartender_BHYT\\backend\\BaoHiemYTe\\BaoHiemYTe\\obj\\",
+        "projectPath": "D:\\hoc\\HK4_1\\PTUDHD\\project_BHYT\\bartender_BHYT\\backend\\BaoHiemYTe\\BaoHiemYTe\\BaoHiemYTe.csproj",
+        "packagesPath": "C:\\Users\\Ha\\.nuget\\packages\\",
+        "outputPath": "D:\\hoc\\HK4_1\\PTUDHD\\project_BHYT\\bartender_BHYT\\backend\\BaoHiemYTe\\BaoHiemYTe\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Vanniee\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Ha\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -74,24 +74,6 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "downloadDependencies": [
-            {
-              "name": "Microsoft.AspNetCore.App.Ref",
-              "version": "[7.0.14, 7.0.14]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Host.win-x64",
-              "version": "[7.0.14, 7.0.14]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Ref",
-              "version": "[7.0.14, 7.0.14]"
-            },
-            {
-              "name": "Microsoft.WindowsDesktop.App.Ref",
-              "version": "[7.0.14, 7.0.14]"
-            }
-          ],
           "frameworkReferences": {
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
@@ -100,7 +82,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.403\\RuntimeIdentifierGraph.json"
         }
       }
     }
