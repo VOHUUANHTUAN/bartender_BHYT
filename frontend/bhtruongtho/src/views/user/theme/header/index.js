@@ -17,12 +17,12 @@ const Header = () => {
 
     useEffect(() => {
         // Kiểm tra xem có thông tin người dùng trong local storage không
-        login({
-            username: localStorage.getItem("username"),
-            token: localStorage.getItem("token"),
-        });
-
-        // console.log(user);
+        var temp = localStorage.getItem("username");
+        if (temp)
+            login({
+                username: localStorage.getItem("username"),
+                token: localStorage.getItem("token"),
+            });
     }, []);
 
     const [menus, setMenus] = useState([

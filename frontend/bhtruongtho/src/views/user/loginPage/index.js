@@ -57,14 +57,9 @@ const Login = () => {
                     try {
                         const response = await getUserInfoByToken(res.token);
 
-                        // Assuming the response structure is like { data: { Username, Role, FirstLogin, ... } }
-                        // setUserInfo(response.data);
-
-                        console.log(res.token);
                         console.log(response);
                     } catch (error) {
                         console.log(error.message);
-                        // setError(error.message);
                     }
                 };
                 fetchUserInfo();
