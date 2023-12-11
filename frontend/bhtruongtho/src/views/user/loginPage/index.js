@@ -2,7 +2,7 @@
 
 import React, { memo, useEffect, useState } from "react";
 import "./index.scss";
-import { logingettoken } from "../../../api/connect";
+import { logingettoken, getUserInfoByToken } from "../../../api/connect";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../../context/UserContext";
 
@@ -44,17 +44,31 @@ const Login = () => {
                 // Nếu API trả về token, lưu vào context
                 login({
                     username: formData.username,
-                    // role: "admin",
                     token: res.token,
                     auth: true,
-                    // userID: res.data.userID, // Thêm thông tin userID nếu có
                 });
                 localStorage.setItem("token", res.token);
                 localStorage.setItem("username", formData.username);
+                localStorage.setItem("auth", true);
+
+                // const token = localStorage.getItem('token'); // Assuming you store the token in localStorage
+
+                const fetchUserInfo = async () => {
+                    try {
+                        const response = await getUserInfoByToken(res.token);
+
+                        // Assuming the response structure is like { data: { Username, Role, FirstLogin, ... } }
+                        // setUserInfo(response.data);
+
+                        console.log(res.token);
+                        console.log(response);
+                    } catch (error) {
+                        console.log(error.message);
+                        // setError(error.message);
+                    }
+                };
+                fetchUserInfo();
                 console.log("Login successful.");
-                // console.log("all: ", user);
-                // console.log("username: ", user.username);
-                // console.log("token: ", user.token);
                 navigate("/");
             } else {
                 // Nếu không có token hoặc bất kỳ điều gì khác, xử lý theo yêu cầu của bạn
