@@ -20,10 +20,14 @@ export const logingettoken = (username, password) => {
     return axiosClient.post(`${END_POINT.LOGIN}`, data);
 };
 
-export const getInfoByToken = () => {
-    return axiosClient.get(`${END_POINT.info}`);
+export const getUserInfoByToken = (token) => {
+    return axiosClient.get(`${END_POINT.info}`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
 };
 
 export const getGoiBHByMaGBH = (MaGBH) => {
     return axiosClient.get(`${END_POINT.GOIBAOHIEM}/${MaGBH}`);
-  };
+};

@@ -27,7 +27,7 @@ namespace BaoHiemYTe.Controllers
         [Route("{id}")]
         public IActionResult GetGoiBHById(int id)
         {
-            var goiBH = userDbContext.GoiBaoHiems.FirstOrDefault(x => x.MaGoiBH == id);
+            var goiBH = userDbContext.GoiBaoHiem.FirstOrDefault(x => x.MaGoiBH == id);
             if (goiBH == null)
             {
                 return NotFound();
