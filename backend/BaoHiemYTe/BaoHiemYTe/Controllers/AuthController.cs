@@ -58,7 +58,7 @@ public class AuthController : ControllerBase
             var username = User.Identity.Name;
 
             // Lấy thông tin người dùng từ cơ sở dữ liệu (tránh trả về mật khẩu)
-            var user = this.userDbContext.Users.FirstOrDefault(u => u.Username == username);
+            var user = this.userDbContext.Users.FirstOrDefault(u => u.username == username);
 
             if (user == null)
             {
@@ -68,7 +68,7 @@ public class AuthController : ControllerBase
             // Trả về thông tin người dùng (tránh trả về mật khẩu)
             return Ok(new
             {
-                Username = user.Username,
+                Username = user.username,
                 // Các thông tin khác cần thiết
             });
         }
@@ -82,7 +82,7 @@ public class AuthController : ControllerBase
     private bool CheckUserCredentials(string username, string password)
     {
         // Thực hiện kiểm tra tên người dùng và mật khẩu trong cơ sở dữ liệu
-        var user = this.userDbContext.Users.FirstOrDefault(u => u.Username == username && u.Password == password);
+        var user = this.userDbContext.Users.FirstOrDefault(u => u.username == username && u.password == password);
         return user != null;
     }
 
