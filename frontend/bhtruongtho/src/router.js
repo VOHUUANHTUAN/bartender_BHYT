@@ -3,7 +3,8 @@ import HomePage from "./views/user/homePage";
 import { ROUTERS } from "./utils/router";
 import MasterLayout from "./views/user/theme/masterLayout";
 import NewsPage from "./views/user/newsPage";
-import ProductPage from "./views/user/productPage";
+import ProductDetailPage from "./views/user/productPage/detail.js";
+import ProductPage from "./views/user/productPage/index.js";
 import Login from "./views/user/loginPage";
 const renderUserRouter = () => {
     const userRouters = [
@@ -32,6 +33,10 @@ const renderUserRouter = () => {
                             key = {key} path = {item.path} element = {item.component}
                         />
                     ))}
+                                                        <Route
+                    path="product/detail/:id" element={<ProductDetailPage />}
+                />
+
             </Routes>
         </MasterLayout>
 
