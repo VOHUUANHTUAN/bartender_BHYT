@@ -54,30 +54,75 @@ public class AuthController : ControllerBase
     {
         try
         {
-            // Lấy tên người dùng từ token
-            var username = User.Identity.Name;
+            // Lấy mã thông báo từ tiêu đề Authorization
+            var authorizationHeader = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
 
-            // Lấy thông tin người dùng từ cơ sở dữ liệu (tránh trả về mật khẩu)
-            var user = this.userDbContext.Users.FirstOrDefault(u => u.username == username);
+            if (string.IsNullOrEmpty(authorizationHeader) || !authorizationHeader.StartsWith("Bearer "))
+            {
+                return Unauthorized("Unauthorized: Token is missing or invalid");
+            }
+
+            var token = authorizationHeader.Substring("Bearer ".Length);
+
+            // Validate and decode the token
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = false,  // Đặt giá trị này theo Issuer của bạn nếu có
+                ValidateAudience = false,  // Đặt giá trị này theo Audience của bạn nếu có
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("your-secret-key-should-be-at-least-128-bits"))
+            };
+
+            var handler = new JwtSecurityTokenHandler();
+            var principal = handler.ValidateToken(token, tokenValidationParameters, out var securityToken);
+
+            // Lấy username từ thông tin xác thực
+            var username = principal.Identity?.Name;
+
+            // Sử dụng hàm GetByUsername để lấy thông tin người dùng
+            var user = GetUserByUsername(username);
 
             if (user == null)
             {
                 return NotFound("Người dùng không tồn tại");
             }
 
-            // Trả về thông tin người dùng (tránh trả về mật khẩu)
-            return Ok(new
-            {
-                Username = user.username,
-                // Các thông tin khác cần thiết
-            });
+            return Ok(user);
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex.StackTrace);
-            return StatusCode(500, $"Lỗi trong quá trình lấy thông tin người dùng: {ex.Message}");
+            return StatusCode(500, $"Lỗi trong quá trình kiểm tra thông tin người dùng: {ex.Message}");
         }
     }
+
+    private UserDTO GetUserByUsername(string username)
+    {
+        try
+        {
+            var user = userDbContext.Users.FirstOrDefault(u => u.username == username);
+
+            if (user == null)
+            {
+                return null;
+            }
+
+            var userDTO = new UserDTO
+            {
+                username = user.username,
+                role = user.role,
+                FirstLogin = user.FirstLogin
+                // Bạn có thể thêm các thông tin khác cần thiết vào đây
+            };
+
+            return userDTO;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.StackTrace);
+            return null;
+        }
+    }
+
 
     private bool CheckUserCredentials(string username, string password)
     {

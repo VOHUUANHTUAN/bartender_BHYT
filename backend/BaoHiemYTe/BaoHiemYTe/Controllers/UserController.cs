@@ -66,5 +66,8 @@ namespace BaoHiemYTe.Controllers
                 return StatusCode(500, $"Lỗi trong quá trình lấy dữ liệu: {ex.Message}");
             }
         }
+
+
+
     }
 }
