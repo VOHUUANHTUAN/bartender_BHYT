@@ -4,12 +4,13 @@
 * {
     box-sizing: border-box;
 }
-.productPage{
+
+.productPage {
     //display: flex;
     justify-content: center;
     align-items: center;
 
-    ul{
+    ul {
         //display: flex;
         //align-items: center;
         //column-gap: 10px;
@@ -17,23 +18,26 @@
         //padding: 10px 10px 13px;
 
     }
-    li{
+
+    li {
         font-size: 14px;
 
         align-items: center;
-        
+
         color: map.get($theme-colors, "normal-text");
     }
 }
-.cards-container{
+
+.cards__container {
     display: grid;
     //grid-template-columns: auto auto auto;
     grid-template-columns: repeat(3, 1fr);
     padding: 10px;
-    gap: 10px 20px;  
+    gap: 10px 20px;
 
 }
-.card-container{
+
+.card__container {
     //display: inline-block;
     width: 100%;
     overflow: hidden;
@@ -45,35 +49,37 @@
     margin: 5px 5px;
 }
 
-.card-container:hover{
+.card__container:hover {
     transform: scale(1.1);
     box-shadow: 0 0 15px 0;
 }
 
-.card-content{
+.card__content {
     margin: 1rem;
     margin-top: 0.5rem;
-    p{
-        
-    }
+
+    p {}
 }
 
-h3, p{
+h3,
+p {
     margin: 0;
     padding: 0;
 }
 
-.card-title{
+.card__title {
     margin: 0.5rem;
 }
 
-.card-btn{
+.card__btn {
     display: flex;
     justify-content: center;
-    a{
+
+    a {
         text-decoration: none;
     }
-    p{
+
+    p {
         padding: 0.5rem;
         margin: 1rem;
         border-style: solid;
@@ -83,9 +89,52 @@ h3, p{
         background: white;
         font-weight: bold;
     }
-    p:hover{
+
+    p:hover {
         background: map.get($theme-colors, "pink-pastel");
         color: white;
     }
 }
 
+.detail__page {
+    .detail__container {
+        //background: blue;
+        margin: auto;
+        width: 80%;
+        .detail__title {
+
+            text-align: center;
+            text-transform: uppercase;
+            font-weight: bold;
+            align-self: center;
+            margin: 10px;
+        }
+
+        .detail__btn {
+            display: flex;
+            justify-content: center;
+
+            a {
+                text-decoration: none;
+            }
+
+            p {
+
+                padding: 0.5rem;
+                margin: 1rem;
+                border-style: solid;
+                border-color: map.get($theme-colors, "pink-pastel");
+                color: map.get($theme-colors, "pink-pastel");
+                align-items: center;
+                background: white;
+                font-weight: bold;
+            }
+
+            p:hover {
+                background: map.get($theme-colors, "pink-pastel");
+                color: white;
+            }
+        }
+    }
+
+}
