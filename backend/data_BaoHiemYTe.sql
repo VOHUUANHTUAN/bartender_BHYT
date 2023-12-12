@@ -1,7 +1,7 @@
-﻿CREATE DATABASE BaoHiemYTe
-AS
+﻿--CREATE DATABASE BaoHiemYTe
+--AS
 USE BaoHiemYTe
-AS
+--AS
 
 
 insert into Users values ('leminhtien','123456',N'Khách Hàng','True')
