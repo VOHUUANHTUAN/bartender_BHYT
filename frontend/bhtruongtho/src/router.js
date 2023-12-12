@@ -6,6 +6,8 @@ import NewsPage from "./views/user/newsPage";
 import ProductDetailPage from "./views/user/productPage/detail.js";
 import ProductPage from "./views/user/productPage/index.js";
 import Login from "./views/user/loginPage";
+import HomePageStaff from "./views/user/homePageStaff";
+import ChangePasswordForm from "./views/user/ChangePasswordPage";
 const renderUserRouter = () => {
     const userRouters = [
         {
@@ -23,6 +25,14 @@ const renderUserRouter = () => {
         {
             path: ROUTERS.USER.LOGIN,
             component: <Login />
+        },
+        {
+            path: ROUTERS.USER.CHANGEPASSWORD,
+            component: <ChangePasswordForm />
+        },
+        {
+            path: ROUTERS.USER.STAFF,
+            component: <HomePageStaff />
         },
     ]
     return (
