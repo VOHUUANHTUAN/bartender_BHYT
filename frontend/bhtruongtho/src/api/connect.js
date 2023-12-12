@@ -5,6 +5,7 @@ const END_POINT = {
     TaiKhoan: "User",
     LOGIN: "Auth/login",
     info: "Auth/userinfo",
+    CHANGEPASSWORD: "User/ChangePassword",
 };
 export const getGoiBHAPI = () => {
     return axiosClient.get(`${END_POINT.GOIBAOHIEM}`);
@@ -31,3 +32,7 @@ export const getUserInfoByToken = (token) => {
 export const getGoiBHByMaGBH = (MaGBH) => {
     return axiosClient.get(`${END_POINT.GOIBAOHIEM}/${MaGBH}`);
 };
+
+export const changePasswordAPI = (username, changePasswordData) => {
+    return axiosClient.put(`${END_POINT.CHANGEPASSWORD}/${username}`, changePasswordData);
+  };
