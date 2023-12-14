@@ -7,6 +7,7 @@ using System.Security.Claims;
 using System.Text;
 using BaoHiemYTe.DTOs;
 using BaoHiemYTe.Data;
+using BaoHiemYTe.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -54,32 +55,17 @@ public class AuthController : ControllerBase
     {
         try
         {
-            // Lấy mã thông báo từ tiêu đề Authorization
-            var authorizationHeader = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
+            // Sử dụng TokenService để lấy username từ token
+            var tokenService = new TokenService("your-secret-key-should-be-at-least-128-bits");
+            var username = tokenService.GetUsernameFromToken(HttpContext.Request);
 
-            if (string.IsNullOrEmpty(authorizationHeader) || !authorizationHeader.StartsWith("Bearer "))
+            if (string.IsNullOrEmpty(username))
             {
                 return Unauthorized("Unauthorized: Token is missing or invalid");
             }
-
-            var token = authorizationHeader.Substring("Bearer ".Length);
-
-            // Validate and decode the token
-            var tokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuer = false,  // Đặt giá trị này theo Issuer của bạn nếu có
-                ValidateAudience = false,  // Đặt giá trị này theo Audience của bạn nếu có
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("your-secret-key-should-be-at-least-128-bits"))
-            };
-
-            var handler = new JwtSecurityTokenHandler();
-            var principal = handler.ValidateToken(token, tokenValidationParameters, out var securityToken);
-
-            // Lấy username từ thông tin xác thực
-            var username = principal.Identity?.Name;
-
             // Sử dụng hàm GetByUsername để lấy thông tin người dùng
             var user = GetUserByUsername(username);
+
 
             if (user == null)
             {
