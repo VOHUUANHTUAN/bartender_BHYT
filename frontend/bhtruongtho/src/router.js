@@ -6,6 +6,8 @@ import NewsPage from "./views/user/newsPage";
 import ProductDetailPage from "./views/user/productPage/detail.js";
 import ProductPage from "./views/user/productPage/index.js";
 import Login from "./views/user/loginPage";
+import Register from "./views/user/registerPage/index.js";
+
 const renderUserRouter = () => {
     const userRouters = [
         {
@@ -23,24 +25,42 @@ const renderUserRouter = () => {
         {
             path: ROUTERS.USER.LOGIN,
             component: <Login />,
+            showHeader: false, // Không hiển thị header ở trang đăng nhập
+            showFooter: false, // Không hiển thị footer ở trang đăng nhập
+        },
+        {
+            path: ROUTERS.USER.REGISTER,
+            component: <Register />,
+            showHeader: false, // Không hiển thị header ở trang đăng ký
+            showFooter: false, // Không hiển thị footer ở trang đăng ký
         },
     ];
+
     return (
-        <MasterLayout>
-            <Routes>
-                {userRouters.map((item, key) => (
-                    <Route
-                        key={key}
-                        path={item.path}
-                        element={item.component}
-                    />
-                ))}
+        <Routes>
+            {userRouters.map((item, key) => (
                 <Route
-                    path="product/detail/:id"
-                    element={<ProductDetailPage />}
+                    key={key}
+                    path={item.path}
+                    element={
+                        <MasterLayout
+                            showHeader={item.showHeader}
+                            showFooter={item.showFooter}
+                        >
+                            {item.component}
+                        </MasterLayout>
+                    }
                 />
-            </Routes>
-        </MasterLayout>
+            ))}
+            <Route
+                path="product/detail/:id"
+                element={
+                    <MasterLayout>
+                        <ProductDetailPage />
+                    </MasterLayout>
+                }
+            />
+        </Routes>
     );
 };
 
