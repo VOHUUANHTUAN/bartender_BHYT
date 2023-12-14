@@ -8,6 +8,8 @@ import ProductPage from "./views/user/productPage/index.js";
 import Login from "./views/user/loginPage";
 import Register from "./views/user/registerPage/index.js";
 
+import HomePageStaff from "./views/user/homePageStaff";
+import ChangePasswordForm from "./views/user/ChangePasswordPage";
 const renderUserRouter = () => {
     const userRouters = [
         {
@@ -34,8 +36,15 @@ const renderUserRouter = () => {
             showHeader: false, // Không hiển thị header ở trang đăng ký
             showFooter: false, // Không hiển thị footer ở trang đăng ký
         },
+        {
+            path: ROUTERS.USER.CHANGEPASSWORD,
+            component: <ChangePasswordForm />
+        },
+        {
+            path: ROUTERS.USER.STAFF,
+            component: <HomePageStaff />
+        },
     ];
-
     return (
         <Routes>
             {userRouters.map((item, key) => (

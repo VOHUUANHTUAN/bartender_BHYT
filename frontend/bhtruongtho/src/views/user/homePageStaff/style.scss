@@ -1,81 +1,96 @@
 // File: style.scss
 .task-and-image {
-    display: flex;
-    padding-top: 100px;
-    padding-bottom: 0px;
-    min-height: 250px;
-}
+  display: flex;
+  padding-top: 100px;
+  padding-bottom: 0px;
+  min-height: 250px;
+  //background: red;
   .task-bar {
     position: relative;
-    padding-top: 23px;
+    padding-top: 2px;
     width: 120px;
     padding-right: 1px;
     display: block;
     padding-bottom: 0px;
-    font-size: 18.5px;
+    font-size: 18px;
   }
   
   // File: style.scss
-    .task-bar {
-        ul {
-        display:  block;
-        justify-content: space-around; // Căn giữa các phần tử và tạo khoảng cách đều
-        list-style: none;
-        padding: 0;
-    
-        li {
-          flex: 1;
-          text-align: center;
-          padding: 10px;
-          border: 1px solid #ccc;
-          font-weight: bold;
-          background: rgb(235, 233, 233);
-    
-          a {
-            text-decoration: none;
-            color: black;
-            transition: color 0.3s;
-    
-            &:hover {
-              color: #10a37f;
-              ;
-            }
+  .task-bar {
+    ul {
+      display: block;
+      justify-content: space-around;
+      list-style: none;
+      padding: 0;
+  
+      li {
+        flex: 1;
+        text-align: center;
+        padding: 10px;
+        border: 1px solid #ccc;
+        font-weight: bold;
+        background: rgb(235, 233, 233);
+  
+        a {
+          text-decoration: none;
+          color: black;
+          transition: color 0.3s;
+  
+          &:hover {
+            color: #10a37f;
+            ;
           }
         }
-        }
+      }
     }
+  }
   
   .image-display {
     position: relative;
     box-sizing: border-box;
-    padding: auto;
+    //padding: auto;
+    padding-top: 2px;
+    //padding-bottom: 0px;
+    //background: blue;
   }
   
   .image-display img {
-    width: 100%; /* Đảm bảo hình ảnh chiếm toàn bộ không gian trong phần image-display */
+    width: 100%;
+    /* Đảm bảo hình ảnh chiếm toàn bộ không gian trong phần image-display */
     height: auto;
   }
+  
   .text_over_image {
     position: absolute;
-    top: 80%; /* Đặt vị trí từ trên xuống 50% của phần tử cha */
-    left: 30%; /* Đặt vị trí từ trái sang phải 50% của phần tử cha */
-    transform: translate(-50%, -50%); /* Di chuyển văn bản điều này ngược lại 50% chiều ngang và chiều dọc, làm cho nó nằm ở giữa */
-    color: white; /* Màu chữ trắng, bạn có thể điều chỉnh màu sắc theo ý muốn */
-    text-align: center; /* Căn giữa văn bản */
-    font-size: 24px; /* Kích thước chữ */
-    font-weight: bold; /* Đậm chữ nếu cần thiết */
+    top: 80%;
+    /* Đặt vị trí từ trên xuống 50% của phần tử cha */
+    left: 30%;
+    /* Đặt vị trí từ trái sang phải 50% của phần tử cha */
+    transform: translate(-50%, -50%);
+    /* Di chuyển văn bản điều này ngược lại 50% chiều ngang và chiều dọc, làm cho nó nằm ở giữa */
+    color: white;
+    /* Màu chữ trắng, bạn có thể điều chỉnh màu sắc theo ý muốn */
+    text-align: center;
+    /* Căn giữa văn bản */
+    font-size: 24px;
+    /* Kích thước chữ */
+    font-weight: bold;
+    /* Đậm chữ nếu cần thiết */
   }
+  
   .work_title {
     display: flex;
-    flex-direction: column; /* Đặt chiều hướng của flexbox thành cột */
-    align-items: center; /* Căn giữa theo chiều ngang */
+    flex-direction: column;
+    /* Đặt chiều hướng của flexbox thành cột */
+    align-items: center;
+    /* Căn giữa theo chiều ngang */
   }
   
   .work_title_01,
   .work_title_02 {
     width: 310px;
     padding: 50px;
-    margin-bottom: 20px; 
+    margin-bottom: 20px;
   }
   
   .work_title_01 h1,
@@ -90,5 +105,5 @@
     color: #666;
     font-size: 16px;
   }
-  
-  
+}
+
