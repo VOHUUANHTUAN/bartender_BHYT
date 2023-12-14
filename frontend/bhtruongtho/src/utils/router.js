@@ -4,6 +4,7 @@ export const ROUTERS = {
         PRODUCT: "product",
         NEWS: "news",
         LOGIN: "login",
+        REGISTER: "register",
         STAFF: "staff",
         CHANGEPASSWORD: "changepassword"
     },
