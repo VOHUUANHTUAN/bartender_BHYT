@@ -37,7 +37,6 @@ const HomePageStaff = () => {
                 </div>
             </div>
         </div>
-
     );
 };
 
