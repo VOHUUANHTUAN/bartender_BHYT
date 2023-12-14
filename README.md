@@ -1,5 +1,4 @@
 # bartender_BHYT
-# Bartender BHYT - Frontend
 
 ## Hướng Dẫn Cài Đặt và Sử Dụng
 
