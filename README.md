@@ -16,14 +16,14 @@
     npm install
     ```
 
-### **Cài Đặt Thư Viện**
+###3. **Cài Đặt Thư Viện**
 Để cài đặt các thư viện cần thiết, bạn có thể chạy lệnh sau:
     ```bash
     npm install @mui/material @emotion/react @emotion/styled react-router-dom axios
     ```
 
 
-### **Cài Đặt Dữ Liệu Mẫu:**
+###4. **Cài Đặt Dữ Liệu Mẫu:**
 
 1. Mở Visual Studio 2022 với bản cài đặt hỗ trợ ASP.NET API.
 2. Mở Package Manager Console (PMC) thông qua `View -> Other Windows -> Package Manager Console`.
