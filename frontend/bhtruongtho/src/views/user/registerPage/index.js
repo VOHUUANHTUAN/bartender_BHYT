@@ -5,16 +5,14 @@ import {
     TextField,
     Button,
     Typography,
-    Link,
     Select,
     MenuItem,
     FormControl,
     InputLabel,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const Register = () => {
-    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         username: "",
         password: "",
@@ -89,7 +87,7 @@ const Register = () => {
                         Đăng ký
                     </Button>
                     <Typography align="center" style={{ marginTop: "10px" }}>
-                        <Link href="/login" variant="body2">
+                        <Link to="/login" variant="body2">
                             Đã có tài khoản? Đăng nhập
                         </Link>
                     </Typography>

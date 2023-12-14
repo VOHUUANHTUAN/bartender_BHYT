@@ -7,7 +7,7 @@
 1. **Clone Repository:**
     ```bash
     git clone https://github.com/VOHUUANHTUAN/bartender_BHYT.git
-    cd bartender_BHYT/frontend
+    cd bartender_BHYT/frontend/bhtruongtho
     ```
 
 2. **Cài Đặt Dependencies:**
