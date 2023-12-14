@@ -39,10 +39,10 @@ Quá trình này sẽ đảm bảo rằng cơ sở dữ liệu của bạn đư�
 
 1. **Khởi Chạy API:**
     - Mở solution trong Visual Studio 2022.
-    - Chọn project `backend` và nhấn F5 để khởi động API.
+    - Chọn project `bartender_BHYT\backend\BaoHiemYTe.sln` và nhấn F5 để khởi động API.
 
 2. **Khởi Chạy Frontend:**
-    - Mở cửa sổ terminal trong thư mục `frontend`.
+    - Mở cửa sổ terminal trong thư mục `bartender_BHYT\frontend\bhtruongtho`.
     - Chạy lệnh `npm start` để khởi động frontend.
 
 Sau khi hoàn tất các bước trên, ứng dụng của bạn sẽ khởi chạy và sẵn sàng sử dụng.
