@@ -17,12 +17,9 @@
     ```
 
 ### **Cài Đặt Thư Viện**
-
 Để cài đặt các thư viện cần thiết, bạn có thể chạy lệnh sau:
-
-```bash
-npm install @mui/material @emotion/react @emotion/styled react-router-dom axios
-
+    ```bash
+    npm install @mui/material @emotion/react @emotion/styled react-router-dom axios
     ```
 
 
