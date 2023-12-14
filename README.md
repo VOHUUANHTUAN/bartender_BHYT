@@ -7,7 +7,7 @@
 1. **Clone Repository:**
     ```bash
     git clone https://github.com/VOHUUANHTUAN/bartender_BHYT.git
-    cd bartender_BHYT/frontend
+    cd bartender_BHYT/frontend/bhtruongtho
     ```
 
 2. **Cài Đặt Dependencies:**
@@ -33,3 +33,16 @@ npm install @mui/material @emotion/react @emotion/styled react-router-dom axios
 5. Mở tệp `backend/data.sql` trong SSMS và chạy để thêm dữ liệu mẫu vào cơ sở dữ liệu.
 
 Quá trình này sẽ đảm bảo rằng cơ sở dữ liệu của bạn được cập nhật và đã có dữ liệu mẫu sẵn sàng để sử dụng trong ứng dụng.
+
+### **Khởi Chạy API và Frontend:**
+Để chạy ứng dụng, bạn cần khởi động API trước, sau đó khởi động frontend.
+
+1. **Khởi Chạy API:**
+    - Mở solution trong Visual Studio 2022.
+    - Chọn project `bartender_BHYT\backend\BaoHiemYTe.sln` và nhấn F5 để khởi động API.
+
+2. **Khởi Chạy Frontend:**
+    - Mở cửa sổ terminal trong thư mục `bartender_BHYT\frontend\bhtruongtho`.
+    - Chạy lệnh `npm start` để khởi động frontend.
+
+Sau khi hoàn tất các bước trên, ứng dụng của bạn sẽ khởi chạy và sẵn sàng sử dụng.

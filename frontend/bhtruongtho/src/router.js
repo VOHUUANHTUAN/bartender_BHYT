@@ -38,38 +38,29 @@ const renderUserRouter = () => {
         },
         {
             path: ROUTERS.USER.CHANGEPASSWORD,
-            component: <ChangePasswordForm />
+            component: <ChangePasswordForm />,
         },
         {
             path: ROUTERS.USER.STAFF,
-            component: <HomePageStaff />
+            component: <HomePageStaff />,
         },
     ];
     return (
-        <Routes>
-            {userRouters.map((item, key) => (
+        <MasterLayout>
+            <Routes>
+                {userRouters.map((item, key) => (
+                    <Route
+                        key={key}
+                        path={item.path}
+                        element={item.component}
+                    />
+                ))}
                 <Route
-                    key={key}
-                    path={item.path}
-                    element={
-                        <MasterLayout
-                            showHeader={item.showHeader}
-                            showFooter={item.showFooter}
-                        >
-                            {item.component}
-                        </MasterLayout>
-                    }
+                    path="product/detail/:id"
+                    element={<ProductDetailPage />}
                 />
-            ))}
-            <Route
-                path="product/detail/:id"
-                element={
-                    <MasterLayout>
-                        <ProductDetailPage />
-                    </MasterLayout>
-                }
-            />
-        </Routes>
+            </Routes>
+        </MasterLayout>
     );
 };
 
