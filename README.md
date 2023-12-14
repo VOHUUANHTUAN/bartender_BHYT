@@ -3,27 +3,29 @@
 
 ## Hướng Dẫn Cài Đặt và Sử Dụng
 
+### Cài Đặt
 
-
-### 1. **Clone Repository:**
+1. **Clone Repository:**
     ```bash
     git clone https://github.com/VOHUUANHTUAN/bartender_BHYT.git
     cd bartender_BHYT/frontend
     ```
 
-###2. **Cài Đặt Dependencies:**
+2. **Cài Đặt Dependencies:**
     ```bash
     npm install
     ```
 
-###3. **Cài Đặt Thư Viện**
+### Thư Viện
+
 Để cài đặt các thư viện cần thiết, bạn có thể chạy lệnh sau:
-    ```bash
-    npm install @mui/material @emotion/react @emotion/styled react-router-dom axios
-    ```
+
+```bash
+npm install @mui/material @emotion/react @emotion/styled react-router-dom axios
 
 
-###4. **Cài Đặt Dữ Liệu Mẫu:**
+
+### **Cài Đặt Dữ Liệu Mẫu:**
 
 1. Mở Visual Studio 2022 với bản cài đặt hỗ trợ ASP.NET API.
 2. Mở Package Manager Console (PMC) thông qua `View -> Other Windows -> Package Manager Console`.
