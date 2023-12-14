@@ -17,12 +17,13 @@ const Header = () => {
 
     useEffect(() => {
         // Kiểm tra xem có thông tin người dùng trong local storage không
-        login({
-            username: localStorage.getItem("username"),
-            token: localStorage.getItem("token"),
-        });
+        var temp = localStorage.getItem("username");
+        if (temp)
+            login({
+                username: localStorage.getItem("username"),
+                token: localStorage.getItem("token"),
+            });
 
-        // console.log(user);
     }, []);
 
     const [menus, setMenus] = useState([
@@ -68,16 +69,16 @@ const Header = () => {
                             </div>
                             <div className="col-6 header_top_right">
                                 <ul>
-                                    {user ? (
+                                {user ? (
                                         <>
                                             <li>Xin chào, {user.username}!</li>
                                             <li>
-                                                <button
+                                                <a
                                                     onClick={handleLogout}
                                                     className="logout-button"
                                                 >
                                                     Đăng xuất
-                                                </button>
+                                                </a>
                                             </li>
                                         </>
                                     ) : (
