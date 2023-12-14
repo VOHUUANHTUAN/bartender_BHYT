@@ -5,5 +5,7 @@ export const ROUTERS = {
         NEWS: "news",
         LOGIN: "login",
         REGISTER: "register",
+        STAFF: "staff",
+        CHANGEPASSWORD: "changepassword"
     },
 };
