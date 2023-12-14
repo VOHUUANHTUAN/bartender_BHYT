@@ -11,7 +11,9 @@ const END_POINT = {
 export const getGoiBHAPI = () => {
     return axiosClient.get(`${END_POINT.GOIBAOHIEM}`);
 };
-
+export const getTaiKhoanByUsername = (username) => {
+    return axiosClient.get(`${END_POINT.TaiKhoan}/${username}`);
+};
 export const logingettoken = (username, password) => {
     const data = {
         username: username,
@@ -20,12 +22,6 @@ export const logingettoken = (username, password) => {
     return axiosClient.post(`${END_POINT.LOGIN}`, data);
 };
 
-
-export const getTaiKhoanByUsername = (username) => {
-    return axiosClient.get(`${END_POINT.TaiKhoan}/${username}`);
-};
-
-
 export const getUserInfoByToken = (token) => {
     return axiosClient.get(`${END_POINT.info}`, {
         headers: {
@@ -33,10 +29,6 @@ export const getUserInfoByToken = (token) => {
         },
     });
 };
-
-
-
-
 
 export const getGoiBHByMaGBH = (MaGBH) => {
     return axiosClient.get(`${END_POINT.GOIBAOHIEM}/${MaGBH}`);
