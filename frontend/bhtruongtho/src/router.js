@@ -6,51 +6,61 @@ import NewsPage from "./views/user/newsPage";
 import ProductDetailPage from "./views/user/productPage/detail.js";
 import ProductPage from "./views/user/productPage/index.js";
 import Login from "./views/user/loginPage";
+import Register from "./views/user/registerPage/index.js";
+
 import HomePageStaff from "./views/user/homePageStaff";
 import ChangePassword from "./views/user/ChangePasswordPage";
 const renderUserRouter = () => {
     const userRouters = [
         {
             path: ROUTERS.USER.HOME,
-            component: <HomePage />
+            component: <HomePage />,
         },
         {
             path: ROUTERS.USER.NEWS,
-            component: <NewsPage />
+            component: <NewsPage />,
         },
         {
             path: ROUTERS.USER.PRODUCT,
-            component: <ProductPage />
+            component: <ProductPage />,
         },
         {
             path: ROUTERS.USER.LOGIN,
-            component: <Login />
+            component: <Login />,
+            showHeader: false, // Không hiển thị header ở trang đăng nhập
+            showFooter: false, // Không hiển thị footer ở trang đăng nhập
+        },
+        {
+            path: ROUTERS.USER.REGISTER,
+            component: <Register />,
+            showHeader: false, // Không hiển thị header ở trang đăng ký
+            showFooter: false, // Không hiển thị footer ở trang đăng ký
         },
         {
             path: ROUTERS.USER.CHANGEPASSWORD,
+
             component: <ChangePassword />
         },
         {
             path: ROUTERS.USER.STAFF,
-            component: <HomePageStaff />
+            component: <HomePageStaff />,
         },
-    ]
+    ];
     return (
         <MasterLayout>
             <Routes>
                 {userRouters.map((item, key) => (
                     <Route
+
                         key={key} path={item.path} element={item.component}
                     />
                 ))}
                 <Route
                     path="product/detail/:id" element={<ProductDetailPage />}
                 />
-
             </Routes>
         </MasterLayout>
-
-    )
+    );
 };
 
 const RouterCustom = () => {

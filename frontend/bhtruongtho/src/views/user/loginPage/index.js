@@ -1,24 +1,28 @@
 // Login.js
 
 import React, { memo, useEffect, useState } from "react";
-import "./index.scss";
 import { logingettoken, getUserInfoByToken } from "../../../api/connect";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useUser } from "../../../context/UserContext";
+import {
+    Container,
+    Paper,
+    TextField,
+    Button,
+    Grid,
+    Typography,
+} from "@mui/material";
 
 const Login = () => {
-    // Khai báo context để sử dụng lưu token và username vào biến toàn cục
-    const { user, login, logout } = useUser();
-
+    const { user, login } = useUser();
     const [formData, setFormData] = useState({
         username: "",
         password: "",
     });
-
+    const [loginError, setLoginError] = useState(null); // Thêm state để theo dõi lỗi đăng nhập
     const navigate = useNavigate();
 
     useEffect(() => {
-        // Nếu người dùng đã đăng nhập, chuyển hướng đến trang chính
         if (user) {
             navigate("/");
         }
@@ -31,7 +35,6 @@ const Login = () => {
         });
     };
 
-    // Xử lí khi nhấn nút LOGIN
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -39,9 +42,7 @@ const Login = () => {
                 formData.username,
                 formData.password
             );
-            // console.log(res);
             if (res) {
-                // Nếu API trả về token, lưu vào context
                 login({
                     username: formData.username,
                     token: res.token,
@@ -51,77 +52,96 @@ const Login = () => {
                 localStorage.setItem("username", formData.username);
                 localStorage.setItem("auth", true);
 
-                // const token = localStorage.getItem('token'); // Assuming you store the token in localStorage
-
                 const fetchUserInfo = async () => {
                     try {
                         const response = await getUserInfoByToken(res.token);
-
-                        // console.log(response);
+                        console.log(response);
                     } catch (error) {
                         console.log(error.message);
                     }
                 };
                 fetchUserInfo();
                 console.log("Login successful.");
+
                 navigate("/");
             } else {
-                // Nếu không có token hoặc bất kỳ điều gì khác, xử lý theo yêu cầu của bạn
-                console.log("Login failed. Please check your credentials.");
+                setLoginError(
+                    "Đăng nhập thất bại. Vui lòng kiểm tra thông tin đăng nhập của bạn."
+                );
             }
         } catch (error) {
-            // Xử lý lỗi khi gặp vấn đề kết nối hoặc lỗi server
+            setLoginError(
+                "Đã xảy ra lỗi trong quá trình đăng nhập. Vui lòng thử lại sau."
+            );
             console.error("Error during login:", error.message);
         }
     };
 
-    const handleCreateAccount = () => {
-        // Thực hiện chuyển hướng đến trang đăng ký hoặc hiển thị modal đăng ký
-        alert("Create New Account Clicked!");
-    };
-
-    const handleForgotPassword = () => {
-        // Thực hiện chuyển hướng đến trang quên mật khẩu hoặc hiển thị modal quên mật khẩu
-        alert("Forgot Password Clicked!");
-    };
-
     return (
-        <div className="login__container">
-            <div className="login-container">
+        <Container maxWidth="xs">
+            <Paper
+                elevation={3}
+                style={{ padding: "20px", margin: "200px 0px 50px 0px" }}
+            >
                 <h2>Login</h2>
-                <form onSubmit={handleSubmit} className="login-form">
-                    <div className="form-group">
-                        <label htmlFor="username">Username or Email:</label>
-                        <input
-                            type="text"
-                            id="username"
-                            name="username"
-                            value={formData.username}
-                            onChange={handleChange}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="password">Password:</label>
-                        <input
-                            type="password"
-                            id="password"
-                            name="password"
-                            value={formData.password}
-                            onChange={handleChange}
-                        />
-                    </div>
-                    <button type="submit">Login</button>
+                <form onSubmit={handleSubmit}>
+                    <TextField
+                        label="Username"
+                        variant="outlined"
+                        margin="normal"
+                        fullWidth
+                        required
+                        name="username"
+                        value={formData.username}
+                        onChange={handleChange}
+                    />
+                    <TextField
+                        label="Password"
+                        type="password"
+                        variant="outlined"
+                        margin="normal"
+                        fullWidth
+                        required
+                        name="password"
+                        value={formData.password}
+                        onChange={handleChange}
+                    />
+                    {loginError && (
+                        <Typography
+                            color="error"
+                            variant="body2"
+                            style={{ marginBottom: "10px" }}
+                        >
+                            {loginError}
+                        </Typography>
+                    )}
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        fullWidth
+                        style={{ marginTop: "20px" }}
+                    >
+                        Login
+                    </Button>
+                    <Grid
+                        container
+                        justifyContent="space-between"
+                        style={{ marginTop: "10px" }}
+                    >
+                        <Grid item>
+                            <Link to="/register" variant="body2">
+                                Đăng ký
+                            </Link>
+                        </Grid>
+                        <Grid item>
+                            <Link variant="body2">Quên mật khẩu</Link>
+                        </Grid>
+                    </Grid>
                 </form>
-
-                <div className="additional-options">
-                    <span onClick={handleCreateAccount}>
-                        Create New Account
-                    </span>
-                    <span onClick={handleForgotPassword}>Forgot Password</span>
-                </div>
-            </div>
-        </div>
+            </Paper>
+        </Container>
     );
 };
 
-export default memo(Login);
+export default Login;
