@@ -57,7 +57,7 @@ const Login = () => {
                     try {
                         const response = await getUserInfoByToken(res.token);
 
-                        console.log(response);
+                        // console.log(response);
                     } catch (error) {
                         console.log(error.message);
                     }
