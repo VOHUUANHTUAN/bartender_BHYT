@@ -63,6 +63,9 @@ public class AuthController : ControllerBase
             {
                 return Unauthorized("Unauthorized: Token is missing or invalid");
             }
+
+
+
             // Sử dụng hàm GetByUsername để lấy thông tin người dùng
             var user = GetUserByUsername(username);
 

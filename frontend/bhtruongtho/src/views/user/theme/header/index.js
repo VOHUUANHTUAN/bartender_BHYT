@@ -69,7 +69,7 @@ const Header = () => {
                             </div>
                             <div className="col-6 header_top_right">
                                 <ul>
-                                {user ? (
+                                    {user ? (
                                         <>
                                             <li>Xin chào, {user.username}!</li>
                                             <li>
@@ -79,6 +79,11 @@ const Header = () => {
                                                 >
                                                     Đăng xuất
                                                 </a>
+                                            </li>
+                                            <li>
+                                                <Link to="/changepassword">
+                                                    changepassword
+                                                </Link>
                                             </li>
                                         </>
                                     ) : (
