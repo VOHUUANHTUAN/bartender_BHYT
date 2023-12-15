@@ -1,34 +1,37 @@
-import { memo, useEffect, useState } from "react"
+import React, { useState } from "react";
 import { changePasswordAPI } from "../../../api/connect";
-import "./style.scss"
-// import { Link } from 'react-router-dom';
+import { useUser } from "../../../context/UserContext";
+import "./style.scss";
 
 const ChangePasswordForm = () => {
+    const { user } = useUser();
+    console.log(typeof user.username);
     const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [loading, setLoading] = useState(false);
+
+    const isButtonDisabled = !currentPassword || !newPassword || !confirmPassword || newPassword !== confirmPassword;
 
     const handleChangePassword = async () => {
-        if (newPassword !== confirmPassword) {
-            alert("New password and confirm password do not match.");
+        if (isButtonDisabled) {
             return;
         }
-        console.log("hello")
+
+        setLoading(true);
+
         try {
-            // Gọi API để đổi mật khẩu
-            await changePasswordAPI({
-                currentPassword: currentPassword,
-                newPassword: newPassword,
-                confirmPassword: confirmPassword,
+            await changePasswordAPI(user.username, {
+                currentPassword,
+                newPassword,
+                confirmPassword,
             });
 
-            // Đổi mật khẩu thành công, thực hiện các xử lý khác nếu cần
             alert("Password changed successfully!");
-
-            // Sau khi đổi mật khẩu thành công, có thể thực hiện điều gì đó, ví dụ: chuyển hướng trang, cập nhật state, vv.
         } catch (error) {
-            // Xử lý lỗi khi đổi mật khẩu
             alert(`Error changing password: ${error.message}`);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -60,8 +63,11 @@ const ChangePasswordForm = () => {
                     onChange={(e) => setConfirmPassword(e.target.value)}
                 />
             </div>
-            <button onClick={handleChangePassword}>Change Password</button>
+            <button onClick={handleChangePassword} disabled={isButtonDisabled || loading}>
+                {loading ? "Changing Password..." : "Change Password"}
+            </button>
         </div>
     );
 };
-export default memo(ChangePasswordForm);
+
+export default ChangePasswordForm;
