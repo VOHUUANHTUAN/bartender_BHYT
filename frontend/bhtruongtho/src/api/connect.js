@@ -48,10 +48,6 @@ export const getBenhByMaGBH = (MaGBH) => {
     return axiosClient.get(`${END_POINT.BENH}/${MaGBH}`);
 };
 
-export const changePasswordAPI = (username, changePasswordData) => {
-    return axiosClient.put(`${END_POINT.CHANGEPASSWORD}/${username}`, changePasswordData);
-  };
-
 export const changePasswordAPI = async (username, changePasswordData) => {
     console.log('URL:', `${END_POINT.TaiKhoan}/${username}/${END_POINT.CHANGEPASSWORD}`);
     console.log('Headers:', { 'Content-Type': 'application/json' });
