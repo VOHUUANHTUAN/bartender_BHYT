@@ -109,7 +109,20 @@ p {
             align-self: center;
             margin: 10px;
         }
-
+        .detail__body{
+            p {
+                margin: 10px;
+            }
+            .benh__list {
+                list-style-type: none;
+                padding: 0;
+              }
+            li{
+                margin: 10px;
+                padding-left: 10px;
+                text-indent: 20px; 
+            }
+        }
         .detail__btn {
             display: flex;
             justify-content: center;
