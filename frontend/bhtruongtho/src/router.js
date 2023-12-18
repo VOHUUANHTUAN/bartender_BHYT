@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom"
 import HomePage from "./views/user/homePage";
 import { ROUTERS } from "./utils/router";
 import MasterLayout from "./views/user/theme/masterLayout";
@@ -9,7 +9,7 @@ import Login from "./views/user/loginPage";
 import Register from "./views/user/registerPage/index.js";
 import RequestInvoicePage from "./views/user/requestInvoicePage";
 import HomePageStaff from "./views/user/homePageStaff";
-import ChangePasswordForm from "./views/user/ChangePasswordPage";
+import ChangePassword from "./views/user/ChangePasswordPage";
 const renderUserRouter = () => {
     const userRouters = [
         {
@@ -38,11 +38,12 @@ const renderUserRouter = () => {
         },
         {
             path: ROUTERS.USER.CHANGEPASSWORD,
-            component: <ChangePasswordForm />
+
+            component: <ChangePassword />
         },
         {
             path: ROUTERS.USER.STAFF,
-            component: <HomePageStaff />
+            component: <HomePageStaff />,
         },
         {
             path: ROUTERS.USER.REQUESTINVOICE,
@@ -53,14 +54,14 @@ const renderUserRouter = () => {
         <MasterLayout>
             <Routes>
                 {userRouters.map((item, key) => (
-                        <Route
-                            key = {key} path = {item.path} element = {item.component}                           
-                        />
-                    ))}
-                                                        <Route
+                    <Route
+
+                        key={key} path={item.path} element={item.component}
+                    />
+                ))}
+                <Route
                     path="product/detail/:id" element={<ProductDetailPage />}
                 />
-
             </Routes>
         </MasterLayout>
     );

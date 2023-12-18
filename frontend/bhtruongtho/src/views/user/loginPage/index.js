@@ -1,7 +1,7 @@
 // Login.js
 import React, { memo, useEffect, useState } from "react";
 import { logingettoken, getUserInfoByToken } from "../../../api/connect";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useUser } from "../../../context/UserContext";
 import {
     Container,
@@ -9,7 +9,6 @@ import {
     TextField,
     Button,
     Grid,
-    Link,
     Typography,
 } from "@mui/material";
 
@@ -62,6 +61,7 @@ const Login = () => {
                 };
                 fetchUserInfo();
                 console.log("Login successful.");
+
                 navigate("/");
             } else {
                 setLoginError(
@@ -74,10 +74,6 @@ const Login = () => {
             );
             console.error("Error during login:", error.message);
         }
-    };
-
-    const handleCreateAccount = () => {
-        navigate("/register");
     };
 
     return (
@@ -133,17 +129,12 @@ const Login = () => {
                         style={{ marginTop: "10px"}}
                     >
                         <Grid item>
-                            <Link
-                                variant="body2"
-                                onClick={handleCreateAccount}
-                            >
+                            <Link to="/register" variant="body2">
                                 Đăng ký
                             </Link>
                         </Grid>
                         <Grid item>
-                            <Link variant="body2">
-                                Quên mật khẩu
-                            </Link>
+                            <Link variant="body2">Quên mật khẩu</Link>
                         </Grid>
                     </Grid>
                 </form>

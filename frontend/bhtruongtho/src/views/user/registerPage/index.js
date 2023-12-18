@@ -11,10 +11,9 @@ import {
     FormControl,
     InputLabel,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const Register = () => {
-    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         username: "",
         password: "",
