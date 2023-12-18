@@ -3,16 +3,13 @@ import { memo } from "react"
 import "./style.scss"
 import logo from "./staff_img.jpeg"
 import { Link } from "react-router-dom";
-import { ROUTERS } from "../../../utils/router";
 const HomePageStaff = () => {
     return (
         <div className="task-and-image">
             <div className="task-bar">
                 <ul>
                     <li>
-                        <Link to={ROUTERS.USER.CHANGEPASSWORD}>
-                            Đơn đăng ký
-                        </Link>
+                        Duyệt đơn đăng ký
                     </li>
                     <li>Đơn thanh toán</li>
                     <li>Danh sách khách hàng</li>
@@ -20,6 +17,8 @@ const HomePageStaff = () => {
                     <li>Chính sách bảo hiểm</li>
                     <li>Lịch sử thanh toán</li>
                     <li>Báo cáo tài chính</li>
+                    <li>Ưu đãi dành cho nhận viên</li>
+                    <li>Các chương trình sắp tới của công ty</li>
                 </ul>
             </div>
             <div className="image-display">

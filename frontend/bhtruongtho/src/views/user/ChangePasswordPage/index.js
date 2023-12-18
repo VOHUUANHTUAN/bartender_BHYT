@@ -1,11 +1,16 @@
 import React, { useState } from "react";
 import { changePasswordAPI } from "../../../api/connect";
 import { useUser } from "../../../context/UserContext";
-import "./style.scss";
+import {
+    Container,
+    Paper,
+    TextField,
+    Button,
+    Typography,
+} from "@mui/material";
 
 const ChangePasswordForm = () => {
     const { user } = useUser();
-    console.log(typeof user.username);
     const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -13,7 +18,9 @@ const ChangePasswordForm = () => {
 
     const isButtonDisabled = !currentPassword || !newPassword || !confirmPassword || newPassword !== confirmPassword;
 
-    const handleChangePassword = async () => {
+    const handleChangePassword = async (e) => {
+        e.preventDefault(); // Prevent default form submission
+
         if (isButtonDisabled) {
             return;
         }
@@ -36,37 +43,57 @@ const ChangePasswordForm = () => {
     };
 
     return (
-        <div className="change-password-form">
-            <h2>Change Password</h2>
+        <Container component="main" maxWidth="xs">
+            <Paper elevation={3} style={{ padding: "20px", marginTop: "100px" }}>
+                <Typography component="h1" variant="h5">
+                    Đổi mật khẩu
+                </Typography>
+                <form onSubmit={(e) => {
+                    e.preventDefault();
+                    handleChangePassword(e);
+                }}>
+                    <TextField
+                        label="Mật khẩu hiện tại"
+                        variant="outlined"
+                        margin="normal"
+                        fullWidth
+                        required
+                        value={currentPassword}
+                        onChange={(e) => setCurrentPassword(e.target.value)}
+                    />
 
-            <div>
-                <label>Current Password:</label>
-                <input
-                    type="password"
-                    value={currentPassword}
-                    onChange={(e) => setCurrentPassword(e.target.value)}
-                />
-            </div>
-            <div>
-                <label>New Password:</label>
-                <input
-                    type="password"
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                />
-            </div>
-            <div>
-                <label>Confirm Password:</label>
-                <input
-                    type="password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                />
-            </div>
-            <button onClick={handleChangePassword} disabled={isButtonDisabled || loading}>
-                {loading ? "Changing Password..." : "Change Password"}
-            </button>
-        </div>
+                    <TextField
+                        label="Mật khẩu mới"
+                        variant="outlined"
+                        margin="normal"
+                        fullWidth
+                        required
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                    />
+
+                    <TextField
+                        label="Nhập lại mật khẩu mới"
+                        variant="outlined"
+                        margin="normal"
+                        fullWidth
+                        required
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                    />
+
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        fullWidth
+                        style={{ marginTop: "20px" }}
+                    >
+                        Đổi mật khẩu
+                    </Button>
+                </form>
+            </Paper>
+        </Container>
     );
 };
 
