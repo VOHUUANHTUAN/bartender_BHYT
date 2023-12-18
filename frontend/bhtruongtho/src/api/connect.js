@@ -3,6 +3,7 @@ import axiosClient from "./axiosClient";
 
 const END_POINT = {
     GOIBAOHIEM: "GoiBaoHiem",
+    BENH: "Benh",
     TaiKhoan: "User",
     LOGIN: "Auth/login",
     info: "Auth/userinfo",
@@ -40,6 +41,10 @@ export const getUserInfoByToken = (token) => {
 
 export const getGoiBHByMaGBH = (MaGBH) => {
     return axiosClient.get(`${END_POINT.GOIBAOHIEM}/${MaGBH}`);
+};
+
+export const getBenhByMaGBH = (MaGBH) => {
+    return axiosClient.get(`${END_POINT.BENH}/${MaGBH}`);
 };
 
 export const changePasswordAPI = (username, changePasswordData) => {

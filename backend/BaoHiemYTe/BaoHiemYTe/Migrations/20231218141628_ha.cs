@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BaoHiemYTe.Migrations
 {
     /// <inheritdoc />
-    public partial class final : Migration
+    public partial class ha : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -154,7 +154,7 @@ namespace BaoHiemYTe.Migrations
                     LuaChonThanhToan = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TongGia = table.Column<int>(type: "int", nullable: false),
                     MaKH = table.Column<int>(type: "int", nullable: false),
-                    MaNV = table.Column<int>(type: "int", nullable: false)
+                    MaNV = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -191,10 +191,10 @@ namespace BaoHiemYTe.Migrations
                     Benh = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ThoiGianTao = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TinhTrang = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    MaGoiBHApDung = table.Column<int>(type: "int", nullable: false),
+                    MaGoiBHApDung = table.Column<int>(type: "int", nullable: true),
                     SoTienHoanTra = table.Column<int>(type: "int", nullable: true),
                     MaKH = table.Column<int>(type: "int", nullable: false),
-                    MaNV = table.Column<int>(type: "int", nullable: false),
+                    MaNV = table.Column<int>(type: "int", nullable: true),
                     ThoiGianDuyet = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
@@ -205,7 +205,7 @@ namespace BaoHiemYTe.Migrations
                         column: x => x.MaGoiBHApDung,
                         principalTable: "GoiBaoHiem",
                         principalColumn: "MaGoiBH",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_YeuCauHoanTra_KhachHang_MaKH",
                         column: x => x.MaKH,

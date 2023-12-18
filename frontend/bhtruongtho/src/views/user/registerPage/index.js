@@ -1,11 +1,11 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import {
     Container,
     Paper,
     TextField,
     Button,
     Typography,
-    Link,
     Select,
     MenuItem,
     FormControl,
@@ -89,7 +89,7 @@ const Register = () => {
                         Đăng ký
                     </Button>
                     <Typography align="center" style={{ marginTop: "10px" }}>
-                        <Link href="/login" variant="body2">
+                        <Link to="/login" variant="body2">
                             Đã có tài khoản? Đăng nhập
                         </Link>
                     </Typography>

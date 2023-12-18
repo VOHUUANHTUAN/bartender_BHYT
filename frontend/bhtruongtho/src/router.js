@@ -7,7 +7,7 @@ import ProductDetailPage from "./views/user/productPage/detail.js";
 import ProductPage from "./views/user/productPage/index.js";
 import Login from "./views/user/loginPage";
 import Register from "./views/user/registerPage/index.js";
-
+import RequestInvoicePage from "./views/user/requestInvoicePage";
 import HomePageStaff from "./views/user/homePageStaff";
 import ChangePasswordForm from "./views/user/ChangePasswordPage";
 const renderUserRouter = () => {
@@ -44,32 +44,25 @@ const renderUserRouter = () => {
             path: ROUTERS.USER.STAFF,
             component: <HomePageStaff />
         },
+        {
+            path: ROUTERS.USER.REQUESTINVOICE,
+            component: <RequestInvoicePage />
+        },
     ];
     return (
-        <Routes>
-            {userRouters.map((item, key) => (
-                <Route
-                    key={key}
-                    path={item.path}
-                    element={
-                        <MasterLayout
-                            showHeader={item.showHeader}
-                            showFooter={item.showFooter}
-                        >
-                            {item.component}
-                        </MasterLayout>
-                    }
+        <MasterLayout>
+            <Routes>
+                {userRouters.map((item, key) => (
+                        <Route
+                            key = {key} path = {item.path} element = {item.component}                           
+                        />
+                    ))}
+                                                        <Route
+                    path="product/detail/:id" element={<ProductDetailPage />}
                 />
-            ))}
-            <Route
-                path="product/detail/:id"
-                element={
-                    <MasterLayout>
-                        <ProductDetailPage />
-                    </MasterLayout>
-                }
-            />
-        </Routes>
+
+            </Routes>
+        </MasterLayout>
     );
 };
 

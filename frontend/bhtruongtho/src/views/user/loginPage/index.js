@@ -1,5 +1,4 @@
 // Login.js
-
 import React, { memo, useEffect, useState } from "react";
 import { logingettoken, getUserInfoByToken } from "../../../api/connect";
 import { useNavigate } from "react-router-dom";
@@ -131,11 +130,10 @@ const Login = () => {
                     <Grid
                         container
                         justifyContent="space-between"
-                        style={{ marginTop: "10px" }}
+                        style={{ marginTop: "10px"}}
                     >
                         <Grid item>
                             <Link
-                                href="#"
                                 variant="body2"
                                 onClick={handleCreateAccount}
                             >
@@ -143,7 +141,7 @@ const Login = () => {
                             </Link>
                         </Grid>
                         <Grid item>
-                            <Link href="#" variant="body2">
+                            <Link variant="body2">
                                 Quên mật khẩu
                             </Link>
                         </Grid>
