@@ -97,7 +97,6 @@ namespace BaoHiemYTe.Migrations
                         .HasColumnType("int");
 
                     b.Property<int?>("MaNV")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("ThoiGianBD")
@@ -341,7 +340,7 @@ namespace BaoHiemYTe.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("MaGoiBHApDung")
+                    b.Property<int?>("MaGoiBHApDung")
                         .HasColumnType("int");
 
                     b.Property<string>("MaHDKhamBenh")
@@ -352,7 +351,6 @@ namespace BaoHiemYTe.Migrations
                         .HasColumnType("int");
 
                     b.Property<int?>("MaNV")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int>("SoTienDaKham")
@@ -422,8 +420,7 @@ namespace BaoHiemYTe.Migrations
                     b.HasOne("BaoHiemYTe.Domain.NhanVien", "NhanVien")
                         .WithMany()
                         .HasForeignKey("MaNV")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("GoiBaoHiem");
 
@@ -500,8 +497,7 @@ namespace BaoHiemYTe.Migrations
                     b.HasOne("BaoHiemYTe.Domain.GoiBaoHiem", "GoiBaoHiem")
                         .WithMany()
                         .HasForeignKey("MaGoiBHApDung")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("BaoHiemYTe.Domain.KhachHang", "KhachHang")
                         .WithMany()
@@ -512,8 +508,7 @@ namespace BaoHiemYTe.Migrations
                     b.HasOne("BaoHiemYTe.Domain.NhanVien", "NhanVien")
                         .WithMany()
                         .HasForeignKey("MaNV")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("GoiBaoHiem");
 

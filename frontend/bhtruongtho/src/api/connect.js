@@ -3,6 +3,7 @@ import axiosClient from "./axiosClient";
 
 const END_POINT = {
     GOIBAOHIEM: "GoiBaoHiem",
+    BENH: "Benh",
     TaiKhoan: "User",
     LOGIN: "Auth/login",
     info: "Auth/userinfo",
@@ -42,6 +43,15 @@ export const getGoiBHByMaGBH = (MaGBH) => {
     return axiosClient.get(`${END_POINT.GOIBAOHIEM}/${MaGBH}`);
 };
 
+
+export const getBenhByMaGBH = (MaGBH) => {
+    return axiosClient.get(`${END_POINT.BENH}/${MaGBH}`);
+};
+
+export const changePasswordAPI = (username, changePasswordData) => {
+    return axiosClient.put(`${END_POINT.CHANGEPASSWORD}/${username}`, changePasswordData);
+  };
+
 export const changePasswordAPI = async (username, changePasswordData) => {
     console.log('URL:', `${END_POINT.TaiKhoan}/${username}/${END_POINT.CHANGEPASSWORD}`);
     console.log('Headers:', { 'Content-Type': 'application/json' });
@@ -59,3 +69,4 @@ export const changePasswordAPI = async (username, changePasswordData) => {
         throw new Error(`Error changing password: ${error.message}`);
     }
 };
+

@@ -7,7 +7,7 @@ import ProductDetailPage from "./views/user/productPage/detail.js";
 import ProductPage from "./views/user/productPage/index.js";
 import Login from "./views/user/loginPage";
 import Register from "./views/user/registerPage/index.js";
-
+import RequestInvoicePage from "./views/user/requestInvoicePage";
 import HomePageStaff from "./views/user/homePageStaff";
 import ChangePassword from "./views/user/ChangePasswordPage";
 const renderUserRouter = () => {
@@ -44,6 +44,10 @@ const renderUserRouter = () => {
         {
             path: ROUTERS.USER.STAFF,
             component: <HomePageStaff />,
+        },
+        {
+            path: ROUTERS.USER.REQUESTINVOICE,
+            component: <RequestInvoicePage />
         },
     ];
     return (

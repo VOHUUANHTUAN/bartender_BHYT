@@ -5,13 +5,13 @@ import { Link } from 'react-router-dom';
 
 const ProductPage = () => {
     const [goiBHs, setgoiBHs] = useState([]);
+    const fetchData = async () => {
+        setgoiBHs(await getGoiBHAPI());
+    }
     useEffect(() => {
         fetchData();
     }, []);
-    const fetchData = async () => {
-        setgoiBHs(await getGoiBHAPI());
 
-    }
     return <>
         <div className="container__body">
             <div className="productPage">
