@@ -3,12 +3,12 @@
 --use BaoHiemYTe
 --go
 -- Thay đổi cột để cho phép giá trị NULL
-ALTER TABLE DonDangKy
-ALTER COLUMN MaNV INT NULL;
-ALTER TABLE YeuCauHoanTra
-ALTER COLUMN MaNV INT NULL;
-ALTER TABLE YeuCauHoanTra
-ALTER COLUMN MaGoiBHApDung INT NULL;
+--ALTER TABLE DonDangKy
+--ALTER COLUMN MaNV INT NULL;
+--ALTER TABLE YeuCauHoanTra
+--ALTER COLUMN MaNV INT NULL;
+--ALTER TABLE YeuCauHoanTra
+--ALTER COLUMN MaGoiBHApDung INT NULL;
 
 insert into Users values('khachhang','123456',N'Khách hàng',0)
 insert into Users values('anhtuan','123456',N'Khách hàng',0)
@@ -224,9 +224,9 @@ INSERT INTO BenhVien(TenBV) values
 --hệ thống tạo hóa đơn hoàn trả
 INSERT INTO YeuCauHoanTra (MaHDKhamBenh, TenBenhVien, SoTienDaKham, Benh, ThoiGianTao, TinhTrang, MaGoiBHApDung, SoTienHoanTra, MaKH, MaNV, ThoiGianDuyet)
 VALUES 
-  ('HDKB001', N'Bệnh viện Nhân dân 115', 1000000, N'Bệnh thần kinh', '2023-07-04 10:30:00', 'Đã hoàn tiền', 1, 250000, 1, 2,  '2023-07-04 10:30:00'),
-  ('HDKB002', N'Bệnh viện Nhân dân 115', 1000000, N'Bệnh hô hấp', '2023-10-04 08:30:00', 'Đã hoàn tiền', 2, 300000, 2, 2, '2023-10-04 08:30:00'),
-  ('HDKB003',N'Bệnh viện Nhân dân 115', 1000000, N'Bệnh thần kinh', '2023-11-04 09:30:00', 'Đã hoàn tiền', 2, 300000, 2, 1, '2023-11-08 08:30:00'),
+  ('HDKB001', N'Bệnh viện Nhân dân 115', 1000000, N'Bệnh thần kinh', '2023-07-04 10:30:00', N'Đã hoàn tiền', 1, 250000, 1, 2,  '2023-07-04 10:30:00'),
+  ('HDKB002', N'Bệnh viện Nhân dân 115', 1000000, N'Bệnh hô hấp', '2023-10-04 08:30:00', N'Đã hoàn tiền', 2, 300000, 2, 2, '2023-10-04 08:30:00'),
+  ('HDKB003',N'Bệnh viện Nhân dân 115', 1000000, N'Bệnh thần kinh', '2023-11-04 09:30:00', N'Đã hoàn tiền', 2, 300000, 2, 1, '2023-11-08 08:30:00'),
   ('HDKB004', N'Bệnh viện đa khoa Thủ Đức', 1200000, N'Bệnh tim mạch', '2023-11-05 08:30:00', N'Đã hoàn tiền', 1, 300000, 1, 1, '2023-11-08 09:30:00'),
   ('HDKB005',N'Bệnh viện đa khoa Thủ Đức', 2000000, N'Bệnh nội tiết', '2023-11-12 08:30:00', N'Không đủ điều kiện', NULL, NULL, 1, NULL, NULL),
   ('HDKB006', N'Bệnh viện đa khoa Thủ Đức', 1600000, N'Bệnh hô hấp', '2023-12-01 09:30:00', N'Chờ duyệt', 1, 400000, 1, NULL, NULL),

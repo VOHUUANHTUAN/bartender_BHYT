@@ -3,10 +3,14 @@ import axiosClient from "./axiosClient";
 
 const END_POINT = {
     GOIBAOHIEM: "GoiBaoHiem",
+    BENH: "Benh",
     TaiKhoan: "User",
     LOGIN: "Auth/login",
     info: "Auth/userinfo",
     CHANGEPASSWORD: "ChangePassword",
+    YEUCAUHOANTRA: "YeuCauHoanTra",
+    TAOYEUCAU: "TaoYeuCauHoanTra",
+    GOIBHBYUS: "GetGoiBHByUs",
 };
 export const getGoiBHAPI = () => {
     return axiosClient.get(`${END_POINT.GOIBAOHIEM}`);
@@ -42,6 +46,12 @@ export const getGoiBHByMaGBH = (MaGBH) => {
     return axiosClient.get(`${END_POINT.GOIBAOHIEM}/${MaGBH}`);
 };
 
+
+export const getBenhByMaGBH = (MaGBH) => {
+    return axiosClient.get(`${END_POINT.BENH}/${MaGBH}`);
+};
+
+
 export const changePasswordAPI = async (username, changePasswordData) => {
     console.log('URL:', `${END_POINT.TaiKhoan}/${username}/${END_POINT.CHANGEPASSWORD}`);
     console.log('Headers:', { 'Content-Type': 'application/json' });
@@ -58,4 +68,30 @@ export const changePasswordAPI = async (username, changePasswordData) => {
         console.error('Error:', error);
         throw new Error(`Error changing password: ${error.message}`);
     }
+};
+
+export const createRefund = async (yeuCauData) => {
+    //console.log('URL:', `${END_POINT.YEUCAUHOANTRA}/${END_POINT.TAOYEUCAU}`);
+    //console.log('Headers:', { 'Content-Type': 'application/json' });
+    //console.log('Data:', yeuCauData);
+    try {
+        const response = await axiosClient.put(
+            `${END_POINT.YEUCAUHOANTRA}/${END_POINT.TAOYEUCAU}`,
+            yeuCauData,
+            { headers: { 'Content-Type': 'application/json' } }
+        );
+
+        return response.data; // Return data from the response if needed
+    } catch (error) {
+        console.error('Error:', error);
+        throw new Error(`Error changing password: ${error.message}`);
+    }
+};
+
+export const getAllBenh = () => {
+    return axiosClient.get(`${END_POINT.BENH}`);
+};
+
+export const getGoiBHByUsername = (username) => {
+    return axiosClient.get(`${END_POINT.GOIBAOHIEM}/${END_POINT.GOIBHBYUS}/${username}`);
 };

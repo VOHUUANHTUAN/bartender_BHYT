@@ -10,7 +10,7 @@ namespace BaoHiemYTe.Data
 
         }
         public DbSet<User> Users { get; set; }
-        public DbSet<KhachHang>  KhachHang{ get; set; }
+        public DbSet<KhachHang> KhachHang { get; set; }
         public DbSet<NhanVien> NhanVien { get; set; }
         public DbSet<GoiBaoHiem> GoiBaoHiem { get; set; }
         public DbSet<Benh> Benh { get; set; }
@@ -51,10 +51,13 @@ namespace BaoHiemYTe.Data
             modelBuilder.Entity<BenhVien>()
                 .HasIndex(bv => bv.TenBV)
                 .IsUnique();
+
+            //DonDangKy
             modelBuilder.Entity<DonDangKy>()
                 .HasOne(d => d.NhanVien)
                 .WithMany()
                 .HasForeignKey(d => d.MaNV)
+                .IsRequired(false)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<DonDangKy>()
@@ -62,10 +65,25 @@ namespace BaoHiemYTe.Data
                 .WithMany()
                 .HasForeignKey(d => d.MaKH)
                 .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<DonDangKy>()
+               .Property(y => y.ThoiGianBD)
+               .IsRequired(false);
+            modelBuilder.Entity<DonDangKy>()
+               .Property(y => y.ThoiGianHetHan)
+               .IsRequired(false);
+
+            //YeuCauHoanTra
             modelBuilder.Entity<YeuCauHoanTra>()
                 .HasOne(y => y.NhanVien)
                 .WithMany()
                 .HasForeignKey(y => y.MaNV)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<YeuCauHoanTra>()
+                .HasOne(y => y.GoiBaoHiem)
+                .WithMany()
+                .HasForeignKey(y => y.MaGoiBHApDung)
+                .IsRequired(false)  // Đây là nơi bạn thêm IsRequired(false) để cho phép giá trị null
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<YeuCauHoanTra>()
@@ -73,6 +91,12 @@ namespace BaoHiemYTe.Data
                 .WithMany()
                 .HasForeignKey(y => y.MaKH)
                 .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<YeuCauHoanTra>()
+                .Property(y => y.ThoiGianDuyet)
+                .IsRequired(false);
+            modelBuilder.Entity<YeuCauHoanTra>()
+                .Property(y => y.SoTienHoanTra)
+                .IsRequired(false);
 
         }
 
