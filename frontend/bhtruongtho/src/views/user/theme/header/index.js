@@ -6,7 +6,7 @@ import { useUser } from "../../../../context/UserContext";
 
 const Header = () => {
     const navigate = useNavigate();
-
+    
     // Gọi hàm để lấy thông tin người dùng
     const { user, login, logout } = useUser();
 
@@ -17,13 +17,14 @@ const Header = () => {
 
     useEffect(() => {
         // Kiểm tra xem có thông tin người dùng trong local storage không
+        
+        
         var temp = localStorage.getItem("username");
         if (temp)
             login({
                 username: localStorage.getItem("username"),
                 token: localStorage.getItem("token"),
             });
-
     }, []);
 
     const [menus, setMenus] = useState([
@@ -167,4 +168,4 @@ const Header = () => {
     );
 };
 
-export default memo(Header);
+export default Header;
