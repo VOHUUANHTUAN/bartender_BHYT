@@ -11,6 +11,7 @@ const END_POINT = {
     YEUCAUHOANTRA: "YeuCauHoanTra",
     TAOYEUCAU: "TaoYeuCauHoanTra",
     GOIBHBYUS: "GetGoiBHByUs",
+    YCHTBYUS: "GetYCHTByUs",
 };
 export const getGoiBHAPI = () => {
     return axiosClient.get(`${END_POINT.GOIBAOHIEM}`);
@@ -65,17 +66,15 @@ export const changePasswordAPI = async (username, changePasswordData) => {
 
         return response.data; // Return data from the response if needed
     } catch (error) {
-        console.error('Error:', error);
+        //console.error('Error:', error);
         throw new Error(`Error changing password: ${error.message}`);
     }
 };
 
-export const createRefund = async (yeuCauData) => {
-    //console.log('URL:', `${END_POINT.YEUCAUHOANTRA}/${END_POINT.TAOYEUCAU}`);
-    //console.log('Headers:', { 'Content-Type': 'application/json' });
-    //console.log('Data:', yeuCauData);
+export const createRequest = async (yeuCauData) => {
     try {
-        const response = await axiosClient.put(
+        // Make a POST request to the specified endpoint with the provided data
+        const response = await axiosClient.post(
             `${END_POINT.YEUCAUHOANTRA}/${END_POINT.TAOYEUCAU}`,
             yeuCauData,
             { headers: { 'Content-Type': 'application/json' } }
@@ -83,8 +82,9 @@ export const createRefund = async (yeuCauData) => {
 
         return response.data; // Return data from the response if needed
     } catch (error) {
-        console.error('Error:', error);
-        throw new Error(`Error changing password: ${error.message}`);
+        // Handle errors and log them
+        //console.error('Error:', error);
+        throw new Error(`Error creating request: ${error.message}`);
     }
 };
 
@@ -94,4 +94,8 @@ export const getAllBenh = () => {
 
 export const getGoiBHByUsername = (username) => {
     return axiosClient.get(`${END_POINT.GOIBAOHIEM}/${END_POINT.GOIBHBYUS}/${username}`);
+};
+
+export const getYCHTByUsername = (username) => {
+    return axiosClient.get(`${END_POINT.YEUCAUHOANTRA}/${END_POINT.YCHTBYUS}/${username}`);
 };
