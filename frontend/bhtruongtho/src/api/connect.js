@@ -1,6 +1,5 @@
 import axiosClient from "./axiosClient";
-// import axiosClient from "./axiosClient";
-import { errorAxiosClient } from "./axiosClient";
+
 const END_POINT = {
     GOIBAOHIEM: "GoiBaoHiem",
     BENH: "Benh",
@@ -73,13 +72,11 @@ export const changePasswordAPI = async (username, changePasswordData) => {
 };
 
 export const createRequest = async (yeuCauData) => {
-    // Make a POST request to the specified endpoint with the provided data
         const response = await axiosClient.post(
             `${END_POINT.YEUCAUHOANTRA}/${END_POINT.TAOYEUCAU}`,
             yeuCauData
         );
-        return response; // Return data from the response if needed
-
+        return response;
 };
 
 export const getAllBenh = () => {

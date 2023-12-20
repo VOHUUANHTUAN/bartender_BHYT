@@ -14,15 +14,10 @@ import {
   InputAdornment,
   Tabs,
   Tab,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
   Snackbar,
 } from "@mui/material";
-
+import Box from '@mui/material/Box';
+import { DataGrid } from '@mui/x-data-grid';
 const RequestInvoice = () => {
   //user context
   const { user } = useUser();
@@ -99,9 +94,9 @@ const RequestInvoice = () => {
     if (!selectedInsurancePackage) {
       return "Gói bảo hiểm không được để trống";
     }
-    if(invoiceCodeError || amountError){
+    if (invoiceCodeError || amountError) {
       return "Thông tin chưa hợp lệ";
-    }   
+    }
     return null; // Validation passed
   };
 
@@ -168,8 +163,7 @@ const RequestInvoice = () => {
     const amountFloat = parseFloat(formData.amount) || 0;
 
     //Nếu nhập số bé hơn không thì gán số tiền hoàn trả = 0
-    if(amountFloat < 0)
-    {
+    if (amountFloat < 0) {
       setRefundAmount(0)
       return
     }
@@ -213,15 +207,79 @@ const RequestInvoice = () => {
     } catch (error) {
       // Xử lý các lỗi khác (ví dụ: mất kết nối)
       //thông báo lỗi
-        setSnackbarMessage(error.response.data);
-        setSnackbarOpen(true);
+      setSnackbarMessage(error.response.data);
+      setSnackbarOpen(true);
     } finally {
       setLoading(false);
     }
   };
 
-  return (
+  //Số thứ tự cho đơn yêu cầu
+  let idCounter = 1; // Initialize a counter
+  // Function to generate unique ids
+  const generateUniqueId = () => {
+    return idCounter++;
+  };
+  //hàm format định dạng thời gian Output: 04/10/2023 08:30
+  function formatDateTime(dateTimeString) {
+    const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+    const date = new Date(dateTimeString);
+    const formattedDate = date.toLocaleDateString('en-GB', options);
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const formattedTime = `${hours}:${minutes}`;
+    return `${formattedDate} ${formattedTime}`;
+  }
+  //đổ dữ liệu vào rows trong datagrid
+  const rows = requestList.map((row) => ({
+    id: generateUniqueId(),
+    maHDKhamBenh: row.maHDKhamBenh,
+    tenBenhVien: row.tenBenhVien,
+    soTienDaKham: row.soTienDaKham,
+    benh: row.benh,
+    thoiGianTao: formatDateTime(row.thoiGianTao),
+    tinhTrang: row.tinhTrang,
+    tenGoiBHApDung: getInsurancePackageName(row.maGoiBHApDung),
+    soTienHoanTra: row.soTienHoanTra
+  }));
 
+  //tạo columnn cho datagrid
+  const columns = [
+    { field: 'id', headerName: 'STT', width: 50 },
+    { field: 'maHDKhamBenh', headerName: 'Mã HĐ Khám Bệnh', width: 150 },
+    { field: 'tenBenhVien', headerName: 'Tên Bệnh Viện', width: 250 },
+    { field: 'benh', headerName: 'Bệnh', width: 150 },
+    { field: 'tenGoiBHApDung', headerName: 'Gói BH Áp Dụng', width: 200 },
+    { field: 'soTienDaKham', headerName: 'Số Tiền Đã Khám', type: 'number', width: 150 },
+    { field: 'soTienHoanTra', headerName: 'Số Tiền Hoàn Trả', type: 'number', width: 150 },
+    {
+      //một chút màu sắc cho cột tình trạng
+      field: 'tinhTrang', headerName: 'Tình Trạng', width: 100,
+      renderCell: (params) => {
+        const tinhTrangValue = params.value;
+        let cellColor;
+        // Set colors based on tinhTrangValue
+        switch (tinhTrangValue) {
+          case 'Đã hoàn tiền':
+            cellColor = 'green';
+            break;
+          case 'Chờ duyệt':
+            cellColor = 'orange';
+            break;
+          case 'Không đủ điều kiện':
+            cellColor = 'red';
+            break;
+          // Add more cases as needed
+          default:
+            cellColor = 'black';
+        }
+        return <div style={{ color: cellColor }}>{tinhTrangValue}</div>;
+      },
+    },
+    { field: 'thoiGianTao', headerName: 'Thời Gian Tạo', width: 200 },
+  ];
+
+  return (
     <Container component="main" maxWidth="md">
       <Paper
         elevation={3}
@@ -282,8 +340,7 @@ const RequestInvoice = () => {
                 error={amountError}
                 helperText={
                   amountError &&
-                  "Số tiền không hợp lệ"
-                }
+                  "Số tiền không hợp lệ"}
               />
               <FormControl style={{ width: '40%', marginRight: '10px' }}>
                 <InputLabel>Tên bệnh</InputLabel>
@@ -298,8 +355,6 @@ const RequestInvoice = () => {
                   ))}
                 </Select>
               </FormControl>
-
-
               <FormControl style={{ width: '40%' }}>
                 <InputLabel>Gói bảo hiểm</InputLabel>
                 <Select
@@ -316,59 +371,43 @@ const RequestInvoice = () => {
               <TextField
                 label="Số tiền hoàn trả"
                 value={refundAmount}
-                //onChange={(e) => setRefundAmount(e.target.value)}
                 fullWidth
                 margin="normal"
                 InputProps={{ readOnly: true }}
               />
-              <Button type="submit" variant="contained" color="primary" >
-                Submit
+              <Button type="submit" variant="outlined" color="primary">
+                Tạo yêu cầu hoàn trả
               </Button>
             </form></div>}
-          {value === 1 && <div style={{ padding: "20px", marginTop: "20px" }}>
-            <Typography component="h1" variant="h5">
-              Danh sách đơn yêu cầu
-            </Typography>
-            <TableContainer>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Mã hóa đơn</TableCell>
-                    <TableCell>Tên bệnh viện</TableCell>
-                    <TableCell>Số tiền</TableCell>
-                    <TableCell>Loại bệnh</TableCell>
-                    <TableCell>Gói bảo hiểm</TableCell>
-                    <TableCell>Số tiền hoàn trả</TableCell>
-                    <TableCell>Tình trạng</TableCell>
-                    <TableCell>Thời gian tạo</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {requestList && requestList.map((request, index) => (
-                    <TableRow key={index}>
-                      <TableCell>{request.maHDKhamBenh}</TableCell>
-                      <TableCell>{request.tenBenhVien}</TableCell>
-                      <TableCell>{request.soTienDaKham}</TableCell>
-                      <TableCell>{request.benh}</TableCell>
-                      <TableCell>{getInsurancePackageName(request.maGoiBHApDung)}</TableCell>
-                      <TableCell>{request.soTienHoanTra}</TableCell>
-                      <TableCell>{request.tinhTrang}</TableCell>
-                      <TableCell>{request.thoiGianTao}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer></div>}
+          {value === 1 &&
+            <div style={{ padding: "20px", marginTop: "20px" }}>
+              <Box sx={{ height: 400, width: '100%' }}>
+                <DataGrid
+                  rows={rows}
+                  columns={columns}
+                  initialState={{
+                    pagination: {
+                      paginationModel: {
+                        pageSize: 5,
+                      },
+                    },
+                  }}
+                  pageSizeOptions={[5]}
+                  disableRowSelectionOnClick
+                  getRowId={(row) => row.id}
+                />
+              </Box>
+            </div>}
         </div>
 
       </Paper>
       <Snackbar
-                open={snackbarOpen}
-                autoHideDuration={2000}
-                onClose={handleSnackbarClose}
-                message={snackbarMessage}
-                anchorOrigin={{ vertical: "top", horizontal: "right" }}
-            />
+        open={snackbarOpen}
+        autoHideDuration={2000}
+        onClose={handleSnackbarClose}
+        message={snackbarMessage}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      />
     </Container>
   );
 };
