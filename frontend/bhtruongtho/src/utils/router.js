@@ -6,6 +6,8 @@ export const ROUTERS = {
         LOGIN: "login",
         REGISTER: "register",
         STAFF: "staff",
-        CHANGEPASSWORD: "changepassword"
+        CHANGEPASSWORD: "changepassword",
+        PERSONALINFO: "PersonalInfo",
+        INSURANCEREGISTRATION: "InsuranceRegistration",
     },
 };

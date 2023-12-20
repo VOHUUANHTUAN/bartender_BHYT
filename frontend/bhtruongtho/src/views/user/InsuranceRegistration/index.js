@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import {
     Container,
     Paper,
@@ -12,17 +13,17 @@ import {
 } from "@mui/material";
 import { getGoiBHByMaGBH } from "../../../api/connect";
 
-const InsuranceRegistration_ = ({ match }) => {
+const InsuranceRegistration_ = () => {
     const [selectedPackage, setSelectedPackage] = useState(null);
     const [duration, setDuration] = useState("");
     const [paymentFrequency, setPaymentFrequency] = useState("");
     const [insuranceAmount, setInsuranceAmount] = useState("");
     const [diseaseList, setDiseaseList] = useState("");
-
+    const { id } = 1;
     useEffect(() => {
         const fetchDataById = async () => {
             try {
-                const response = await getGoiBHByMaGBH(match.params.id);
+                const response = await getGoiBHByMaGBH(id);
                 setSelectedPackage(response.data);
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -30,7 +31,7 @@ const InsuranceRegistration_ = ({ match }) => {
         };
 
         fetchDataById();
-    }, [match.params.id]);
+    }, [id]); // Chắc chắn rằng bạn đã thêm 'id' vào dependency array
 
     useEffect(() => {
         if (selectedPackage && duration && paymentFrequency) {

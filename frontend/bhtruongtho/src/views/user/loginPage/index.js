@@ -46,10 +46,12 @@ const Login = () => {
                 login({
                     username: formData.username,
                     token: res.token,
+                    firstLogin: res.firstLogin,
                     auth: true,
                 });
                 localStorage.setItem("token", res.token);
                 localStorage.setItem("username", formData.username);
+                localStorage.setItem("firstLogin", res.firstLogin);
                 localStorage.setItem("auth", true);
 
                 const fetchUserInfo = async () => {
@@ -63,6 +65,10 @@ const Login = () => {
                 fetchUserInfo();
                 console.log("Login successful.");
 
+                if (localStorage.getItem("firstLogin") == "true") {
+                    navigate("/PersonalInfo");
+                    return;
+                }
                 navigate("/");
             } else {
                 setLoginError(

@@ -23,7 +23,6 @@ const Header = () => {
                 username: localStorage.getItem("username"),
                 token: localStorage.getItem("token"),
             });
-
     }, []);
 
     const [menus, setMenus] = useState([
@@ -69,7 +68,7 @@ const Header = () => {
                             </div>
                             <div className="col-6 header_top_right">
                                 <ul>
-                                {user ? (
+                                    {user ? (
                                         <>
                                             <li>Xin chào, {user.username}!</li>
                                             <li>

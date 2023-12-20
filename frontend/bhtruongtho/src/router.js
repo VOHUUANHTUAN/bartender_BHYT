@@ -7,9 +7,10 @@ import ProductDetailPage from "./views/user/productPage/detail.js";
 import ProductPage from "./views/user/productPage/index.js";
 import Login from "./views/user/loginPage";
 import Register from "./views/user/registerPage/index.js";
-
 import HomePageStaff from "./views/user/homePageStaff";
 import ChangePasswordForm from "./views/user/ChangePasswordPage";
+import InsuranceRegistration from "./views/user/InsuranceRegistration";
+import ChangeInformation from "./views/user/changeInfoPage/index.js";
 const renderUserRouter = () => {
     const userRouters = [
         {
@@ -27,14 +28,10 @@ const renderUserRouter = () => {
         {
             path: ROUTERS.USER.LOGIN,
             component: <Login />,
-            showHeader: false, // Không hiển thị header ở trang đăng nhập
-            showFooter: false, // Không hiển thị footer ở trang đăng nhập
         },
         {
             path: ROUTERS.USER.REGISTER,
             component: <Register />,
-            showHeader: false, // Không hiển thị header ở trang đăng ký
-            showFooter: false, // Không hiển thị footer ở trang đăng ký
         },
         {
             path: ROUTERS.USER.CHANGEPASSWORD,
@@ -43,6 +40,14 @@ const renderUserRouter = () => {
         {
             path: ROUTERS.USER.STAFF,
             component: <HomePageStaff />,
+        },
+        {
+            path: ROUTERS.USER.PERSONALINFO,
+            component: <ChangeInformation />,
+        },
+        {
+            path: ROUTERS.USER.INSURANCEREGISTRATION,
+            component: <InsuranceRegistration />,
         },
     ];
     return (
