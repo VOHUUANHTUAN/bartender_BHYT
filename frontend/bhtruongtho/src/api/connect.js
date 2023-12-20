@@ -1,6 +1,6 @@
 import axiosClient from "./axiosClient";
 // import axiosClient from "./axiosClient";
-
+import { errorAxiosClient } from "./axiosClient";
 const END_POINT = {
     GOIBAOHIEM: "GoiBaoHiem",
     BENH: "Benh",
@@ -12,6 +12,7 @@ const END_POINT = {
     TAOYEUCAU: "TaoYeuCauHoanTra",
     GOIBHBYUS: "GetGoiBHByUs",
     YCHTBYUS: "GetYCHTByUs",
+    BENHVIEN: "BenhVien",
 };
 export const getGoiBHAPI = () => {
     return axiosClient.get(`${END_POINT.GOIBAOHIEM}`);
@@ -72,20 +73,13 @@ export const changePasswordAPI = async (username, changePasswordData) => {
 };
 
 export const createRequest = async (yeuCauData) => {
-    try {
-        // Make a POST request to the specified endpoint with the provided data
+    // Make a POST request to the specified endpoint with the provided data
         const response = await axiosClient.post(
             `${END_POINT.YEUCAUHOANTRA}/${END_POINT.TAOYEUCAU}`,
-            yeuCauData,
-            { headers: { 'Content-Type': 'application/json' } }
+            yeuCauData
         );
+        return response; // Return data from the response if needed
 
-        return response.data; // Return data from the response if needed
-    } catch (error) {
-        // Handle errors and log them
-        //console.error('Error:', error);
-        throw new Error(`Error creating request: ${error.message}`);
-    }
 };
 
 export const getAllBenh = () => {
@@ -97,5 +91,10 @@ export const getGoiBHByUsername = (username) => {
 };
 
 export const getYCHTByUsername = (username) => {
-    return axiosClient.get(`${END_POINT.YEUCAUHOANTRA}/${END_POINT.YCHTBYUS}/${username}`);
+    const res = axiosClient.get(`${END_POINT.YEUCAUHOANTRA}/${END_POINT.YCHTBYUS}/${username}`);
+    return res
+};
+
+export const getBenhVienAPI = () => {
+    return axiosClient.get(`${END_POINT.BENHVIEN}`);
 };

@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom"
+import { Routes, Route, Navigate } from "react-router-dom";
 import HomePage from "./views/user/homePage";
 import { ROUTERS } from "./utils/router";
 import MasterLayout from "./views/user/theme/masterLayout";
@@ -10,19 +10,37 @@ import Register from "./views/user/registerPage/index.js";
 import RequestInvoicePage from "./views/user/requestInvoicePage";
 import HomePageStaff from "./views/user/homePageStaff";
 import ChangePassword from "./views/user/ChangePasswordPage";
+import { useUser } from "../src/context/UserContext.js";
+
+const AuthGuard = ({ component: Component, loginRequired }) => {
+    const { user } = useUser();
+  
+    if (loginRequired && !user) {
+      // Redirect to login if login is required and the user is not authenticated
+      return <Navigate to={`/${ROUTERS.USER.LOGIN}`}/>;
+    }
+  
+    // Render the component if login is not required or the user is authenticated
+    return Component
+  };
+
 const renderUserRouter = () => {
     const userRouters = [
         {
             path: ROUTERS.USER.HOME,
             component: <HomePage />,
+            loginRequired: false,
         },
         {
             path: ROUTERS.USER.NEWS,
             component: <NewsPage />,
+            loginRequired: false,
         },
         {
             path: ROUTERS.USER.PRODUCT,
             component: <ProductPage />,
+            //loginRequired: false,
+            loginRequired: false,
         },
         {
             path: ROUTERS.USER.LOGIN,
@@ -35,33 +53,41 @@ const renderUserRouter = () => {
             component: <Register />,
             showHeader: false, // Không hiển thị header ở trang đăng ký
             showFooter: false, // Không hiển thị footer ở trang đăng ký
+            loginRequired: false,
         },
         {
             path: ROUTERS.USER.CHANGEPASSWORD,
 
-            component: <ChangePassword />
+            component: <ChangePassword />,
+            loginRequired: true,
         },
         {
             path: ROUTERS.USER.STAFF,
             component: <HomePageStaff />,
+            loginRequired: true,
         },
         {
             path: ROUTERS.USER.REQUESTINVOICE,
-            component: <RequestInvoicePage />
-        },
+            component: <RequestInvoicePage />,
+            loginRequired: true,
+        },      
+
     ];
+
     return (
         <MasterLayout>
             <Routes>
                 {userRouters.map((item, key) => (
                     <Route
 
-                        key={key} path={item.path} element={item.component}
+                        key={key} path={item.path} //element={item.component}
+                        element={<AuthGuard component={item.component} loginRequired={item.loginRequired}/>}
                     />
                 ))}
                 <Route
                     path="product/detail/:id" element={<ProductDetailPage />}
                 />
+            {/* <Route path="product/detail/:id" element={<AuthGuard component={<ProductDetailPage />} loginRequired={true} />} /> */}
             </Routes>
         </MasterLayout>
     );
@@ -72,3 +98,16 @@ const RouterCustom = () => {
 };
 
 export default RouterCustom;
+
+// const AuthGuard = ({ component, loginRequired }) => {
+//     // Kiểm tra xem user có tồn tại hay không
+//     const isAuthenticated = user !== null;
+  
+//     // Nếu yêu cầu đăng nhập và user không tồn tại, chuyển hướng đến trang đăng nhập
+//     if (loginRequired && !isAuthenticated) {
+//       return <Navigate to={ROUTERS.USER.LOGIN} />;
+//     }
+  
+//     // Nếu user tồn tại hoặc không yêu cầu đăng nhập, hiển thị component được chuyển vào
+//     return component;
+//   };

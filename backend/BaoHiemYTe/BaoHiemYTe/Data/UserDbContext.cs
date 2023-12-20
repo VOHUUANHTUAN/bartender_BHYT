@@ -97,7 +97,9 @@ namespace BaoHiemYTe.Data
             modelBuilder.Entity<YeuCauHoanTra>()
                 .Property(y => y.SoTienHoanTra)
                 .IsRequired(false);
-
+            modelBuilder.Entity<YeuCauHoanTra>()
+                .HasIndex(hd => hd.MaHDKhamBenh)
+                .IsUnique();
         }
 
         public DbSet<DonDangKy> DonDangKy { get; set; }

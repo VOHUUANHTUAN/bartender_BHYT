@@ -4,14 +4,6 @@ import "./style.scss"
 import { Link, useParams } from 'react-router-dom';
 import { ROUTERS } from "../../../utils/router";
 const ProductDetailPage = () => {
-    /*     const [goiBHs, setgoiBHs] = useState([]);
-        useEffect(() => {
-            fetchData();
-        }, []);
-        const fetchData = async () => {
-            setgoiBHs(await getGoiBHAPI());
-    
-        } */
     const params = useParams();
     const [dataGoiBH, setDataGoiBH] = useState(null);
     const [dataBenh, setDataBenh] = useState([]);
@@ -45,26 +37,6 @@ const ProductDetailPage = () => {
     if (error) {
         return <p>Error: {error.message}</p>;
     }
-
-    /*     const params = useParams();
-        const [detail, setDetail] = useState([]);
-        useEffect(() => {
-            fetchDataById();
-        }, []);
-        const fetchDataById = async () => {
-            setDetail(await getGoiBHByMaGBH(params.id));
-    
-        }
-        const [benh, setBenh] = useState(null);
-        useEffect(() => {
-            fetchBenhByGoiBH();
-        }, []);
-    
-        const fetchBenhByGoiBH = async () => {
-            setBenh(await getBenhByMaGBH(params.id));
-    
-        } */
-    //console.log(benh)
     return <><div className="container__body">
         <div className="detail__page">
             <div className="detail__container">
@@ -76,7 +48,6 @@ const ProductDetailPage = () => {
                         <h3> {dataGoiBH.tenGoiBH}</h3>
                     </div>
                     <div className="detail__body">
-
                         <p>{dataGoiBH.motaGoiBH}</p>
                         <p>Giá: {dataGoiBH.gia} VND</p>
                         <p>Tỉ lệ hoàn tiền: {dataGoiBH.tiLeHoanTien}%</p>

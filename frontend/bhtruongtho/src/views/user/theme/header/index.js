@@ -73,6 +73,7 @@ const Header = () => {
     };
     const handleClose = () => {
         setAnchorEl(null);
+        
     };
     return (
         <>
@@ -114,7 +115,7 @@ const Header = () => {
                                                 open={open}
                                                 onClose={handleClose}
                                                 onClick={handleClose}
-                                                PaperProps={{
+                                                slotProps={{
                                                     elevation: 0,
                                                     sx: {
                                                         overflow: 'visible',
@@ -143,9 +144,9 @@ const Header = () => {
                                                 transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                                                 anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                                             >
-                                                <MenuItem onClick={handleClose}>
+                                                {/* <MenuItem onClick={handleClose}>
                                                     <Avatar /> Profile
-                                                </MenuItem>
+                                                </MenuItem> */}
                                                 <MenuItem onClick={handleClose}>
                                                     <Avatar />                                                 <Link to="/changepassword">
                                                     Đổi mật khẩu
@@ -160,12 +161,12 @@ const Header = () => {
                                                     Tạo yêu cầu hoàn trả
                                                 </Link>
                                                 </MenuItem>
-                                                <MenuItem onClick={handleClose}>
+                                                {/* <MenuItem onClick={handleClose}>
                                                     <ListItemIcon>
                                                         <Settings fontSize="small" />
                                                     </ListItemIcon>
                                                     Settings
-                                                </MenuItem>
+                                                </MenuItem> */}
                                                 <MenuItem onClick={handleClose}>
                                                     <ListItemIcon>
                                                         <Logout fontSize="small" />

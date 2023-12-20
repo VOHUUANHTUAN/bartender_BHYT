@@ -1,6 +1,5 @@
 import React, { memo, useState, useEffect } from "react";
-import { createRequest, getGoiBHByUsername, getBenhByMaGBH, getYCHTByUsername } from "../../../api/connect";
-import { Link } from "react-router-dom";
+import { createRequest, getGoiBHByUsername, getBenhByMaGBH, getYCHTByUsername, getBenhVienAPI } from "../../../api/connect";
 import { useUser } from "../../../context/UserContext";
 import {
   Container,
@@ -21,139 +20,203 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-
+  Snackbar,
 } from "@mui/material";
 
-import { useNavigate } from "react-router-dom";
-
 const RequestInvoice = () => {
+  //user context
   const { user } = useUser();
+  //error và loading
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [invoiceCode, setInvoiceCode] = useState('');
-  const [hospitalName, setHospitalName] = useState('');
-  const [amount, setAmount] = useState('');
+  //khai báo các biến
+  const [hospitalNameList, setHospitalNameList] = useState([]);
   const [refundAmount, setRefundAmount] = useState('');
   const [diseases, setDiseases] = useState([]);
   const [insurancePackages, setInsurancePackages] = useState([]);
+  const [selectedHospitalName, setSelectedHospitalName] = useState('');
   const [selectedDisease, setSelectedDisease] = useState('');
   const [selectedInsurancePackage, setSelectedInsurancePackage] = useState('');
   const [requestList, setRequestList] = useState([]);
 
-  const isButtonDisabled = !invoiceCode || !hospitalName || !amount || !selectedDisease || !selectedInsurancePackage;
-
+  //Cấu hình cho tab
   const [value, setValue] = useState(0);
 
-  const handleChange = (event, newValue) => {
+  const handleChangeTab = (event, newValue) => {
     setValue(newValue);
   };
 
+  //Dữ liệu nhập cần validate
+  const [formData, setFormData] = useState({
+    invoiceCode: '',
+    amount: '',
+    // ... other fields
+  });
+
+  //thông báo lỗi
+  const [invoiceCodeError, setInvoiceCodeError] = useState(false);
+  const [amountError, setAmountError] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+
+  //handle tab thông báo
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
+  //handle cho dữ liệu thay đổi
+  const handleChangeData = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+
+    //regex cho số tiền
+    if (e.target.name === "amount") {
+      const amountRegex = /^\d+(\.\d{0,2})?$/;
+      setAmountError(!amountRegex.test(e.target.value));
+    }
+    //regex cho mã hóa đơn
+    if (e.target.name === "invoiceCode") {
+      const invoiceCodeRegex = /^[a-zA-Z0-9_@#&]+$/;
+      setInvoiceCodeError(!invoiceCodeRegex.test(e.target.value));
+    }
+  };
+  //validate cho các trường trong form
+  const validateForm = () => {
+    if (!formData.invoiceCode) {
+      return "Mã hóa đơn không được để trống";
+    }
+    if (!selectedHospitalName) {
+      return "Tên bệnh viện không được để trống";
+    }
+    if (!formData.amount) {
+      return "Số tiền không được để trống";
+    }
+    if (!selectedDisease) {
+      return "Tên bệnh không được để trống";
+    }
+    if (!selectedInsurancePackage) {
+      return "Gói bảo hiểm không được để trống";
+    }
+    if(invoiceCodeError || amountError){
+      return "Thông tin chưa hợp lệ";
+    }   
+    return null; // Validation passed
+  };
+
+  //xử lý gọi api
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
+        //API cho tab1
         // Gọi API để lấy dữ liệu về gói Bảo hiểm
         const goiBHByUs = await getGoiBHByUsername(user.username);
         setInsurancePackages(goiBHByUs);
+        //gọi api lấy dữ liệu tất cả bệnh viện
+        const benhVien = await getBenhVienAPI();
+        setHospitalNameList(benhVien);
 
-        //Gọi API để lấy yêu cầu hoàn trả theo username
-        const yCHTByUs = await getYCHTByUsername(user.username);
-        setRequestList(yCHTByUs);
-
-        // Check if a package is selected before making the API call
+        //Nếu đã chọn gói bảo hiểm
         if (selectedInsurancePackage) {
           // Gọi API để lấy dữ liệu về bệnh dựa trên mã gói Bảo hiểm đã chọn
           const benhData = await getBenhByMaGBH(selectedInsurancePackage);
           setDiseases(benhData);
         }
 
+        //API cho tab2
+        //Gọi API để lấy yêu cầu hoàn trả theo username
+        const yCHTByUs = await getYCHTByUsername(user.username);
+        setRequestList(yCHTByUs);
       } catch (error) {
         setError(error);
       } finally {
         setLoading(false);
       }
     };
-
     fetchData();
-  }, [user, selectedInsurancePackage, value]); // Include dependencies in the dependency array
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       setLoading(true);
-  //       // Check if a package is selected before making the API call
-  //       if (selectedInsurancePackage) {
-  //         // Gọi API để lấy dữ liệu về bệnh dựa trên mã gói Bảo hiểm đã chọn
-  //         const benhData = await getBenhByMaGBH(selectedInsurancePackage);
-  //         setDiseases(benhData);
-  //       }
-  //     } catch (error) {
-  //       setError(error);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, [selectedInsurancePackage]); // Include dependencies in the dependency array
-
+  }, [user, selectedInsurancePackage, value]); //những thuộc tính nếu thay đôi sẽ gọi lại useEffect
 
   const handleInsurancePackageChange = (e) => {
     setSelectedInsurancePackage(e.target.value);
-
   };
   // Hàm để lấy tên gói bảo hiểm dựa trên MaGoiBH
   const getInsurancePackageName = (maGoiBHApDung) => {
     const foundPackage = insurancePackages.find((packageItem) => packageItem.maGoiBH === maGoiBHApDung);
     return foundPackage ? foundPackage.tenGoiBH : 'Unknown';
   };
+  //hàm lấy tên bệnh dựa trên mã bệnh
   const getDiseaseName = (maBenh) => {
     const foundPackage = diseases.find((packageItem) => packageItem.maBenh === maBenh);
     return foundPackage.tenBenh;
   };
-  useEffect(() => {
-    const selectedGoiBH = insurancePackages.find((packageItem) => packageItem.maGoiBH === selectedInsurancePackage);
+  //hàm lấy tên bệnh viện dựa trên mã bệnh viện
+  const getHospitalName = (maBenhVien) => {
+    const foundPackage = hospitalNameList.find((packageItem) => packageItem.maBV === maBenhVien);
+    return foundPackage.tenBV;
+  };
 
+  //Xử lý tính số tiền hoàn trả
+  //Dùng useEffect để bắt thay đổi ở bảo hiểm, tiền
+  useEffect(() => {
+    //lấy tỉ lệ hoàn tiền dựa trên mã bảo hiểm
+    const selectedGoiBH = insurancePackages.find((packageItem) => packageItem.maGoiBH === selectedInsurancePackage);
     const refundRate = selectedGoiBH ? selectedGoiBH.tiLeHoanTien : 0;
+
     // Convert the amount to a float, defaulting to 0 if NaN
-    const amountFloat = parseFloat(amount) || 0;
+    const amountFloat = parseFloat(formData.amount) || 0;
+
+    //Nếu nhập số bé hơn không thì gán số tiền hoàn trả = 0
+    if(amountFloat < 0)
+    {
+      setRefundAmount(0)
+      return
+    }
     // Calculate the refund amount
     const calculatedRefundAmount = Math.round(amountFloat * (refundRate / 100));
-
     // Check if the calculated refund amount is a valid number
     const refundAmountValue = isNaN(calculatedRefundAmount) ? 0 : calculatedRefundAmount;
-   
     // Set the calculated refund amount to the state
     setRefundAmount(refundAmountValue);
-  }, [selectedInsurancePackage, insurancePackages, amount]);
+  }, [selectedInsurancePackage, insurancePackages, formData.amount]);
 
-
+  //handle cho nút Tạo yêu cầu
   const handleRefundSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
-
-    if (isButtonDisabled) {
+    //gọi hàm validate
+    const validationError = validateForm();
+    if (validationError) {
+      setSnackbarMessage(validationError);
+      setSnackbarOpen(true);
       return;
     }
     // Handle form submission logic here
     setLoading(true);
-const yeuCauData = {
-    // Populate with the necessary data
-      maHDKhamBenh: invoiceCode,
-            tenBenhVien: hospitalName,
-            soTienDaKham: amount,
-            benh: getDiseaseName(selectedDisease),
-            maGoiBHApDung: selectedInsurancePackage,
-            username: user.username
-};
-console.log(yeuCauData)
+    const yeuCauData = {
+      // Populate with the necessary data
+      maHDKhamBenh: formData.invoiceCode,
+      tenBenhVien: getHospitalName(selectedHospitalName),
+      soTienDaKham: formData.amount,
+      benh: getDiseaseName(selectedDisease),
+      maGoiBHApDung: selectedInsurancePackage,
+      username: user.username,
+      soTienHoanTra: refundAmount
+
+    };
     try {
+      //gọi api post
       const responseData = await createRequest(yeuCauData);
-      console.log('Response Data:', responseData);
-        alert("successfully!");
+      //thông báo thành công
+      setSnackbarMessage(responseData);
+      setSnackbarOpen(true);
     } catch (error) {
-        alert(`Error: ${error.message}`);
+      // Xử lý các lỗi khác (ví dụ: mất kết nối)
+      //thông báo lỗi
+        setSnackbarMessage(error.response.data);
+        setSnackbarOpen(true);
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
   };
 
@@ -165,7 +228,7 @@ console.log(yeuCauData)
         style={{ padding: "20px", marginTop: "120px", marginBottom: "100px" }}
       >
         <div>
-          <Tabs value={value} onChange={handleChange}>
+          <Tabs value={value} onChange={handleChangeTab}>
             <Tab label="Đơn yêu cầu" />
             <Tab label="Danh sách các đơn yêu cầu đã gửi" />
           </Tabs>
@@ -180,30 +243,50 @@ console.log(yeuCauData)
             }}>
               <TextField
                 label="Mã hóa đơn"
-                value={invoiceCode}
-                onChange={(e) => setInvoiceCode(e.target.value)}
+                name="invoiceCode"
+                value={formData.invoiceCode}
+                onChange={handleChangeData}
                 fullWidth
+                required
                 margin="normal"
+                error={invoiceCodeError}
+                helperText={
+                  invoiceCodeError &&
+                  "Mã hóa đơn bắt đầu bằng chữ cái hoặc số và có ít nhất 6 kí tự"
+                }
               />
-              <TextField
-                label="Tên bệnh viện"
-                value={hospitalName}
-                onChange={(e) => setHospitalName(e.target.value)}
-                fullWidth
-                margin="normal"
-              />
+              <FormControl style={{ width: '100%' }}>
+                <InputLabel>Tên bệnh viện</InputLabel>
+                <Select
+                  value={selectedHospitalName}
+                  onChange={(e) => setSelectedHospitalName(e.target.value)}
+                >
+                  {hospitalNameList.map((hos_name) => (
+                    <MenuItem key={hos_name.maBV} value={hos_name.maBV}>
+                      {hos_name.tenBV}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
               <TextField
                 label="Số tiền"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
+                name="amount"
+                value={formData.amount}
+                onChange={handleChangeData}
                 fullWidth
+                required
                 margin="normal"
                 InputProps={{
                   startAdornment: <InputAdornment position="start">$</InputAdornment>,
                 }}
+                error={amountError}
+                helperText={
+                  amountError &&
+                  "Số tiền không hợp lệ"
+                }
               />
               <FormControl style={{ width: '40%', marginRight: '10px' }}>
-                <InputLabel>Diseases</InputLabel>
+                <InputLabel>Tên bệnh</InputLabel>
                 <Select
                   value={selectedDisease}
                   onChange={(e) => setSelectedDisease(e.target.value)}
@@ -218,7 +301,7 @@ console.log(yeuCauData)
 
 
               <FormControl style={{ width: '40%' }}>
-                <InputLabel>Insurance Packages</InputLabel>
+                <InputLabel>Gói bảo hiểm</InputLabel>
                 <Select
                   value={selectedInsurancePackage || ''}
                   onChange={handleInsurancePackageChange}
@@ -237,7 +320,7 @@ console.log(yeuCauData)
                 fullWidth
                 margin="normal"
                 InputProps={{ readOnly: true }}
-              /> 
+              />
               <Button type="submit" variant="contained" color="primary" >
                 Submit
               </Button>
@@ -279,6 +362,13 @@ console.log(yeuCauData)
         </div>
 
       </Paper>
+      <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={2000}
+                onClose={handleSnackbarClose}
+                message={snackbarMessage}
+                anchorOrigin={{ vertical: "top", horizontal: "right" }}
+            />
     </Container>
   );
 };
