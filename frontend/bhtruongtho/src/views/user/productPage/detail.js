@@ -1,3 +1,4 @@
+
 import { memo, useEffect, useState } from "react"
 import { getGoiBHByMaGBH, getBenhByMaGBH } from "../../../api/connect";
 import "./style.scss"
@@ -73,4 +74,4 @@ const ProductDetailPage = () => {
     </>
 };
 
-export default memo(ProductDetailPage);
+export default InsuranceRegistration_;

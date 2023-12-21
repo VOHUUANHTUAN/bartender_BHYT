@@ -8,5 +8,7 @@ export const ROUTERS = {
         STAFF: "staff",
         CHANGEPASSWORD: "changepassword",
         REQUESTINVOICE: "requestinvoice"
+        PERSONALINFO: "PersonalInfo",
+        INSURANCEREGISTRATION: "InsuranceRegistration",
     },
 };

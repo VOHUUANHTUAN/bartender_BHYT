@@ -9,8 +9,8 @@ namespace BaoHiemYTe.Data
         {
 
         }
-        public DbSet<User> Users { get; set; }
-        public DbSet<KhachHang> KhachHang { get; set; }
+        public DbSet<Users> Users { get; set; }
+        public DbSet<KhachHang>  KhachHang{ get; set; }
         public DbSet<NhanVien> NhanVien { get; set; }
         public DbSet<GoiBaoHiem> GoiBaoHiem { get; set; }
         public DbSet<Benh> Benh { get; set; }

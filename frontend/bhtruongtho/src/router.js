@@ -24,6 +24,8 @@ const AuthGuard = ({ component: Component, loginRequired }) => {
     return Component
   };
 
+import InsuranceRegistration from "./views/user/InsuranceRegistration";
+import ChangeInformation from "./views/user/changeInfoPage/index.js";
 const renderUserRouter = () => {
     const userRouters = [
         {
@@ -45,8 +47,6 @@ const renderUserRouter = () => {
         {
             path: ROUTERS.USER.LOGIN,
             component: <Login />,
-            showHeader: false, // Không hiển thị header ở trang đăng nhập
-            showFooter: false, // Không hiển thị footer ở trang đăng nhập
         },
         {
             path: ROUTERS.USER.REGISTER,
@@ -72,6 +72,13 @@ const renderUserRouter = () => {
             loginRequired: true,
         },      
 
+            path: ROUTERS.USER.PERSONALINFO,
+            component: <ChangeInformation />,
+        },
+        {
+            path: ROUTERS.USER.INSURANCEREGISTRATION,
+            component: <InsuranceRegistration />,
+        },
     ];
 
     return (

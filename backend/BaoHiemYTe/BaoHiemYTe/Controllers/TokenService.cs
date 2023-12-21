@@ -6,76 +6,92 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-public class TokenService
+namespace BaoHiemYTe.Controllers
 {
-    private readonly string secretKey;
-
-    public TokenService(string secretKey)
+    public class TokenService
     {
-        this.secretKey = secretKey;
-    }
+        private readonly string secretKey;
 
-    public string GenerateJwtToken(string username)
-    {
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
-        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-        var token = new JwtSecurityToken(
-            claims: new[] { new Claim(ClaimTypes.Name, username) },
-            expires: DateTime.UtcNow.AddHours(1),
-            signingCredentials: creds
-        );
-
-        return new JwtSecurityTokenHandler().WriteToken(token);
-    }
-
-    public string GetUsernameFromToken(HttpRequest request)
-    {
-        var authorizationHeader = request.Headers["Authorization"].FirstOrDefault();
-
-        if (string.IsNullOrEmpty(authorizationHeader) || !authorizationHeader.StartsWith("Bearer "))
+        public TokenService()
         {
+            this.secretKey = "your-secret-key-should-be-at-least-128-bits";
+        }
+
+        public string GenerateJwtToken(string username)
+        {
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                claims: new[] { new Claim(ClaimTypes.Name, username) },
+                expires: DateTime.UtcNow.AddHours(1),
+                signingCredentials: creds
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+        public string GetUsernameFromToken(HttpRequest request)
+        {
+            var authorizationHeader = request.Headers["Authorization"].FirstOrDefault();
+
+            if (string.IsNullOrEmpty(authorizationHeader) || !authorizationHeader.StartsWith("Bearer "))
+            {
+                return null;
+            }
+
+            var token = authorizationHeader.Substring("Bearer ".Length);
+
+            // Validate and decode the token
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
+            };
+
+            var handler = new JwtSecurityTokenHandler();
+
+            try
+            {
+                var principal = handler.ValidateToken(token, tokenValidationParameters, out var securityToken);
+
+                // Kiểm tra xem token có được validate thành công hay không
+                if (principal != null && principal.Identity != null && principal.Identity.IsAuthenticated)
+                {
+                    // Lấy username từ thông tin xác thực
+                    return principal.Identity.Name;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.StackTrace);
+            }
+
             return null;
         }
 
-        var token = authorizationHeader.Substring("Bearer ".Length);
-
-        // Validate and decode the token
-        var tokenValidationParameters = new TokenValidationParameters
+        public ClaimsPrincipal ValidateTokenAndGetClaimsPrincipal(string token)
         {
-            ValidateIssuer = false,
-            ValidateAudience = false,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
-        };
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(secretKey);
 
-        var handler = new JwtSecurityTokenHandler();
-        var principal = handler.ValidateToken(token, tokenValidationParameters, out var securityToken);
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                IssuerSigningKey = new SymmetricSecurityKey(key),
+            };
 
-        // Lấy username từ thông tin xác thực
-        return principal.Identity?.Name;
-    }
-
-    public ClaimsPrincipal ValidateTokenAndGetClaimsPrincipal(string token)
-    {
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.ASCII.GetBytes(secretKey);
-
-        var tokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = false,
-            ValidateAudience = false,
-            IssuerSigningKey = new SymmetricSecurityKey(key),
-        };
-
-        try
-        {
-            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out var securityToken);
-            return principal;
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.StackTrace);
-            return null;
+            try
+            {
+                var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out var securityToken);
+                return principal;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.StackTrace);
+                return null;
+            }
         }
     }
 }

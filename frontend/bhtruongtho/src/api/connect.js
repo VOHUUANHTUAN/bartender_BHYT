@@ -4,6 +4,7 @@ const END_POINT = {
     GOIBAOHIEM: "GoiBaoHiem",
     BENH: "Benh",
     TaiKhoan: "User",
+    KHACHHANG: "KhachHang",
     LOGIN: "Auth/login",
     info: "Auth/userinfo",
     CHANGEPASSWORD: "ChangePassword",
@@ -25,12 +26,16 @@ export const logingettoken = (username, password) => {
     return axiosClient.post(`${END_POINT.LOGIN}`, data);
 };
 
-
 export const getTaiKhoanByUsername = (username) => {
     return axiosClient.get(`${END_POINT.TaiKhoan}/${username}`);
 };
 
+// Hàm đăng ký tài khoản mới
+export const KhachHang_DangKyTaiKhoan = (khachHangData) => {
+    return axiosClient.post(`${END_POINT.TaiKhoan}`, khachHangData);
+};
 
+//Hàm lấy thông tin đăng nhập của user
 export const getUserInfoByToken = (token) => {
     return axiosClient.get(`${END_POINT.info}`, {
         headers: {
@@ -39,9 +44,23 @@ export const getUserInfoByToken = (token) => {
     });
 };
 
+// Hàm lấy thông tin cá nhân khách hàng
+export const getKhachHangInformation = (token) => {
+    return axiosClient.get(`${END_POINT.KHACHHANG}`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+};
 
-
-
+//Hàm cập nhật thông tin khách hàng
+export const updateKhachHangInformation = (token, khachHangData) => {
+    return axiosClient.post(`${END_POINT.KHACHHANG}`, khachHangData, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+};
 
 export const getGoiBHByMaGBH = (MaGBH) => {
     return axiosClient.get(`${END_POINT.GOIBAOHIEM}/${MaGBH}`);
