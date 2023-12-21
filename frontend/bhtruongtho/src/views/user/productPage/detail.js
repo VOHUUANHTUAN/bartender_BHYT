@@ -75,4 +75,4 @@ const ProductDetailPage = () => {
     </>
 };
 
-export default InsuranceRegistration_;
+export default memo(ProductDetailPage);
