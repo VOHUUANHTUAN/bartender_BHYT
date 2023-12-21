@@ -84,9 +84,12 @@ export const getAllBenh = () => {
 
 export const getGoiBHByUsername = (username) => {
     return axiosClient.get(`${END_POINT.GOIBAOHIEM}/${END_POINT.GOIBHBYUS}/${username}`);
+};
+
 export const getDonDangKyList = () => {
     return axiosClient.get(`${END_POINT.DONDANGKY}`);
-}
+};
+
 
 export const getDonDangKyByID = (ID) => {
     return axiosClient.get(`${END_POINT.DONDANGKY}/${ID}`);
