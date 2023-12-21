@@ -12,6 +12,8 @@ import HomePageStaff from "./views/user/homePageStaff";
 import ChangePassword from "./views/user/ChangePasswordPage";
 import { useUser } from "../src/context/UserContext.js";
 import InsuranceRegistration from "./views/user/InsuranceRegistration";
+import ListDonDangKy from "./views/user/registrationForm/index.js";
+import DonDangKyDetail from "./views/user/registrationForm/regisdetail.js";
 import PersonalInfo from "./views/user/personalInfoPage/index.js";
 
 const AuthGuard = ({ component: Component, loginRequired }) => {
@@ -107,6 +109,10 @@ const renderUserRouter = () => {
                 <Route
                     path="registrationForms/detail/:id"
                     element={<DonDangKyDetail />}
+                />
+            {/* <Route path="product/detail/:id" element={<AuthGuard component={<ProductDetailPage />} loginRequired={true} />} /> */}
+                <Route
+                    path="registrationForms/detail/:id" element={<DonDangKyDetail />}
                 />
             </Routes>
         </MasterLayout>

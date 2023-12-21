@@ -11,6 +11,10 @@ const END_POINT = {
     YEUCAUHOANTRA: "YeuCauHoanTra",
     TAOYEUCAU: "TaoYeuCauHoanTra",
     GOIBHBYUS: "GetGoiBHByUs",
+    YCHTBYUS: "GetYCHTByUs",
+    BENHVIEN: "BenhVien",
+    DONDANGKY: "DONDANGKY",
+    NHANVIEN: "NhanVien",
 };
 export const getGoiBHAPI = () => {
     return axiosClient.get(`${END_POINT.GOIBAOHIEM}`);
@@ -110,4 +114,29 @@ export const getYCHTByUsername = (username) => {
 
 export const getBenhVienAPI = () => {
     return axiosClient.get(`${END_POINT.BENHVIEN}`);
+};
+export const getDonDangKyList = () => {
+    return axiosClient.get(`${END_POINT.DONDANGKY}`);
+}
+
+export const getDonDangKyByID = (ID) => {
+    return axiosClient.get(`${END_POINT.DONDANGKY}/${ID}`);
+}
+
+export const getNhanVienByID = (ID) => {
+    return axiosClient.get(`${END_POINT.NHANVIEN}/${ID}`);
+}
+
+export const putDonDangKyByID = async (ID, Data) => {
+    try {
+        const response = await axiosClient.put(
+            `${END_POINT.DONDANGKY}/${ID}`,
+            Data,
+            { headers: { 'Content-Type': 'application/json' } }
+        );
+        return response.data;
+    } catch (error) {
+        console.error('Error:', error);
+        throw new Error(`Error chang DDK: ${error.message}`);
+    }
 };
