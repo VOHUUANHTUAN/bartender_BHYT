@@ -11,9 +11,14 @@ import {
     Button,
     Grid,
     Typography,
+    Snackbar,
 } from "@mui/material";
 
 const Login = () => {
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState("");
+    const [usernameError, setUsernameError] = useState(false);
+    const [passwordError, setPasswordError] = useState(false);
     const { user, login } = useUser();
     const [formData, setFormData] = useState({
         username: "",
@@ -22,26 +27,58 @@ const Login = () => {
     const [loginError, setLoginError] = useState(null); // Thêm state để theo dõi lỗi đăng nhập
     const navigate = useNavigate();
 
+    const handleSnackbarClose = () => {
+        setSnackbarOpen(false);
+    };
+    const handleChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value,
+        });
+        if (e.target.name === "username") {
+            const usernameRegex = /^[a-zA-Z0-9_@#&]+$/;
+            setUsernameError(!usernameRegex.test(e.target.value));
+        }
+        if (e.target.name === "password") {
+            const usernameRegex = /^[a-zA-Z0-9_@#&]+$/;
+            setPasswordError(!usernameRegex.test(e.target.value));
+        }
+    };
+
+    const validateForm = () => {
+        if (usernameError || passwordError) {
+            return "Vui lòng kiểm tra lại thông tin";
+        }
+
+        return null; // Validation passed
+    };
+
     useEffect(() => {
         if (user) {
             navigate("/");
         }
     }, [user, navigate]);
 
-    const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value,
-        });
-    };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
+            const validationError = validateForm();
+
+            if (validationError) {
+                setSnackbarMessage(validationError);
+                setSnackbarOpen(true);
+                return;
+            }
             const res = await logingettoken(
                 formData.username,
                 formData.password
             );
+            console.log(res);
+            if (res.errorMessage) {
+                setSnackbarMessage(res.errorMessage);
+                setSnackbarOpen(true);
+                return;
+            }
             if (res) {
                 login({
                     username: formData.username,
@@ -62,6 +99,7 @@ const Login = () => {
                         console.log(error.message);
                     }
                 };
+
                 fetchUserInfo();
                 console.log("Login successful.");
 
@@ -100,6 +138,11 @@ const Login = () => {
                         name="username"
                         value={formData.username}
                         onChange={handleChange}
+                        error={usernameError}
+                        helperText={
+                            usernameError &&
+                            "Username chỉ được chứa chữ cái và số, dấu _ @ # &"
+                        }
                     />
                     <TextField
                         label="Password"
@@ -111,6 +154,11 @@ const Login = () => {
                         name="password"
                         value={formData.password}
                         onChange={handleChange}
+                        error={passwordError}
+                        helperText={
+                            passwordError &&
+                            "Password chỉ được chứa chữ cái và số, dấu _ @ # &"
+                        }
                     />
                     {loginError && (
                         <Typography
@@ -146,6 +194,13 @@ const Login = () => {
                     </Grid>
                 </form>
             </Paper>
+            <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={2000}
+                onClose={handleSnackbarClose}
+                message={snackbarMessage}
+                anchorOrigin={{ vertical: "top", horizontal: "right" }}
+            />
         </Container>
     );
 };

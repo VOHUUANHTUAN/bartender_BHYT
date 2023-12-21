@@ -26,17 +26,8 @@ export const getTaiKhoanByUsername = (username) => {
 };
 
 // Hàm đăng ký tài khoản mới
-// Hàm đăng ký tài khoản mới
 export const KhachHang_DangKyTaiKhoan = (khachHangData) => {
-    return axiosClient.post(
-        `${END_POINT.TaiKhoan}`,
-        JSON.stringify(khachHangData),
-        {
-            headers: {
-                "Content-Type": "application/json",
-            },
-        }
-    );
+    return axiosClient.post(`${END_POINT.TaiKhoan}`, khachHangData);
 };
 
 //Hàm lấy thông tin đăng nhập của user

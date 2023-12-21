@@ -33,8 +33,10 @@ const ChangeInformation = () => {
         const token = localStorage.getItem("token");
         var response = await updateKhachHangInformation(token, khachHangData);
         console.log(response);
+
         setSnackbarMessage(response);
         setSnackbarOpen(true);
+
         // if (response === 200) {
         //     console.log("Request was successful:", response);
         //     setSnackbarMessage("Cập nhật thông tin thành công");

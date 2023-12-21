@@ -14,9 +14,9 @@ import { TRUE } from "sass";
 const Register = () => {
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState("");
-    const [confirmPasswordError, setConfirmPasswordError] = useState(false);
     const [usernameError, setUsernameError] = useState(false);
     const [passwordError, setPasswordError] = useState(false);
+    const [confirmPasswordError, setConfirmPasswordError] = useState(false);
 
     const [formData, setFormData] = useState({
         username: "",
@@ -32,7 +32,6 @@ const Register = () => {
             ...formData,
             [e.target.name]: e.target.value,
         });
-
         if (e.target.name === "username") {
             const usernameRegex = /^[a-zA-Z0-9_@#&]+$/;
             setUsernameError(!usernameRegex.test(e.target.value));
@@ -41,6 +40,10 @@ const Register = () => {
             const usernameRegex = /^[a-zA-Z0-9_@#&]+$/;
             setPasswordError(!usernameRegex.test(e.target.value));
         }
+        if (e.target.name === "confirmPassword") {
+            const usernameRegex = /^[a-zA-Z0-9_@#&]+$/;
+            setConfirmPasswordError(!usernameRegex.test(e.target.value));
+        }
         // Check if passwords match when typing in the confirmation field
         if (e.target.name === "confirmPassword") {
             setConfirmPasswordError(e.target.value !== formData.password);
@@ -48,17 +51,8 @@ const Register = () => {
     };
 
     const validateForm = () => {
-        if (formData.password !== formData.confirmPassword) {
-            return "Mật khẩu không khớp";
-        }
-
-        if (formData.username.length < 6) {
-            return "Tên người dùng phải có ít nhất 6 ký tự";
-        }
         if (usernameError || passwordError || confirmPasswordError) {
             return "Vui lòng kiểm tra lại thông tin";
-            //   setSnackbarOpen(true);
-            //   return false;
         }
 
         return null; // Validation passed
@@ -66,17 +60,27 @@ const Register = () => {
 
     const fetchData = async () => {
         try {
-            const user = {
+            const userData = {
                 username: formData.username,
                 password: formData.password,
                 role: "Khách hàng",
             };
-            console.log(user);
-            const res = await KhachHang_DangKyTaiKhoan(user);
-            // Initialize state variables from the fetched data
-            return res;
+            // console.log(userData);
+            const res = await KhachHang_DangKyTaiKhoan(userData);
+
+            if (res.errorMessage) {
+                setSnackbarMessage(res.errorMessage);
+                setSnackbarOpen(true);
+                return;
+            }
+
+            console.log(res);
+            setSnackbarMessage(res);
+            setSnackbarOpen(true);
         } catch (error) {
-            console.error("Error fetching user information", error);
+            console.error("Error sending request:", error.message);
+            setSnackbarMessage("Đã có lỗi xảy ra");
+            setSnackbarOpen(true);
         }
     };
 
@@ -85,13 +89,15 @@ const Register = () => {
         e.preventDefault();
 
         const validationError = validateForm();
+
         if (validationError) {
             setSnackbarMessage(validationError);
             setSnackbarOpen(true);
             return;
         }
-        var res = fetchData();
-        // console.log(res);
+
+        //Gọi API
+        fetchData();
     };
 
     return (
