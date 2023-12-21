@@ -15,7 +15,7 @@ namespace BaoHiemYTe.Domain
         public string  Benh { get; set; }
         public DateTime ThoiGianTao { get; set; }
         public string TinhTrang { get; set; }
-        public int  MaGoiBHApDung { get; set; }
+        public int?  MaGoiBHApDung { get; set; }
         [ForeignKey("MaGoiBHApDung")]
         public GoiBaoHiem GoiBaoHiem { get; set; }
         public int?  SoTienHoanTra { get; set; }

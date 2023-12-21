@@ -1,5 +1,4 @@
 // Login.js
-
 import React, { memo, useEffect, useState } from "react";
 import { logingettoken, getUserInfoByToken } from "../../../api/connect";
 import { useNavigate, Link } from "react-router-dom";
@@ -176,7 +175,7 @@ const Login = () => {
                     <Grid
                         container
                         justifyContent="space-between"
-                        style={{ marginTop: "10px" }}
+                        style={{ marginTop: "10px"}}
                     >
                         <Grid item>
                             <Link to="/register" variant="body2">

@@ -1,67 +1,102 @@
-import { memo, useEffect, useState } from "react"
+import React, { useState } from "react";
 import { changePasswordAPI } from "../../../api/connect";
-import "./style.scss"
-// import { Link } from 'react-router-dom';
+import { useUser } from "../../../context/UserContext";
+import {
+    Container,
+    Paper,
+    TextField,
+    Button,
+    Typography,
+} from "@mui/material";
 
 const ChangePasswordForm = () => {
+    const { user } = useUser();
     const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [loading, setLoading] = useState(false);
 
-    const handleChangePassword = async () => {
-        if (newPassword !== confirmPassword) {
-            alert("New password and confirm password do not match.");
+    const isButtonDisabled = !currentPassword || !newPassword || !confirmPassword || newPassword !== confirmPassword;
+
+    const handleChangePassword = async (e) => {
+        console.log(user)
+
+        e.preventDefault(); // Prevent default form submission
+
+        if (isButtonDisabled) {
             return;
         }
-        console.log("hello")
+
+        setLoading(true);
+
         try {
-            // Gọi API để đổi mật khẩu
-            await changePasswordAPI({
-                currentPassword: currentPassword,
-                newPassword: newPassword,
-                confirmPassword: confirmPassword,
+            await changePasswordAPI(user.username, {
+                currentPassword,
+                newPassword,
+                confirmPassword,
             });
 
-            // Đổi mật khẩu thành công, thực hiện các xử lý khác nếu cần
             alert("Password changed successfully!");
-
-            // Sau khi đổi mật khẩu thành công, có thể thực hiện điều gì đó, ví dụ: chuyển hướng trang, cập nhật state, vv.
         } catch (error) {
-            // Xử lý lỗi khi đổi mật khẩu
             alert(`Error changing password: ${error.message}`);
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
-        <div className="change-password-form">
-            <h2>Change Password</h2>
+        <Container component="main" maxWidth="xs">
+            <Paper elevation={3} style={{ padding: "20px", marginTop: "100px" }}>
+                <Typography component="h1" variant="h5">
+                    Đổi mật khẩu
+                </Typography>
+                <form onSubmit={(e) => {
+                    e.preventDefault();
+                    handleChangePassword(e);
+                }}>
+                    <TextField
+                        label="Mật khẩu hiện tại"
+                        variant="outlined"
+                        margin="normal"
+                        fullWidth
+                        required
+                        value={currentPassword}
+                        onChange={(e) => setCurrentPassword(e.target.value)}
+                    />
 
-            <div>
-                <label>Current Password:</label>
-                <input
-                    type="password"
-                    value={currentPassword}
-                    onChange={(e) => setCurrentPassword(e.target.value)}
-                />
-            </div>
-            <div>
-                <label>New Password:</label>
-                <input
-                    type="password"
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                />
-            </div>
-            <div>
-                <label>Confirm Password:</label>
-                <input
-                    type="password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                />
-            </div>
-            <button onClick={handleChangePassword}>Change Password</button>
-        </div>
+                    <TextField
+                        label="Mật khẩu mới"
+                        variant="outlined"
+                        margin="normal"
+                        fullWidth
+                        required
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                    />
+
+                    <TextField
+                        label="Nhập lại mật khẩu mới"
+                        variant="outlined"
+                        margin="normal"
+                        fullWidth
+                        required
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                    />
+
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        fullWidth
+                        style={{ marginTop: "20px" }}
+                    >
+                        Đổi mật khẩu
+                    </Button>
+                </form>
+            </Paper>
+        </Container>
     );
 };
-export default memo(ChangePasswordForm);
+
+export default ChangePasswordForm;

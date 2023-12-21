@@ -1,161 +1,77 @@
-import React, { useState, useEffect } from "react";
-import {
-    Container,
-    Paper,
-    Typography,
-    TextField,
-    Button,
-    FormControl,
-    InputLabel,
-    MenuItem,
-    Select,
-} from "@mui/material";
-import { getGoiBHByMaGBH } from "../../../api/connect";
 
-const InsuranceRegistration_ = ({ match }) => {
-    const [selectedPackage, setSelectedPackage] = useState(null);
-    const [duration, setDuration] = useState("");
-    const [paymentFrequency, setPaymentFrequency] = useState("");
-    const [insuranceAmount, setInsuranceAmount] = useState("");
-    const [diseaseList, setDiseaseList] = useState("");
+import { memo, useEffect, useState } from "react"
+import { getGoiBHByMaGBH, getBenhByMaGBH } from "../../../api/connect";
+import "./style.scss"
+import { Link, useParams } from 'react-router-dom';
+import { ROUTERS } from "../../../utils/router";
+const ProductDetailPage = () => {
+    const params = useParams();
+    const [dataGoiBH, setDataGoiBH] = useState(null);
+    const [dataBenh, setDataBenh] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
-        const fetchDataById = async () => {
+        const fetchData = async () => {
             try {
-                const response = await getGoiBHByMaGBH(match.params.id);
-                setSelectedPackage(response.data);
+                // Gọi API để lấy dữ liệu về gói Bảo hiểm
+                const goiBHData = await getGoiBHByMaGBH(params.id);
+                setDataGoiBH(goiBHData);
+
+                // Gọi API để lấy dữ liệu về bệnh dựa trên mã gói Bảo hiểm
+                const benhData = await getBenhByMaGBH(params.id);
+                setDataBenh(benhData);
             } catch (error) {
-                console.error("Error fetching data:", error);
+                setError(error);
+            } finally {
+                setLoading(false);
             }
         };
 
-        fetchDataById();
-    }, [match.params.id]);
+        fetchData();
+    }, []);
 
-    useEffect(() => {
-        if (selectedPackage && duration && paymentFrequency) {
-            const calculatedAmount =
-                selectedPackage.gia * duration * paymentFrequency;
-            setInsuranceAmount(calculatedAmount);
-        }
-    }, [selectedPackage, duration, paymentFrequency]);
+    if (loading) {
+        return <p>Loading...</p>;
+    }
 
-    const handleRegistrationSubmit = (e) => {
-        e.preventDefault();
-        console.log("Thông tin đăng ký:", {
-            maGoiBH: selectedPackage.maGoiBH,
-            tenGoiBH: selectedPackage.tenGoiBH,
-            motaGoiBH: selectedPackage.motaGoiBH,
-            gia: selectedPackage.gia,
-            tiLeHoanTien: selectedPackage.tiLeHoanTien,
-            thoiHan: duration,
-            tanSuatThanhToan: paymentFrequency,
-            soTienBaoHiem: insuranceAmount,
-            danhSachBenh: diseaseList,
-        });
-        // Gọi API hoặc thực hiện các xử lý khác tại đây
-    };
-
-    return (
-        <Container component="main" maxWidth="md">
-            <Paper elevation={3} style={{ padding: "20px", marginTop: "20px" }}>
-                <Typography component="h1" variant="h5">
-                    Đăng ký gói bảo hiểm
-                </Typography>
-                <form onSubmit={handleRegistrationSubmit}>
-                    {selectedPackage ? (
-                        <>
-                            <Typography variant="subtitle1">
-                                Thông tin gói bảo hiểm đã chọn:
-                            </Typography>
-                            <Typography variant="body1">
-                                Tên gói bảo hiểm: {selectedPackage.tenGoiBH}
-                            </Typography>
-                            <Typography variant="body1">
-                                Mô tả: {selectedPackage.motaGoiBH}
-                            </Typography>
-                            <Typography variant="body1">
-                                Giá cơ bản: {selectedPackage.gia}đ
-                            </Typography>
-                            <Typography variant="body1">
-                                Tỉ lệ hoàn tiền: {selectedPackage.tiLeHoanTien}%
-                            </Typography>
-
-                            <FormControl
-                                fullWidth
-                                style={{ marginTop: "20px" }}
-                            >
-                                <InputLabel id="duration-label">
-                                    Thời hạn (năm)
-                                </InputLabel>
-                                <Select
-                                    labelId="duration-label"
-                                    id="duration"
-                                    value={duration}
-                                    onChange={(e) =>
-                                        setDuration(e.target.value)
-                                    }
-                                    required
-                                >
-                                    <MenuItem value={1}>1</MenuItem>
-                                    <MenuItem value={2}>2</MenuItem>
-                                    {/* Thêm các giá trị khác nếu cần */}
-                                </Select>
-                            </FormControl>
-
-                            <FormControl
-                                fullWidth
-                                style={{ marginTop: "20px" }}
-                            >
-                                <InputLabel id="payment-frequency-label">
-                                    Số lần thanh toán
-                                </InputLabel>
-                                <Select
-                                    labelId="payment-frequency-label"
-                                    id="payment-frequency"
-                                    value={paymentFrequency}
-                                    onChange={(e) =>
-                                        setPaymentFrequency(e.target.value)
-                                    }
-                                    required
-                                >
-                                    <MenuItem value={1}>1</MenuItem>
-                                    <MenuItem value={2}>2</MenuItem>
-                                    {/* Thêm các giá trị khác nếu cần */}
-                                </Select>
-                            </FormControl>
-
-                            <TextField
-                                label="Giá mỗi kỳ hạn (đ)"
-                                variant="outlined"
-                                margin="normal"
-                                fullWidth
-                                required
-                                value={insuranceAmount}
-                                InputProps={{
-                                    readOnly: true,
-                                }}
-                            />
-
-                            <Button
-                                type="submit"
-                                variant="contained"
-                                color="primary"
-                                fullWidth
-                                style={{ marginTop: "20px" }}
-                            >
-                                Đăng ký
-                            </Button>
-                        </>
-                    ) : (
-                        <Typography variant="body1">
-                            Đang tải thông tin gói bảo hiểm...
-                        </Typography>
-                    )}
-                </form>
-            </Paper>
-        </Container>
-    );
+    if (error) {
+        return <p>Error: {error.message}</p>;
+    }
+    return <><div className="container__body">
+        <div className="detail__page">
+            <div className="detail__container">
+                <div className="img-container">
+                    <img src="" alt=""></img>
+                </div>
+                <div className="card-content">
+                    <div className="detail__title">
+                        <h3> {dataGoiBH.tenGoiBH}</h3>
+                    </div>
+                    <div className="detail__body">
+                        <p>{dataGoiBH.motaGoiBH}</p>
+                        <p>Giá: {dataGoiBH.gia} VND</p>
+                        <p>Tỉ lệ hoàn tiền: {dataGoiBH.tiLeHoanTien}%</p>
+                        <p>Thời hạn bảo vệ: {dataGoiBH.thoiHanBaoVe} năm</p>
+                        <p>Gói bảo hiểm áp dụng hoàn tiền cho các bệnh sau:</p>
+                        <ul className="benh__list">
+                            {dataBenh.map((benhItem, index) => (
+                                <li key={index} >
+                                    {`${benhItem.tenBenh}: ${benhItem.moTa}`}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
+                <div className="detail__btn">
+                    <Link to={`../${ROUTERS.USER.PRODUCT}`}>
+                        <p>Quay lại</p>
+                    </Link>
+                </div>
+            </div>
+        </div>
+    </div>
+    </>
 };
 
 export default InsuranceRegistration_;
