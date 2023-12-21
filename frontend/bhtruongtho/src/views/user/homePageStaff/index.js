@@ -9,7 +9,7 @@ const HomePageStaff = () => {
             <div className="task-bar">
                 <ul>
                     <li>
-                        Duyệt đơn đăng ký
+                        <Link to="/registrationForms">Duyệt đơn đăng ký</Link>
                     </li>
                     <li>Đơn thanh toán</li>
                     <li>Danh sách khách hàng</li>

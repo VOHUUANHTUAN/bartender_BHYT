@@ -1,5 +1,4 @@
 import axiosClient from "./axiosClient";
-// import axiosClient from "./axiosClient";
 
 const END_POINT = {
     GOIBAOHIEM: "GoiBaoHiem",
@@ -8,6 +7,8 @@ const END_POINT = {
     LOGIN: "Auth/login",
     info: "Auth/userinfo",
     CHANGEPASSWORD: "ChangePassword",
+    DONDANGKY: "DONDANGKY",
+    NHANVIEN: "NhanVien",
 };
 export const getGoiBHAPI = () => {
     return axiosClient.get(`${END_POINT.GOIBAOHIEM}`);
@@ -21,11 +22,9 @@ export const logingettoken = (username, password) => {
     return axiosClient.post(`${END_POINT.LOGIN}`, data);
 };
 
-
 export const getTaiKhoanByUsername = (username) => {
     return axiosClient.get(`${END_POINT.TaiKhoan}/${username}`);
 };
-
 
 export const getUserInfoByToken = (token) => {
     return axiosClient.get(`${END_POINT.info}`, {
@@ -34,10 +33,6 @@ export const getUserInfoByToken = (token) => {
         },
     });
 };
-
-
-
-
 
 export const getGoiBHByMaGBH = (MaGBH) => {
     return axiosClient.get(`${END_POINT.GOIBAOHIEM}/${MaGBH}`);
@@ -49,9 +44,6 @@ export const getBenhByMaGBH = (MaGBH) => {
 };
 
 export const changePasswordAPI = async (username, changePasswordData) => {
-    console.log('URL:', `${END_POINT.TaiKhoan}/${username}/${END_POINT.CHANGEPASSWORD}`);
-    console.log('Headers:', { 'Content-Type': 'application/json' });
-    console.log('Data:', changePasswordData);
     try {
         const response = await axiosClient.put(
             `${END_POINT.TaiKhoan}/${username}/${END_POINT.CHANGEPASSWORD}`,
@@ -59,10 +51,35 @@ export const changePasswordAPI = async (username, changePasswordData) => {
             { headers: { 'Content-Type': 'application/json' } }
         );
 
-        return response.data; // Return data from the response if needed
+        return response.data;
     } catch (error) {
         console.error('Error:', error);
         throw new Error(`Error changing password: ${error.message}`);
     }
 };
 
+export const getDonDangKyList = () => {
+    return axiosClient.get(`${END_POINT.DONDANGKY}`);
+}
+
+export const getDonDangKyByID = (ID) => {
+    return axiosClient.get(`${END_POINT.DONDANGKY}/${ID}`);
+}
+
+export const getNhanVienByID = (ID) => {
+    return axiosClient.get(`${END_POINT.NHANVIEN}/${ID}`);
+}
+
+export const putDonDangKyByID = async (ID, Data) => {
+    try {
+        const response = await axiosClient.put(
+            `${END_POINT.DONDANGKY}/${ID}`,
+            Data,
+            { headers: { 'Content-Type': 'application/json' } }
+        );
+        return response.data;
+    } catch (error) {
+        console.error('Error:', error);
+        throw new Error(`Error chang DDK: ${error.message}`);
+    }
+};
