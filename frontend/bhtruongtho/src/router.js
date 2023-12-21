@@ -11,6 +11,10 @@ import RequestInvoicePage from "./views/user/requestInvoicePage";
 import HomePageStaff from "./views/user/homePageStaff";
 import ChangePassword from "./views/user/ChangePasswordPage";
 import { useUser } from "../src/context/UserContext.js";
+import InsuranceRegistration from "./views/user/InsuranceRegistration";
+import ChangeInformation from "./views/user/changeInfoPage/index.js";
+import ListDonDangKy from "./views/user/registrationForm/index.js";
+import DonDangKyDetail from "./views/user/registrationForm/regisdetail.js";
 
 const AuthGuard = ({ component: Component, loginRequired }) => {
     const { user } = useUser();
@@ -24,10 +28,7 @@ const AuthGuard = ({ component: Component, loginRequired }) => {
     return Component
   };
 
-import InsuranceRegistration from "./views/user/InsuranceRegistration";
-import ChangeInformation from "./views/user/changeInfoPage/index.js";
-import ListDonDangKy from "./views/user/registrationForm/index.js";
-import DonDangKyDetail from "./views/user/registrationForm/regisdetail.js";
+
 
 const renderUserRouter = () => {
     const userRouters = [
