@@ -3,23 +3,25 @@ import "./style.scss";
 import { ROUTERS } from "../../../../utils/router";
 import { Link, useNavigate } from "react-router-dom";
 import { useUser } from "../../../../context/UserContext";
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import * as React from 'react';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import Box from '@mui/material/Box';
-import Avatar from '@mui/material/Avatar';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Tooltip from '@mui/material/Tooltip';
-import Settings from '@mui/icons-material/Settings';
-import Logout from '@mui/icons-material/Logout';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import * as React from "react";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import Box from "@mui/material/Box";
+import LockIcon from "@mui/icons-material/Lock";
+import Avatar from "@mui/material/Avatar";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import Divider from "@mui/material/Divider";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import Tooltip from "@mui/material/Tooltip";
+import Settings from "@mui/icons-material/Settings";
+import Logout from "@mui/icons-material/Logout";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 const Header = () => {
     const navigate = useNavigate();
 
+    // Gọi hàm để lấy thông tin người dùng
     // Gọi hàm để lấy thông tin người dùng
     const { user, login, logout } = useUser();
 
@@ -30,7 +32,6 @@ const Header = () => {
 
     useEffect(() => {
         // Kiểm tra xem có thông tin người dùng trong local storage không
-
 
         var temp = localStorage.getItem("username");
         if (temp)
@@ -73,7 +74,6 @@ const Header = () => {
     };
     const handleClose = () => {
         setAnchorEl(null);
-        
     };
     return (
         <>
@@ -94,16 +94,34 @@ const Header = () => {
                                 <ul>
                                     {user ? (
                                         <>
-                                            <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
-                                                <Typography sx={{ minWidth: 100 }}>Xin chào, {user.username}!</Typography>
+                                            <Box
+                                                sx={{
+                                                    display: "flex",
+                                                    alignItems: "center",
+                                                    textAlign: "center",
+                                                }}
+                                            >
+                                                <Typography
+                                                    sx={{ minWidth: 100 }}
+                                                >
+                                                    Xin chào, {user.username}!
+                                                </Typography>
                                                 <Tooltip title="Account">
                                                     <IconButton
                                                         onClick={handleClick}
                                                         size="small"
                                                         sx={{ ml: 2 }}
-                                                        aria-controls={open ? 'account-menu' : undefined}
+                                                        aria-controls={
+                                                            open
+                                                                ? "account-menu"
+                                                                : undefined
+                                                        }
                                                         aria-haspopup="true"
-                                                        aria-expanded={open ? 'true' : undefined}
+                                                        aria-expanded={
+                                                            open
+                                                                ? "true"
+                                                                : undefined
+                                                        }
                                                     >
                                                         <AccountCircleIcon />
                                                     </IconButton>
@@ -118,39 +136,59 @@ const Header = () => {
                                                 slotProps={{
                                                     elevation: 0,
                                                     sx: {
-                                                        overflow: 'visible',
-                                                        filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+                                                        overflow: "visible",
+                                                        filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
                                                         mt: 1.5,
-                                                        '& .MuiAvatar-root': {
+                                                        "& .MuiAvatar-root": {
                                                             width: 32,
                                                             height: 32,
                                                             ml: -0.5,
                                                             mr: 1,
                                                         },
-                                                        '&:before': {
+                                                        "&:before": {
                                                             content: '""',
-                                                            display: 'block',
-                                                            position: 'absolute',
+                                                            display: "block",
+                                                            position:
+                                                                "absolute",
                                                             top: 0,
                                                             right: 14,
                                                             width: 10,
                                                             height: 10,
-                                                            bgcolor: 'background.paper',
-                                                            transform: 'translateY(-50%) rotate(45deg)',
+                                                            bgcolor:
+                                                                "background.paper",
+                                                            transform:
+                                                                "translateY(-50%) rotate(45deg)",
                                                             zIndex: 0,
                                                         },
                                                     },
                                                 }}
-                                                transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-                                                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                                                transformOrigin={{
+                                                    horizontal: "right",
+                                                    vertical: "top",
+                                                }}
+                                                anchorOrigin={{
+                                                    horizontal: "right",
+                                                    vertical: "bottom",
+                                                }}
                                             >
                                                 {/* <MenuItem onClick={handleClose}>
                                                     <Avatar /> Profile
                                                 </MenuItem> */}
                                                 <MenuItem onClick={handleClose}>
-                                                    <Avatar />                                                 <Link to="/changepassword">
-                                                    Đổi mật khẩu
-                                                </Link>
+                                                    <ListItemIcon>
+                                                        <AccountCircleIcon fontSize="small" />
+                                                    </ListItemIcon>
+                                                    <Link to="/PersonalInfo">
+                                                        Thông tin cá nhân
+                                                    </Link>
+                                                </MenuItem>
+                                                <MenuItem onClick={handleClose}>
+                                                    <ListItemIcon>
+                                                        <LockIcon fontSize="small" />
+                                                    </ListItemIcon>
+                                                    <Link to="/changepassword">
+                                                        Đổi mật khẩu
+                                                    </Link>
                                                 </MenuItem>
                                                 <Divider />
                                                 <MenuItem onClick={handleClose}>
@@ -158,8 +196,8 @@ const Header = () => {
                                                         <AddCircleIcon fontSize="small" />
                                                     </ListItemIcon>
                                                     <Link to="/requestinvoice">
-                                                    Tạo yêu cầu hoàn trả
-                                                </Link>
+                                                        Tạo yêu cầu hoàn trả
+                                                    </Link>
                                                 </MenuItem>
                                                 {/* <MenuItem onClick={handleClose}>
                                                     <ListItemIcon>
@@ -173,15 +211,13 @@ const Header = () => {
                                                         <Logout fontSize="small" />
                                                     </ListItemIcon>
                                                     <a
-                                                    onClick={handleLogout}
-                                                    className="logout-button"
-                                                >
-                                                    Đăng xuất
-                                                </a>
+                                                        onClick={handleLogout}
+                                                        className="logout-button"
+                                                    >
+                                                        Đăng xuất
+                                                    </a>
                                                 </MenuItem>
                                             </Menu>
-
-
                                         </>
                                     ) : (
                                         <>
@@ -259,7 +295,7 @@ const Header = () => {
                         </div>
                     </div>
                 </div>
-            </div >
+            </div>
         </>
     );
 };
