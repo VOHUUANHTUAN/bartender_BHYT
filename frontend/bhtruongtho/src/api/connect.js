@@ -68,18 +68,16 @@ export const getGoiBHByMaGBH = (MaGBH) => {
     return axiosClient.get(`${END_POINT.GOIBAOHIEM}/${MaGBH}`);
 };
 
-
 export const getBenhByMaGBH = (MaGBH) => {
     return axiosClient.get(`${END_POINT.BENH}/${MaGBH}`);
 };
-
 
 export const changePasswordAPI = async (username, changePasswordData) => {
     try {
         const response = await axiosClient.put(
             `${END_POINT.TaiKhoan}/${username}/${END_POINT.CHANGEPASSWORD}`,
             changePasswordData,
-            { headers: { 'Content-Type': 'application/json' } }
+            { headers: { "Content-Type": "application/json" } }
         );
 
         return response.data;
@@ -89,14 +87,12 @@ export const changePasswordAPI = async (username, changePasswordData) => {
     }
 };
 
-
-export const createRefund = async (yeuCauData) => {
-    try {
-        const response = await axiosClient.put(
-            `${END_POINT.YEUCAUHOANTRA}/${END_POINT.TAOYEUCAU}`,
-            yeuCauData
-        );
-        return response;}
+export const createRequest = async (yeuCauData) => {
+    const response = await axiosClient.post(
+        `${END_POINT.YEUCAUHOANTRA}/${END_POINT.TAOYEUCAU}`,
+        yeuCauData
+    );
+    return response;
 };
 
 export const getAllBenh = () => {
@@ -104,12 +100,16 @@ export const getAllBenh = () => {
 };
 
 export const getGoiBHByUsername = (username) => {
-    return axiosClient.get(`${END_POINT.GOIBAOHIEM}/${END_POINT.GOIBHBYUS}/${username}`);
+    return axiosClient.get(
+        `${END_POINT.GOIBAOHIEM}/${END_POINT.GOIBHBYUS}/${username}`
+    );
 };
 
 export const getYCHTByUsername = (username) => {
-    const res = axiosClient.get(`${END_POINT.YEUCAUHOANTRA}/${END_POINT.YCHTBYUS}/${username}`);
-    return res
+    const res = axiosClient.get(
+        `${END_POINT.YEUCAUHOANTRA}/${END_POINT.YCHTBYUS}/${username}`
+    );
+    return res;
 };
 
 export const getBenhVienAPI = () => {
@@ -117,26 +117,26 @@ export const getBenhVienAPI = () => {
 };
 export const getDonDangKyList = () => {
     return axiosClient.get(`${END_POINT.DONDANGKY}`);
-}
+};
 
 export const getDonDangKyByID = (ID) => {
     return axiosClient.get(`${END_POINT.DONDANGKY}/${ID}`);
-}
+};
 
 export const getNhanVienByID = (ID) => {
     return axiosClient.get(`${END_POINT.NHANVIEN}/${ID}`);
-}
+};
 
 export const putDonDangKyByID = async (ID, Data) => {
     try {
         const response = await axiosClient.put(
             `${END_POINT.DONDANGKY}/${ID}`,
             Data,
-            { headers: { 'Content-Type': 'application/json' } }
+            { headers: { "Content-Type": "application/json" } }
         );
         return response.data;
     } catch (error) {
-        console.error('Error:', error);
+        console.error("Error:", error);
         throw new Error(`Error chang DDK: ${error.message}`);
     }
 };
