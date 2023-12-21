@@ -12,23 +12,21 @@ import HomePageStaff from "./views/user/homePageStaff";
 import ChangePassword from "./views/user/ChangePasswordPage";
 import { useUser } from "../src/context/UserContext.js";
 import InsuranceRegistration from "./views/user/InsuranceRegistration";
-import ChangeInformation from "./views/user/changeInfoPage/index.js";
 import ListDonDangKy from "./views/user/registrationForm/index.js";
 import DonDangKyDetail from "./views/user/registrationForm/regisdetail.js";
+import PersonalInfo from "./views/user/personalInfoPage/index.js";
 
 const AuthGuard = ({ component: Component, loginRequired }) => {
     const { user } = useUser();
-  
+
     if (loginRequired && !user) {
-      // Redirect to login if login is required and the user is not authenticated
-      return <Navigate to={`/${ROUTERS.USER.LOGIN}`}/>;
+        // Redirect to login if login is required and the user is not authenticated
+        return <Navigate to={`/${ROUTERS.USER.LOGIN}`} />;
     }
-  
+
     // Render the component if login is not required or the user is authenticated
-    return Component
-  };
-
-
+    return Component;
+};
 
 const renderUserRouter = () => {
     const userRouters = [
@@ -74,11 +72,10 @@ const renderUserRouter = () => {
             path: ROUTERS.USER.REQUESTINVOICE,
             component: <RequestInvoicePage />,
             loginRequired: true,
-        }, 
-        {    
-
+        },
+        {
             path: ROUTERS.USER.PERSONALINFO,
-            component: <ChangeInformation />,
+            component: <PersonalInfo />,
         },
         {
             path: ROUTERS.USER.INSURANCEREGISTRATION,
@@ -86,8 +83,8 @@ const renderUserRouter = () => {
         },
         {
             path: ROUTERS.USER.DONDANGKY,
-            component: <ListDonDangKy />
-        }
+            component: <ListDonDangKy />,
+        },
     ];
 
     return (
@@ -95,13 +92,23 @@ const renderUserRouter = () => {
             <Routes>
                 {userRouters.map((item, key) => (
                     <Route
-
-                        key={key} path={item.path} //element={item.component}
-                        element={<AuthGuard component={item.component} loginRequired={item.loginRequired}/>}
+                        key={key}
+                        path={item.path} //element={item.component}
+                        element={
+                            <AuthGuard
+                                component={item.component}
+                                loginRequired={item.loginRequired}
+                            />
+                        }
                     />
                 ))}
                 <Route
-                    path="product/detail/:id" element={<ProductDetailPage />}
+                    path="product/detail/:id"
+                    element={<ProductDetailPage />}
+                />
+                <Route
+                    path="registrationForms/detail/:id"
+                    element={<DonDangKyDetail />}
                 />
             {/* <Route path="product/detail/:id" element={<AuthGuard component={<ProductDetailPage />} loginRequired={true} />} /> */}
                 <Route
@@ -121,12 +128,12 @@ export default RouterCustom;
 // const AuthGuard = ({ component, loginRequired }) => {
 //     // Kiểm tra xem user có tồn tại hay không
 //     const isAuthenticated = user !== null;
-  
+
 //     // Nếu yêu cầu đăng nhập và user không tồn tại, chuyển hướng đến trang đăng nhập
 //     if (loginRequired && !isAuthenticated) {
 //       return <Navigate to={ROUTERS.USER.LOGIN} />;
 //     }
-  
+
 //     // Nếu user tồn tại hoặc không yêu cầu đăng nhập, hiển thị component được chuyển vào
 //     return component;
 //   };
