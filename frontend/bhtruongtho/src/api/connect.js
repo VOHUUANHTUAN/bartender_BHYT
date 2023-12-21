@@ -4,12 +4,15 @@ const END_POINT = {
     GOIBAOHIEM: "GoiBaoHiem",
     BENH: "Benh",
     TaiKhoan: "User",
+    KHACHHANG: "KhachHang",
     LOGIN: "Auth/login",
     info: "Auth/userinfo",
     CHANGEPASSWORD: "ChangePassword",
     YEUCAUHOANTRA: "YeuCauHoanTra",
     TAOYEUCAU: "TaoYeuCauHoanTra",
     GOIBHBYUS: "GetGoiBHByUs",
+    YCHTBYUS: "GetYCHTByUs",
+    BENHVIEN: "BenhVien",
     DONDANGKY: "DONDANGKY",
     NHANVIEN: "NhanVien",
 };
@@ -29,8 +32,32 @@ export const getTaiKhoanByUsername = (username) => {
     return axiosClient.get(`${END_POINT.TaiKhoan}/${username}`);
 };
 
+// Hàm đăng ký tài khoản mới
+export const KhachHang_DangKyTaiKhoan = (khachHangData) => {
+    return axiosClient.post(`${END_POINT.TaiKhoan}`, khachHangData);
+};
+
+//Hàm lấy thông tin đăng nhập của user
 export const getUserInfoByToken = (token) => {
     return axiosClient.get(`${END_POINT.info}`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+};
+
+// Hàm lấy thông tin cá nhân khách hàng
+export const getKhachHangInformation = (token) => {
+    return axiosClient.get(`${END_POINT.KHACHHANG}`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+};
+
+//Hàm cập nhật thông tin khách hàng
+export const updateKhachHangInformation = (token, khachHangData) => {
+    return axiosClient.post(`${END_POINT.KHACHHANG}`, khachHangData, {
         headers: {
             Authorization: `Bearer ${token}`,
         },
@@ -57,25 +84,17 @@ export const changePasswordAPI = async (username, changePasswordData) => {
 
         return response.data;
     } catch (error) {
-        console.error('Error:', error);
+        //console.error('Error:', error);
         throw new Error(`Error changing password: ${error.message}`);
     }
 };
 
-
-export const createRefund = async (yeuCauData) => {
-    try {
-        const response = await axiosClient.put(
+export const createRequest = async (yeuCauData) => {
+        const response = await axiosClient.post(
             `${END_POINT.YEUCAUHOANTRA}/${END_POINT.TAOYEUCAU}`,
-            yeuCauData,
-            { headers: { 'Content-Type': 'application/json' } }
+            yeuCauData
         );
-
-        return response.data; // Return data from the response if needed
-    } catch (error) {
-        console.error('Error:', error);
-        throw new Error(`Error changing password: ${error.message}`);
-    }
+        return response;
 };
 
 export const getAllBenh = () => {
@@ -84,6 +103,16 @@ export const getAllBenh = () => {
 
 export const getGoiBHByUsername = (username) => {
     return axiosClient.get(`${END_POINT.GOIBAOHIEM}/${END_POINT.GOIBHBYUS}/${username}`);
+};
+
+export const getYCHTByUsername = (username) => {
+    const res = axiosClient.get(`${END_POINT.YEUCAUHOANTRA}/${END_POINT.YCHTBYUS}/${username}`);
+    return res
+};
+
+export const getBenhVienAPI = () => {
+    return axiosClient.get(`${END_POINT.BENHVIEN}`);
+};
 export const getDonDangKyList = () => {
     return axiosClient.get(`${END_POINT.DONDANGKY}`);
 }

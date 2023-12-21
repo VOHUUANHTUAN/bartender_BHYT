@@ -1,3 +1,4 @@
+
 import { memo, useEffect, useState } from "react"
 import { getGoiBHByMaGBH, getBenhByMaGBH } from "../../../api/connect";
 import "./style.scss"
@@ -49,7 +50,6 @@ const ProductDetailPage = () => {
                         <h3> {dataGoiBH.tenGoiBH}</h3>
                     </div>
                     <div className="detail__body">
-
                         <p>{dataGoiBH.motaGoiBH}</p>
                         <p>Giá: {dataGoiBH.gia} VND</p>
                         <p>Tỉ lệ hoàn tiền: {dataGoiBH.tiLeHoanTien}%</p>
@@ -75,4 +75,4 @@ const ProductDetailPage = () => {
     </>
 };
 
-export default memo(ProductDetailPage);
+export default InsuranceRegistration_;

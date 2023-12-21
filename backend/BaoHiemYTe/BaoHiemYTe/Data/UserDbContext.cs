@@ -9,8 +9,8 @@ namespace BaoHiemYTe.Data
         {
 
         }
-        public DbSet<User> Users { get; set; }
-        public DbSet<KhachHang> KhachHang { get; set; }
+        public DbSet<Users> Users { get; set; }
+        public DbSet<KhachHang>  KhachHang{ get; set; }
         public DbSet<NhanVien> NhanVien { get; set; }
         public DbSet<GoiBaoHiem> GoiBaoHiem { get; set; }
         public DbSet<Benh> Benh { get; set; }
@@ -97,7 +97,9 @@ namespace BaoHiemYTe.Data
             modelBuilder.Entity<YeuCauHoanTra>()
                 .Property(y => y.SoTienHoanTra)
                 .IsRequired(false);
-
+            modelBuilder.Entity<YeuCauHoanTra>()
+                .HasIndex(hd => hd.MaHDKhamBenh)
+                .IsUnique();
         }
 
         public DbSet<DonDangKy> DonDangKy { get; set; }
