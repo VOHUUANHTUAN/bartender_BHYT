@@ -10,6 +10,7 @@
         public int SoTienDaKham { get; set; }
         public string Benh { get; set; }
         public int MaGoiBHApDung { get; set; }
+        public int SoTienHoanTra { get; set; }
         public string username { get; set; }
 
 

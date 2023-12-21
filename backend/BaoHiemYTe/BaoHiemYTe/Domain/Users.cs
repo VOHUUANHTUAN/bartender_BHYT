@@ -2,7 +2,7 @@
 
 namespace BaoHiemYTe.Domain
 {
-    public class User
+    public class Users
     {
         [Key]
         public string username { get; set; }
