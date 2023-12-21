@@ -52,7 +52,7 @@ namespace BaoHiemYTe.Controllers
 
         // GET: api/DonDangKy/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<DonDangKyDTO>> GetGoiBHById(int id)
+        public async Task<ActionResult<DonDangKyDTO>> GetDonDangKyById(int id)
         {
             var donDangKy = await _dbContext.DonDangKy
                 .Include(d => d.KhachHang)
@@ -83,6 +83,69 @@ namespace BaoHiemYTe.Controllers
             };
 
             return Ok(donDangKyDTO);
+        }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateDonDangKyStatus(int id, [FromBody] DonDangKyUpdateDto updateDto)
+        {
+            if (updateDto == null)
+            {
+                return BadRequest("Invalid data");
+            }
+
+            var donDangKy = await _dbContext.DonDangKy
+                .Include(d => d.NhanVien)
+                .FirstOrDefaultAsync(d => d.MaDonDK == id);
+
+            if (donDangKy == null)
+            {
+                return NotFound();
+            }
+
+            // Update DonDangKy properties
+            donDangKy.TinhTrang = updateDto.TinhTrang;
+            donDangKy.MaNV = updateDto.MaNV;
+            donDangKy.ThoiGianBD = updateDto.ThoiGianBD;
+            donDangKy.ThoiGianHetHan= updateDto.ThoiGianHetHan;
+            // Update NhanVien properties if NhanVien is not null
+            if (donDangKy.NhanVien != null)
+            {
+                donDangKy.NhanVien.DiaChi = updateDto.DiaChi;
+                donDangKy.NhanVien.Email = updateDto.Email;
+                donDangKy.NhanVien.HoTen = updateDto.HoTen;
+                donDangKy.NhanVien.SDT = updateDto.SDT;
+                donDangKy.NhanVien.MaNV = updateDto.MaNV;
+                // Add more properties as needed for updating NhanVien
+            }
+
+            // Use a transaction if needed
+            using (var transaction = _dbContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    await _dbContext.SaveChangesAsync();
+                    transaction.Commit();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!DonDangKyExists(id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        // Log or handle the exception as needed
+                        transaction.Rollback();
+                        throw;
+                    }
+                }
+            }
+
+            return NoContent();
+        }
+
+        private bool DonDangKyExists(int id)
+        {
+            return _dbContext.DonDangKy.Any(e => e.MaDonDK == id);
         }
     }
 }

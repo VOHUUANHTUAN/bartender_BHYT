@@ -46,7 +46,9 @@ const ChangePasswordForm = () => {
 
     return (
         <Container component="main" maxWidth="xs">
-            <Paper elevation={3} style={{ padding: "20px", marginTop: "100px" }}>
+            <Paper elevation={3}
+                style={{ padding: "20px", margin: "150px 0px 50px 0px" }}
+            >
                 <Typography component="h1" variant="h5">
                     Đổi mật khẩu
                 </Typography>

@@ -11,8 +11,6 @@ const END_POINT = {
     YEUCAUHOANTRA: "YeuCauHoanTra",
     TAOYEUCAU: "TaoYeuCauHoanTra",
     GOIBHBYUS: "GetGoiBHByUs",
-    YCHTBYUS: "GetYCHTByUs",
-    BENHVIEN: "BenhVien",
 };
 export const getGoiBHAPI = () => {
     return axiosClient.get(`${END_POINT.GOIBAOHIEM}`);
@@ -73,9 +71,6 @@ export const getBenhByMaGBH = (MaGBH) => {
 
 
 export const changePasswordAPI = async (username, changePasswordData) => {
-    console.log('URL:', `${END_POINT.TaiKhoan}/${username}/${END_POINT.CHANGEPASSWORD}`);
-    console.log('Headers:', { 'Content-Type': 'application/json' });
-    console.log('Data:', changePasswordData);
     try {
         const response = await axiosClient.put(
             `${END_POINT.TaiKhoan}/${username}/${END_POINT.CHANGEPASSWORD}`,
@@ -83,19 +78,21 @@ export const changePasswordAPI = async (username, changePasswordData) => {
             { headers: { 'Content-Type': 'application/json' } }
         );
 
-        return response.data; // Return data from the response if needed
+        return response.data;
     } catch (error) {
         //console.error('Error:', error);
         throw new Error(`Error changing password: ${error.message}`);
     }
 };
 
-export const createRequest = async (yeuCauData) => {
-        const response = await axiosClient.post(
+
+export const createRefund = async (yeuCauData) => {
+    try {
+        const response = await axiosClient.put(
             `${END_POINT.YEUCAUHOANTRA}/${END_POINT.TAOYEUCAU}`,
             yeuCauData
         );
-        return response;
+        return response;}
 };
 
 export const getAllBenh = () => {

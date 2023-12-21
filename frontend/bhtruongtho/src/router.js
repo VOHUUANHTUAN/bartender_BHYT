@@ -79,6 +79,10 @@ const renderUserRouter = () => {
             path: ROUTERS.USER.INSURANCEREGISTRATION,
             component: <InsuranceRegistration />,
         },
+        {
+            path: ROUTERS.USER.DONDANGKY,
+            component: <ListDonDangKy />,
+        },
     ];
 
     return (
@@ -100,7 +104,10 @@ const renderUserRouter = () => {
                     path="product/detail/:id"
                     element={<ProductDetailPage />}
                 />
-                {/* <Route path="product/detail/:id" element={<AuthGuard component={<ProductDetailPage />} loginRequired={true} />} /> */}
+                <Route
+                    path="registrationForms/detail/:id"
+                    element={<DonDangKyDetail />}
+                />
             </Routes>
         </MasterLayout>
     );

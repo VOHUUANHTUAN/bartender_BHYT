@@ -10,5 +10,6 @@ export const ROUTERS = {
         REQUESTINVOICE: "requestinvoice",
         PERSONALINFO: "PersonalInfo",
         INSURANCEREGISTRATION: "InsuranceRegistration",
+        DONDANGKY: "registrationForms",
     },
 };
