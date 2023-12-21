@@ -10,6 +10,9 @@ import Register from "./views/user/registerPage/index.js";
 import RequestInvoicePage from "./views/user/requestInvoicePage";
 import HomePageStaff from "./views/user/homePageStaff";
 import ChangePassword from "./views/user/ChangePasswordPage";
+import ListDonDangKy from "./views/user/registrationForm/index.js";
+import DonDangKyDetail from "./views/user/registrationForm/regisdetail.js";
+
 const renderUserRouter = () => {
     const userRouters = [
         {
@@ -49,6 +52,10 @@ const renderUserRouter = () => {
             path: ROUTERS.USER.REQUESTINVOICE,
             component: <RequestInvoicePage />
         },
+        {
+            path: ROUTERS.USER.DONDANGKY,
+            component: <ListDonDangKy />
+        }
     ];
     return (
         <MasterLayout>
@@ -61,6 +68,9 @@ const renderUserRouter = () => {
                 ))}
                 <Route
                     path="product/detail/:id" element={<ProductDetailPage />}
+                />
+                <Route
+                    path="registrationForms/detail/:id" element={<DonDangKyDetail />}
                 />
             </Routes>
         </MasterLayout>
