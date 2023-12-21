@@ -22,6 +22,7 @@ const Header = () => {
     const navigate = useNavigate();
 
     // Gọi hàm để lấy thông tin người dùng
+    // Gọi hàm để lấy thông tin người dùng
     const { user, login, logout } = useUser();
 
     const handleLogout = () => {
