@@ -4,6 +4,7 @@ using BaoHiemYTe.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BaoHiemYTe.Migrations
 {
     [DbContext(typeof(UserDbContext))]
-    partial class UserDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231220125245_demo")]
+    partial class demo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -307,7 +310,7 @@ namespace BaoHiemYTe.Migrations
                     b.ToTable("TinhTrangBenh");
                 });
 
-            modelBuilder.Entity("BaoHiemYTe.Domain.Users", b =>
+            modelBuilder.Entity("BaoHiemYTe.Domain.User", b =>
                 {
                     b.Property<string>("username")
                         .HasColumnType("nvarchar(450)");
@@ -456,24 +459,24 @@ namespace BaoHiemYTe.Migrations
 
             modelBuilder.Entity("BaoHiemYTe.Domain.KhachHang", b =>
                 {
-                    b.HasOne("BaoHiemYTe.Domain.Users", "Users")
+                    b.HasOne("BaoHiemYTe.Domain.User", "User")
                         .WithMany()
                         .HasForeignKey("username")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Users");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("BaoHiemYTe.Domain.NhanVien", b =>
                 {
-                    b.HasOne("BaoHiemYTe.Domain.Users", "Users")
+                    b.HasOne("BaoHiemYTe.Domain.User", "User")
                         .WithMany()
                         .HasForeignKey("username")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Users");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("BaoHiemYTe.Domain.TinhTrangBenh", b =>
