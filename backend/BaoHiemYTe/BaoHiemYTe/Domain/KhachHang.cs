@@ -15,7 +15,7 @@ namespace BaoHiemYTe.Domain
 
         // Khai báo khóa ngoại với User
         [ForeignKey("username")]
-        public User User { get; set; }
+        public Users Users { get; set; }
 
         public string username { get; set; }
     }

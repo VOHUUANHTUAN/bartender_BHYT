@@ -88,7 +88,6 @@ namespace BaoHiemYTe.Controllers
                     existingKhachHang.SDT = khachHangDTO.SDT;
                     existingKhachHang.Email = khachHangDTO.Email;
                     userDbContext.SaveChanges();
-
                     return Ok("Cập nhật thông tin thành công");
                 }
                 else
@@ -103,13 +102,19 @@ namespace BaoHiemYTe.Controllers
                         Email = khachHangDTO.Email,
                         username = username_
                     };
-
                     userDbContext.KhachHang.Add(newKhachHang);
+                    userDbContext.SaveChanges();
+                }
+
+                var currentUser = userDbContext.Users.FirstOrDefault(u => u.username == username_);
+                if (currentUser != null)
+                {
+                    currentUser.FirstLogin = false;
                 }
 
                 userDbContext.SaveChanges();
 
-                return Ok("Cập nhật thông tin thành công");
+                return Ok("Thêm thông tin thành công");
             }
             catch (Exception ex)
             {

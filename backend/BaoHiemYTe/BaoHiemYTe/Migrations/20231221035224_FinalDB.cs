@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BaoHiemYTe.Migrations
 {
     /// <inheritdoc />
-    public partial class final : Migration
+    public partial class FinalDB : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

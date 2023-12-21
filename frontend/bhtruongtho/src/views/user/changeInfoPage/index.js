@@ -2,6 +2,7 @@ import React, { memo, useEffect, useState } from "react";
 import {
     updateKhachHangInformation,
     getKhachHangInformation,
+    getUserInfoByToken,
 } from "../../../api/connect";
 import { useNavigate, Link } from "react-router-dom";
 import { useUser } from "../../../context/UserContext";
@@ -17,38 +18,33 @@ import {
 // ... (imports)
 
 const ChangeInformation = () => {
-    const { user, setUser } = useUser(); // Assuming this provides the user data
+    const { user, login, setUser } = useUser(); // Assuming this provides the user data
 
     // Initialize SoDu and username from user data
     const [soDu, setSoDu] = useState(user ? user.soDu : 0);
-    const [username, setUsername] = useState(user ? user.username : "");
-    const [hoTen, setHoTen] = useState(user ? user.hoTen || "" : "");
-    const [diaChi, setDiaChi] = useState(user ? user.diaChi || "" : "");
-    const [soDienThoai, setSoDienThoai] = useState(user ? user.SDT || "" : "");
-    const [email, setEmail] = useState(user ? user.email || "" : "");
+    const [username, setUsername] = useState(
+        localStorage.getItem("username") || ""
+    );
+    const [hoTen, setHoTen] = useState("");
+    const [diaChi, setDiaChi] = useState("");
+    const [soDienThoai, setSoDienThoai] = useState("");
+    const [email, setEmail] = useState("");
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState("");
 
     const callAsyncFunction = async (khachHangData) => {
-        const token = localStorage.getItem("token");
-        var response = await updateKhachHangInformation(token, khachHangData);
-        console.log(response);
-
-        setSnackbarMessage(response);
-        setSnackbarOpen(true);
-
-        // if (response === 200) {
-        //     console.log("Request was successful:", response);
-        //     setSnackbarMessage("Cập nhật thông tin thành công");
-        //     setSnackbarOpen(true);
-        // } else {
-        //     // Request failed with an error status
-        //     console.error("Request failed:", response.statusText);
-
-        //     // Display an error Snackbar message
-        //     setSnackbarMessage(`${response}`);
-        //     setSnackbarOpen(true);
-        // }
+        try {
+            const token = localStorage.getItem("token");
+            var response = await updateKhachHangInformation(
+                token,
+                khachHangData
+            );
+            setSnackbarMessage(response);
+            setSnackbarOpen(true);
+        } catch (error) {
+            setSnackbarMessage(error.response.data);
+            setSnackbarOpen(true);
+        }
     };
 
     const fetchData = async () => {
@@ -56,13 +52,26 @@ const ChangeInformation = () => {
             const token = localStorage.getItem("token");
             const khachHangData = await getKhachHangInformation(token);
             // Initialize state variables from the fetched data
-            setHoTen(khachHangData.hoTen || "");
-            setDiaChi(khachHangData.diaChi || "");
-            setSoDienThoai(khachHangData.sdt || "");
-            setEmail(khachHangData.email || "");
-            setSoDu(khachHangData.soDu || "");
-            setUsername(khachHangData.username || "");
-            // Do not update SoDu and username as they should remain constant
+            if (khachHangData) {
+                setHoTen(khachHangData.hoTen || "");
+                setDiaChi(khachHangData.diaChi || "");
+                setSoDienThoai(khachHangData.sdt || "");
+                setEmail(khachHangData.email || "");
+                setSoDu(khachHangData.soDu || "");
+                setUsername(localStorage.getItem("username") || "");
+                // Do not update SoDu and username as they should remain constant
+            }
+            const res = await getUserInfoByToken(token);
+            if (res) {
+                localStorage.setItem("firstLogin", res.firstLogin);
+            }
+            login({
+                username: res.username,
+                token: token,
+                firstLogin: res.firstLogin,
+                auth: true,
+                role: res.role,
+            });
         } catch (error) {
             console.error("Error fetching user information", error);
         }
@@ -87,8 +96,9 @@ const ChangeInformation = () => {
             soDu: soDu, // Include SoDu from the state
             username: username, // Include username from the state
         };
-        console.log(informationData);
+        // console.log(informationData);
         callAsyncFunction(informationData);
+        fetchData();
     };
 
     const validateFormat = () => {

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BaoHiemYTe.Migrations
 {
     [DbContext(typeof(UserDbContext))]
-    [Migration("20231211102511_final")]
-    partial class final
+    [Migration("20231221035224_FinalDB")]
+    partial class FinalDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -311,7 +311,7 @@ namespace BaoHiemYTe.Migrations
                     b.ToTable("TinhTrangBenh");
                 });
 
-            modelBuilder.Entity("BaoHiemYTe.Domain.User", b =>
+            modelBuilder.Entity("BaoHiemYTe.Domain.Users", b =>
                 {
                     b.Property<string>("username")
                         .HasColumnType("nvarchar(450)");
@@ -459,24 +459,24 @@ namespace BaoHiemYTe.Migrations
 
             modelBuilder.Entity("BaoHiemYTe.Domain.KhachHang", b =>
                 {
-                    b.HasOne("BaoHiemYTe.Domain.User", "User")
+                    b.HasOne("BaoHiemYTe.Domain.Users", "Users")
                         .WithMany()
                         .HasForeignKey("username")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("User");
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("BaoHiemYTe.Domain.NhanVien", b =>
                 {
-                    b.HasOne("BaoHiemYTe.Domain.User", "User")
+                    b.HasOne("BaoHiemYTe.Domain.Users", "Users")
                         .WithMany()
                         .HasForeignKey("username")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("User");
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("BaoHiemYTe.Domain.TinhTrangBenh", b =>

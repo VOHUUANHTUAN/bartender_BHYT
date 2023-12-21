@@ -59,7 +59,7 @@ namespace BaoHiemYTe.Controllers
             }
 
             // Nếu username chưa tồn tại, tạo tài khoản mới
-            var newUser = new User
+            var newUser = new Users
             {
                 username = userDto.username,
                 password = userDto.password,

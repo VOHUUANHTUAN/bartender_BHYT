@@ -49,7 +49,6 @@ const Login = () => {
         if (usernameError || passwordError) {
             return "Vui lòng kiểm tra lại thông tin";
         }
-
         return null; // Validation passed
     };
 
@@ -73,34 +72,24 @@ const Login = () => {
                 formData.username,
                 formData.password
             );
-            console.log(res);
-            if (res.errorMessage) {
-                setSnackbarMessage(res.errorMessage);
-                setSnackbarOpen(true);
-                return;
-            }
+
+            // setSnackbarMessage("Đăng nhập thành công");
+            // setSnackbarOpen(true);
+
             if (res) {
                 login({
                     username: formData.username,
                     token: res.token,
                     firstLogin: res.firstLogin,
                     auth: true,
+                    role: res.role,
                 });
                 localStorage.setItem("token", res.token);
                 localStorage.setItem("username", formData.username);
                 localStorage.setItem("firstLogin", res.firstLogin);
+                localStorage.setItem("role", res.role);
                 localStorage.setItem("auth", true);
 
-                const fetchUserInfo = async () => {
-                    try {
-                        const response = await getUserInfoByToken(res.token);
-                        console.log(response);
-                    } catch (error) {
-                        console.log(error.message);
-                    }
-                };
-
-                fetchUserInfo();
                 console.log("Login successful.");
 
                 if (localStorage.getItem("firstLogin") == "true") {
@@ -108,19 +97,25 @@ const Login = () => {
                     return;
                 }
                 navigate("/");
-            } else {
-                setLoginError(
-                    "Đăng nhập thất bại. Vui lòng kiểm tra thông tin đăng nhập của bạn."
-                );
             }
         } catch (error) {
-            setLoginError(
-                "Đã xảy ra lỗi trong quá trình đăng nhập. Vui lòng thử lại sau."
-            );
-            console.error("Error during login:", error.message);
+            try {
+                setSnackbarMessage(error.response.data);
+            } catch {
+                setSnackbarMessage("Có lỗi xảy ra khi kết nối với máy chủ");
+            }
+            setSnackbarOpen(true);
         }
     };
 
+    const getUserInfo = async (res) => {
+        try {
+            const response = await getUserInfoByToken(res.token);
+            console.log(response);
+        } catch (error) {
+            console.log(error.message);
+        }
+    };
     return (
         <Container maxWidth="xs">
             <Paper
