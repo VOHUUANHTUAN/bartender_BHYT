@@ -1,8 +1,7 @@
-
-import { memo, useEffect, useState } from "react"
+import { memo, useEffect, useState } from "react";
 import { getGoiBHByMaGBH, getBenhByMaGBH } from "../../../api/connect";
-import "./style.scss"
-import { Link, useParams } from 'react-router-dom';
+import "./style.scss";
+import { Link, useParams } from "react-router-dom";
 import { ROUTERS } from "../../../utils/router";
 const ProductDetailPage = () => {
     const params = useParams();
@@ -64,15 +63,9 @@ const ProductDetailPage = () => {
                         </ul>
                     </div>
                 </div>
-                <div className="detail__btn">
-                    <Link to={`../${ROUTERS.USER.PRODUCT}`}>
-                        <p>Quay lại</p>
-                    </Link>
-                </div>
             </div>
-        </div>
-    </div>
-    </>
+        </>
+    );
 };
 
 export default memo(ProductDetailPage);

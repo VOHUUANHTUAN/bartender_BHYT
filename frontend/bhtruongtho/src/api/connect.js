@@ -89,12 +89,14 @@ export const changePasswordAPI = async (username, changePasswordData) => {
     }
 };
 
-export const createRequest = async (yeuCauData) => {
-        const response = await axiosClient.post(
+
+export const createRefund = async (yeuCauData) => {
+    try {
+        const response = await axiosClient.put(
             `${END_POINT.YEUCAUHOANTRA}/${END_POINT.TAOYEUCAU}`,
             yeuCauData
         );
-        return response;
+        return response;}
 };
 
 export const getAllBenh = () => {
