@@ -19,6 +19,8 @@ const ChangePasswordForm = () => {
     const isButtonDisabled = !currentPassword || !newPassword || !confirmPassword || newPassword !== confirmPassword;
 
     const handleChangePassword = async (e) => {
+        console.log(user)
+
         e.preventDefault(); // Prevent default form submission
 
         if (isButtonDisabled) {
