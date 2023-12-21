@@ -38,6 +38,7 @@ const ProductDetailPage = () => {
     if (error) {
         return <p>Error: {error.message}</p>;
     }
+
     return <><div className="container__body">
         <div className="detail__page">
             <div className="detail__container">

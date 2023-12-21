@@ -119,7 +119,7 @@ const Login = () => {
         <Container maxWidth="xs">
             <Paper
                 elevation={3}
-                style={{ padding: "20px", margin: "200px 0px 50px 0px" }}
+                style={{ padding: "20px", margin: "150px 0px 50px 0px" }}
             >
                 <h2>Login</h2>
                 <form onSubmit={handleSubmit}>
@@ -175,7 +175,7 @@ const Login = () => {
                     <Grid
                         container
                         justifyContent="space-between"
-                        style={{ marginTop: "10px"}}
+                        style={{ marginTop: "10px" }}
                     >
                         <Grid item>
                             <Link to="/register" variant="body2">
