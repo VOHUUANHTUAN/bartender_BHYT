@@ -21,7 +21,7 @@ const ChangeInformation = () => {
     const { user, login, setUser } = useUser(); // Assuming this provides the user data
 
     // Initialize SoDu and username from user data
-    const [soDu, setSoDu] = useState(user ? user.soDu : 0);
+    const [soDu, setSoDu] = useState(0);
     const [username, setUsername] = useState(
         localStorage.getItem("username") || ""
     );
@@ -41,6 +41,7 @@ const ChangeInformation = () => {
             );
             setSnackbarMessage(response);
             setSnackbarOpen(true);
+            setUsername(response.username);
         } catch (error) {
             setSnackbarMessage(error.response.data);
             setSnackbarOpen(true);

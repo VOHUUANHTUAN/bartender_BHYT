@@ -3,8 +3,6 @@
     public class AddYeuCauHoanTraDTO
     {
         //MaHDKhamBenh, TenBenhVien, SoTienDaKham, Benh, ThoiGianTao, TinhTrang, MaGoiBHApDung, SoTienHoanTra, MaKH, MaNV, ThoiGianDuyet
-
-
         public string MaHDKhamBenh { get; set; }
         public string TenBenhVien { get; set; }
         public int SoTienDaKham { get; set; }

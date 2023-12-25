@@ -15,11 +15,17 @@ const END_POINT = {
     BENHVIEN: "BenhVien",
     DONDANGKY: "DONDANGKY",
     NHANVIEN: "NhanVien",
+    HOADONDK: "HoaDonThanhToanDK/GetHoaDonThanhToanByTinhTrang",
+    HOADONDKDETAIL: "HoaDonThanhToanDK/GetHoaDonDetails",
+    UPDATEHOADON: "HoaDonThanhToanDK/updateKhiThanhToan",
+    CHINHSACH: "chinhsach",
+    ADD: "add",
     CAPNHATYEUCAU: "CapNhat",
     GETALLYEUCAUHOANTRA: "GetAllYeuCauHoanTra",
     HOADONTHANHTOANDK: "HoaDonThanhToanDK",
     KH_LICHSUGD: "HoaDonThanhToanDK/KH_GetLichSuGiaoDich",
 };
+
 export const getGoiBHAPI = () => {
     return axiosClient.get(`${END_POINT.GOIBAOHIEM}`);
 };
@@ -144,6 +150,14 @@ export const putDonDangKyByID = async (ID, Data) => {
         throw new Error(`Error chang DDK: ${error.message}`);
     }
 };
+//Lấy hóa đơn theo  tình trạng
+export const getHoaDonDKbyTinhTrang = (token,tinhTrang) => {
+    return axiosClient.get(`${END_POINT.HOADONDK}/${tinhTrang}`,{
+         headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+};
 
 export const putYeuCauHoanTraByID = async (ID, Data) => {
     try {
@@ -159,6 +173,41 @@ export const putYeuCauHoanTraByID = async (ID, Data) => {
     }
 };
 
+export const updateInsPack = async (maGoiBH, goiBHData) => {
+    const response = await axiosClient.put(
+        `${END_POINT.GOIBAOHIEM}/${maGoiBH}/${END_POINT.UPDATE}`,
+        goiBHData
+    );
+    return response;
+};
+
+export const addBenhForGBH = async (MaGoiBH, MaBenh) => {
+    const response = await axiosClient.post(
+        `${END_POINT.CHINHSACH}/${END_POINT.ADD}`,
+        {MaGoiBH, MaBenh}
+    );
+    return response;
+};
+
+export const deleteBenhFromBGH = async (maGoiBH, maBenh) => {
+    try {
+        // Gọi API xóa bệnh khỏi Gói Bảo hiểm
+        const response = await axiosClient.delete( `${END_POINT.CHINHSACH}/${maGoiBH}/${maBenh}/delete`);
+        return response;
+      } catch (error) {
+        // Xử lý lỗi nếu cần
+        console.error('Lỗi khi xóa bệnh khỏi Gói Bảo hiểm:', error.message);
+        throw error;
+      }
+};
+
+export const addInsPack = async (goiBHData) => {
+    const response = await axiosClient.post(
+        `${END_POINT.GOIBAOHIEM}/${END_POINT.ADD}`,
+        goiBHData
+    );
+    return response;
+};
 export const getAllYeuCauHoanTra = () => {
     return axiosClient.get(`${END_POINT.YEUCAUHOANTRA}/${END_POINT.GETALLYEUCAUHOANTRA}`);
 };
@@ -173,6 +222,23 @@ export const KH_post_DonDangKy = (token, data) => {
             Authorization: `Bearer ${token}`,
         },
     });
+};
+//Lấy chi tiết hóa đơn (thông tin GoiBH, DonDangKy, HoaDon)
+export const getHoaDonDKDaThanhToanDetail = (maHD) => {
+    return axiosClient.get(`${END_POINT.HOADONDKDETAIL}/${maHD}`);
+};
+export const postUpdateHoaDon = (token, maHD) => {
+    console.log(token);
+    console.log(maHD);
+    return axiosClient.post(
+        `${END_POINT.UPDATEHOADON}/${maHD}`,
+        {},
+        {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        }
+    );
 };
 
 //Hàm đăng ký gói bảo hiểm mới cho khách
