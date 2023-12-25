@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useParams, Link, Form } from "react-router-dom";
 import {
     Container,
     Paper,
@@ -10,56 +10,172 @@ import {
     InputLabel,
     MenuItem,
     Select,
+    Grid,
+    TableContainer,
+    Table,
+    TableHead,
+    TableBody,
+    TableRow,
+    TableCell,
+    Checkbox,
+    Snackbar,
 } from "@mui/material";
-import { getGoiBHByMaGBH } from "../../../api/connect";
+import { ROUTERS } from "../../../utils/router";
+import dayjs from "dayjs";
+// Import only the necessary API function
+import {
+    getGoiBHByMaGBH,
+    getBenhByMaGBH,
+    KH_post_DonDangKy,
+} from "../../../api/connect";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers";
 
-const InsuranceRegistration_ = () => {
+const InsuranceRegistration = () => {
+    const params = useParams();
     const [selectedPackage, setSelectedPackage] = useState(null);
     const [duration, setDuration] = useState("");
     const [paymentFrequency, setPaymentFrequency] = useState("");
     const [insuranceAmount, setInsuranceAmount] = useState("");
-    const [diseaseList, setDiseaseList] = useState("");
-    const { id } = 1;
-    useEffect(() => {
-        const fetchDataById = async () => {
-            try {
-                const response = await getGoiBHByMaGBH(id);
-                setSelectedPackage(response.data);
-            } catch (error) {
-                console.error("Error fetching data:", error);
-            }
-        };
+    const [startDate, setStartDate] = useState(dayjs());
+    const [selectedBenhs, setSelectedBenhs] = useState([]);
+    const [benhData, setBenhData] = useState([]);
+    //Bảng thông báo
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState("");
+    const handleSnackbarClose = () => {
+        setSnackbarOpen(false);
+    };
 
-        fetchDataById();
-    }, [id]); // Chắc chắn rằng bạn đã thêm 'id' vào dependency array
+    const handleCheckboxChange = (benhId) => {
+        setSelectedBenhs((prevSelectedBenhs) => {
+            if (prevSelectedBenhs.includes(benhId)) {
+                // If the checkbox is already checked, remove it
+                return prevSelectedBenhs.filter((id) => id !== benhId);
+            } else {
+                // If the checkbox is not checked, add it
+                return [...prevSelectedBenhs, benhId];
+            }
+        });
+    };
+
+    const fetchDataBenh = async () => {
+        try {
+            const response = await getBenhByMaGBH(params.id);
+            setBenhData(response);
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    };
+    const fetchDataGoiBH = async () => {
+        try {
+            const response = await getGoiBHByMaGBH(params.id);
+            setSelectedPackage(response);
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    };
+    useEffect(() => {
+        fetchDataBenh();
+        fetchDataGoiBH();
+    }, [params.id]); // Fetch data whenever params.id changes
 
     useEffect(() => {
         if (selectedPackage && duration && paymentFrequency) {
-            const calculatedAmount =
-                selectedPackage.gia * duration * paymentFrequency;
+            const calculatedAmount = selectedPackage.gia / paymentFrequency;
             setInsuranceAmount(calculatedAmount);
+            calculateTotalAmount();
         }
     }, [selectedPackage, duration, paymentFrequency]);
+    const calculateTotalAmount = () => {
+        if (selectedPackage && duration) {
+            return (selectedPackage.gia * parseInt(duration, 10)).toString();
+        }
+        return "";
+    };
 
+    // Khi nhấn nút đăng ký
     const handleRegistrationSubmit = (e) => {
         e.preventDefault();
-        console.log("Thông tin đăng ký:", {
-            maGoiBH: selectedPackage.maGoiBH,
-            tenGoiBH: selectedPackage.tenGoiBH,
-            motaGoiBH: selectedPackage.motaGoiBH,
-            gia: selectedPackage.gia,
-            tiLeHoanTien: selectedPackage.tiLeHoanTien,
-            thoiHan: duration,
-            tanSuatThanhToan: paymentFrequency,
-            soTienBaoHiem: insuranceAmount,
-            danhSachBenh: diseaseList,
-        });
-        // Gọi API hoặc thực hiện các xử lý khác tại đây
+
+        var HoaDonList = calculatePaymentDetails(
+            insuranceAmount,
+            duration,
+            paymentFrequency,
+            startDate
+        );
+        var data_DonDangKy = {
+            MaGoiBH: selectedPackage.maGoiBH,
+            ThoiGianDK: dayjs().format("YYYY-MM-DDTHH:mm:ss.SSS[Z]"), //getdate,
+            ThoiGianBD: dayjs(startDate).format("YYYY-MM-DD"),
+            ThoiGianHetHan: dayjs(startDate)
+                .add(duration, "year")
+                .format("YYYY-MM-DD"),
+            TinhTrang: "Chờ duyệt",
+            TongGia: calculateTotalAmount(),
+            BenhIDs: selectedBenhs,
+            HoaDonThanhToanList: HoaDonList,
+        };
+        // console.log(data_DonDangKy);
+        // console.log(selectedBenhs);
+
+        call_API_post_DonDangKy(localStorage.getItem("token"), data_DonDangKy);
+    };
+
+    const call_API_post_DonDangKy = async (token, data) => {
+        try {
+            const response = await KH_post_DonDangKy(token, data);
+            setSnackbarMessage(response);
+            setSnackbarOpen(true);
+        } catch (error) {
+            // console.error("Error sending request:", error.message);
+            setSnackbarMessage(error.message);
+            setSnackbarOpen(true);
+        }
+    };
+
+    const calculatePaymentDetails = (
+        insuranceAmount,
+        durationInYears,
+        paymentFrequency,
+        startDate
+    ) => {
+        const numberOfPayments = durationInYears * paymentFrequency;
+        const monthsInYear = 12;
+
+        const paymentDetails = [];
+
+        for (let i = 1; i <= numberOfPayments; i++) {
+            const hanKy = `${i}/${numberOfPayments}`;
+            // Tính thời gian hết hạn của từng kỳ hạn
+            const thoiGianHetHan = dayjs(startDate)
+                .add(i * (monthsInYear / paymentFrequency), "month")
+                .format();
+            const paymentDetail = {
+                SoTien: insuranceAmount,
+                HanKy: hanKy,
+                TinhTrangThanhToan: "Chưa thanh toán",
+                ThoiGianHetHan: thoiGianHetHan,
+            };
+
+            paymentDetails.push(paymentDetail);
+        }
+
+        return paymentDetails;
+    };
+
+    const calculateEndDate = (startDate, duration) => {
+        const endDate = dayjs(startDate).add(duration, "year");
+        return endDate.format("DD/MM/YYYY");
     };
 
     return (
         <Container component="main" maxWidth="md">
-            <Paper elevation={3} style={{ padding: "20px", marginTop: "20px" }}>
+            <Paper
+                elevation={3}
+                style={{ padding: "20px", margin: "150px 0px 20px 0px" }}
+            >
                 <Typography component="h1" variant="h5">
                     Đăng ký gói bảo hiểm
                 </Typography>
@@ -81,7 +197,6 @@ const InsuranceRegistration_ = () => {
                             <Typography variant="body1">
                                 Tỉ lệ hoàn tiền: {selectedPackage.tiLeHoanTien}%
                             </Typography>
-
                             <FormControl
                                 fullWidth
                                 style={{ marginTop: "20px" }}
@@ -91,6 +206,7 @@ const InsuranceRegistration_ = () => {
                                 </InputLabel>
                                 <Select
                                     labelId="duration-label"
+                                    label="Thời hạn (năm)"
                                     id="duration"
                                     value={duration}
                                     onChange={(e) =>
@@ -100,19 +216,67 @@ const InsuranceRegistration_ = () => {
                                 >
                                     <MenuItem value={1}>1</MenuItem>
                                     <MenuItem value={2}>2</MenuItem>
+                                    <MenuItem value={3}>3</MenuItem>
+                                    <MenuItem value={4}>4</MenuItem>
+                                    <MenuItem value={5}>5</MenuItem>
                                     {/* Thêm các giá trị khác nếu cần */}
                                 </Select>
                             </FormControl>
-
+                            {/* chọn ngày */}
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <Grid container spacing={2}>
+                                    <Grid item xs={6}>
+                                        <FormControl
+                                            fullWidth
+                                            style={{ marginTop: "20px" }}
+                                        >
+                                            <InputLabel id="start-date-label"></InputLabel>
+                                            <DatePicker
+                                                label="Ngày bắt đầu đăng ký"
+                                                value={startDate}
+                                                onChange={(date) =>
+                                                    setStartDate(date)
+                                                }
+                                                renderInput={(params) => (
+                                                    <TextField
+                                                        {...params}
+                                                        fullWidth
+                                                    />
+                                                )}
+                                                format="DD/MM/YYYY"
+                                            />
+                                        </FormControl>
+                                    </Grid>
+                                    <Grid item xs={6}>
+                                        <FormControl
+                                            fullWidth
+                                            style={{ marginTop: "20px" }}
+                                        >
+                                            <InputLabel id="end-date-label"></InputLabel>
+                                            <TextField
+                                                label="Ngày kết thúc đăng ký"
+                                                id="end-date"
+                                                value={calculateEndDate(
+                                                    startDate,
+                                                    duration
+                                                )}
+                                                fullWidth
+                                                disabled
+                                            />
+                                        </FormControl>
+                                    </Grid>
+                                </Grid>
+                            </LocalizationProvider>
                             <FormControl
                                 fullWidth
                                 style={{ marginTop: "20px" }}
                             >
                                 <InputLabel id="payment-frequency-label">
-                                    Số lần thanh toán
+                                    Số kỳ hạn mỗi năm
                                 </InputLabel>
                                 <Select
                                     labelId="payment-frequency-label"
+                                    label="Số kỳ hạn mỗi năm"
                                     id="payment-frequency"
                                     value={paymentFrequency}
                                     onChange={(e) =>
@@ -122,22 +286,81 @@ const InsuranceRegistration_ = () => {
                                 >
                                     <MenuItem value={1}>1</MenuItem>
                                     <MenuItem value={2}>2</MenuItem>
+                                    <MenuItem value={3}>3</MenuItem>
+                                    <MenuItem value={4}>4</MenuItem>
                                     {/* Thêm các giá trị khác nếu cần */}
                                 </Select>
                             </FormControl>
-
-                            <TextField
-                                label="Giá mỗi kỳ hạn (đ)"
-                                variant="outlined"
-                                margin="normal"
+                            <FormControl
                                 fullWidth
-                                required
-                                value={insuranceAmount}
-                                InputProps={{
-                                    readOnly: true,
-                                }}
-                            />
-
+                                style={{ marginTop: "20px" }}
+                            >
+                                <InputLabel id="insurance-amount-label"></InputLabel>
+                                <TextField
+                                    id="insurance-amount"
+                                    label="Giá mỗi kỳ hạn (đ)"
+                                    type="number"
+                                    value={insuranceAmount}
+                                    onChange={(e) =>
+                                        setInsuranceAmount(e.target.value)
+                                    }
+                                    InputProps={{
+                                        readOnly: true,
+                                    }}
+                                    fullWidth
+                                />
+                            </FormControl>
+                            <FormControl
+                                fullWidth
+                                style={{ marginTop: "20px" }}
+                            >
+                                <InputLabel id="total-amount-label" />
+                                <TextField
+                                    id="total-amount"
+                                    label="Tổng tiền"
+                                    type="text"
+                                    value={calculateTotalAmount()}
+                                    InputProps={{
+                                        readOnly: true,
+                                    }}
+                                    fullWidth
+                                />
+                            </FormControl>
+                            <TableContainer>
+                                <Table>
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell>Tên bệnh</TableCell>
+                                            <TableCell>Mô tả</TableCell>
+                                            <TableCell>Chọn</TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {benhData.map((benh) => (
+                                            <TableRow key={benh.id}>
+                                                <TableCell>
+                                                    {benh.tenBenh}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {benh.moTa}
+                                                </TableCell>
+                                                <TableCell>
+                                                    <Checkbox
+                                                        checked={selectedBenhs.includes(
+                                                            benh.maBenh
+                                                        )}
+                                                        onChange={() =>
+                                                            handleCheckboxChange(
+                                                                benh.maBenh
+                                                            )
+                                                        }
+                                                    />
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
                             <Button
                                 type="submit"
                                 variant="contained"
@@ -147,6 +370,15 @@ const InsuranceRegistration_ = () => {
                             >
                                 Đăng ký
                             </Button>
+                            <Button
+                                color="primary"
+                                fullWidth
+                                style={{ marginTop: "20px" }}
+                                component={Link}
+                                to={`/${ROUTERS.USER.PRODUCT}/detail/${params.id}`}
+                            >
+                                <p>Quay lại</p>
+                            </Button>
                         </>
                     ) : (
                         <Typography variant="body1">
@@ -155,8 +387,15 @@ const InsuranceRegistration_ = () => {
                     )}
                 </form>
             </Paper>
+            <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={2000}
+                onClose={handleSnackbarClose}
+                message={snackbarMessage}
+                anchorOrigin={{ vertical: "top", horizontal: "right" }}
+            />
         </Container>
     );
 };
 
-export default InsuranceRegistration_;
+export default InsuranceRegistration;

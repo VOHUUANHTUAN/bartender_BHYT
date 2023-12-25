@@ -17,6 +17,7 @@ import Typography from "@mui/material/Typography";
 import Tooltip from "@mui/material/Tooltip";
 import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
+import { getUserInfoByToken } from "../../../../api/connect";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 const Header = () => {
     const navigate = useNavigate();
@@ -32,15 +33,38 @@ const Header = () => {
 
     useEffect(() => {
         // Kiểm tra xem có thông tin người dùng trong local storage không
-
-        var temp = localStorage.getItem("username");
-        if (temp)
-            login({
-                username: localStorage.getItem("username"),
-                token: localStorage.getItem("token"),
-            });
+        getUserInfo(localStorage.getItem("token"));
     }, []);
 
+    const getUserInfo = async (token) => {
+        try {
+            const response = await getUserInfoByToken(token);
+            if (response) {
+                login({
+                    username: response.username,
+                    token: token,
+                    firstLogin: response.firstLogin,
+                    auth: true,
+                    role: response.role,
+                });
+                localStorage.setItem("token", token);
+                localStorage.setItem("username", response.username);
+                localStorage.setItem("firstLogin", response.firstLogin);
+                localStorage.setItem("role", response.role);
+                localStorage.setItem("auth", true);
+                console.log("Login successful");
+            } else {
+                localStorage.clear();
+                console.log("Login fail");
+                logout();
+            }
+        } catch (error) {
+            localStorage.clear();
+            console.log("Login fail");
+            logout();
+            console.log(error.message);
+        }
+    };
     const [menus, setMenus] = useState([
         {
             name: "Trang chủ",
@@ -191,6 +215,14 @@ const Header = () => {
                                                     </Link>
                                                 </MenuItem>
                                                 <Divider />
+                                                <MenuItem onClick={handleClose}>
+                                                    <ListItemIcon>
+                                                        <LockIcon fontSize="small" />
+                                                    </ListItemIcon>
+                                                    <Link to="/invoice">
+                                                        Lịch sử giao dịch
+                                                    </Link>
+                                                </MenuItem>
                                                 <MenuItem onClick={handleClose}>
                                                     <ListItemIcon>
                                                         <AddCircleIcon fontSize="small" />

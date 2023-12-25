@@ -61,6 +61,44 @@ namespace BaoHiemYTe.Controllers
                 return StatusCode(500, $"Lỗi: {ex.Message}");
             }
         }
+        [HttpGet("{maYC}")]
+        public IActionResult GetYeuCauHoanTraById(int maYC)
+        {
+            try
+            {
+                // Tìm YeuCauHoanTra theo ID trong database
+                var yeuCauHoanTra = userDbContext.YeuCauHoanTra.FirstOrDefault(y => y.MaYC == maYC);
+
+                // Nếu không tìm thấy, trả về NotFound
+                if (yeuCauHoanTra == null)
+                {
+                    return NotFound($"Không tìm thấy yêu cầu hoàn trả với ID {maYC}.");
+                }
+
+                // Chuyển đổi từ YeuCauHoanTra sang YeuCauHoanTraDTO
+                var yeuCauHoanTraDTO = new YeuCauHoanTraDTO
+                {
+                    MaYC = yeuCauHoanTra.MaYC,
+                    MaHDKhamBenh = yeuCauHoanTra.MaHDKhamBenh,
+                    TenBenhVien = yeuCauHoanTra.TenBenhVien,
+                    SoTienDaKham = yeuCauHoanTra.SoTienDaKham,
+                    Benh = yeuCauHoanTra.Benh,
+                    ThoiGianTao = yeuCauHoanTra.ThoiGianTao,
+                    TinhTrang = yeuCauHoanTra.TinhTrang,
+                    MaGoiBHApDung = yeuCauHoanTra.MaGoiBHApDung,
+                    SoTienHoanTra = yeuCauHoanTra.SoTienHoanTra,
+                    MaKH = yeuCauHoanTra.MaKH,
+                    MaNV = yeuCauHoanTra.MaNV,
+                    ThoiGianDuyet = yeuCauHoanTra.ThoiGianDuyet
+                };
+
+                return Ok(yeuCauHoanTraDTO);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Lỗi: {ex.Message}");
+            }
+        }
 
 
         [HttpGet("GetYCHTByUs/{username}")]
@@ -171,94 +209,34 @@ namespace BaoHiemYTe.Controllers
             }
 
         }
-
-    
-
-
-
-
-        /*
-        [HttpGet]
-        [Route("GetYCHTByUs/{username}")]
-        public IActionResult GetGoiBHByUsername(string username)
+        [HttpPut("CapNhat/{id}")]
+        public IActionResult CapNhatTinhTrangThoiGianDuyet(int id, [FromBody] CapNhatYeuCauHoanTraDTO capNhatDTO)
         {
-            // Lấy thông tin MaKH từ bảng KhachHang
-            var maKH = userDbContext.KhachHang
-                .Where(u => u.username == username)
-                .Select(u => u.MaKH)
-                .FirstOrDefault();
-
-            if (maKH == 0)
+            try
             {
-                return NotFound($"Không tìm thấy thông tin khách hàng của người dùng {username}");
+                // Lấy thông tin YeuCauHoanTra từ ID
+                var yeuCauHoanTra = userDbContext.YeuCauHoanTra.Find(id);
+
+                if (yeuCauHoanTra == null)
+                {
+                    return NotFound($"Không tìm thấy yêu cầu hoàn trả có ID {id}");
+                }
+
+                // Cập nhật thông tin
+                yeuCauHoanTra.TinhTrang = capNhatDTO.TinhTrang;
+                yeuCauHoanTra.ThoiGianDuyet = capNhatDTO.ThoiGianDuyet;
+                yeuCauHoanTra.MaNV = capNhatDTO.MaNV;
+
+                // Lưu vào database
+                userDbContext.SaveChanges();
+
+                return Ok("Cập nhật thông tin yêu cầu hoàn trả thành công");
             }
-
-            // Lấy danh sách Ma Goi BH từ bảng DonDangKy
-            var maGoiBHs = userDbContext.DonDangKy
-                .Where(d => (d.MaKH == maKH && d.TinhTrang == "Đã kích hoạt"))
-                .Select(d => d.MaGoiBH)
-                .ToList();
-
-            if (maGoiBHs == null || !maGoiBHs.Any())
+            catch (Exception ex)
             {
-                return NotFound($"Người dùng {username} không có Goi Bao Hiem");
+                return StatusCode(500, $"Lỗi: {ex.Message}");
             }
-
-            // Lấy thông tin Benh từ bảng Benh
-            var GoiBHEntities = userDbContext.GoiBaoHiem
-                .Where(h => maGoiBHs.Contains(h.MaGoiBH))
-                .ToList();
-
-            if (GoiBHEntities == null || !GoiBHEntities.Any())
-            {
-                return NotFound();
-            }
-            // Chuyển đổi từ List<HoaDonThanhToanDK> sang List<HoaDonThanhToanDKDTO>
-            var GoiBHDTOs = GoiBHEntities.Select(h => new GoiBaoHiemDTO
-            {
-                MaGoiBH = h.MaGoiBH,
-                TenGoiBH = h.TenGoiBH,
-                MotaGoiBH = h.MotaGoiBH,
-                Gia = h.Gia,
-                TiLeHoanTien = h.TiLeHoanTien,
-                ThoiHanBaoVe = h.ThoiHanBaoVe
-
-        }).ToList();
-
-            return Ok(GoiBHDTOs);
-        }
-        */
-
-        /*
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
         }
 
-        // GET api/<GoiBaoHiemController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/<GoiBaoHiemController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/<GoiBaoHiemController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<GoiBaoHiemController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }*/
     }
 }

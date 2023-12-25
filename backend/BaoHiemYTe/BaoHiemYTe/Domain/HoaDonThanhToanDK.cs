@@ -19,7 +19,5 @@ namespace BaoHiemYTe.Domain
         
         [ForeignKey("MaDonDK")]
         public DonDangKy DonDangKy { get; set; }
-
-       
     }
 }
