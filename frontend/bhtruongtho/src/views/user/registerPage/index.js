@@ -5,18 +5,28 @@ import {
     TextField,
     Button,
     Typography,
-    Select,
-    MenuItem,
-    FormControl,
-    InputLabel,
+    Snackbar,
 } from "@mui/material";
+import { KhachHang_DangKyTaiKhoan } from "../../../api/connect";
 import { useNavigate, Link } from "react-router-dom";
+import { TRUE } from "sass";
 
 const Register = () => {
+    const [usernameError, setUsernameError] = useState(false);
+    const [passwordError, setPasswordError] = useState(false);
+    const [confirmPasswordError, setConfirmPasswordError] = useState(false);
+
+    //Bảng thông báo
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState("");
+    const handleSnackbarClose = () => {
+        setSnackbarOpen(false);
+    };
+
     const [formData, setFormData] = useState({
         username: "",
         password: "",
-        role: "", // Thêm trường vai trò
+        confirmPassword: "",
     });
 
     const handleChange = (e) => {
@@ -24,19 +34,73 @@ const Register = () => {
             ...formData,
             [e.target.name]: e.target.value,
         });
+        if (e.target.name === "username") {
+            const usernameRegex = /^[a-zA-Z0-9_@#&]+$/;
+            setUsernameError(!usernameRegex.test(e.target.value));
+        }
+        if (e.target.name === "password") {
+            const usernameRegex = /^[a-zA-Z0-9_@#&]+$/;
+            setPasswordError(!usernameRegex.test(e.target.value));
+        }
+        if (e.target.name === "confirmPassword") {
+            const usernameRegex = /^[a-zA-Z0-9_@#&]+$/;
+            setConfirmPasswordError(!usernameRegex.test(e.target.value));
+        }
+        // Check if passwords match when typing in the confirmation field
+        if (e.target.name === "confirmPassword") {
+            setConfirmPasswordError(e.target.value !== formData.password);
+        }
     };
 
+    const validateForm = () => {
+        if (usernameError || passwordError || confirmPasswordError) {
+            return "Vui lòng kiểm tra lại thông tin";
+        }
+
+        return null; // Validation passed
+    };
+
+    const fetchData = async () => {
+        try {
+            const userData = {
+                username: formData.username,
+                password: formData.password,
+                role: "Khách hàng",
+            };
+            // console.log(userData);
+            const res = await KhachHang_DangKyTaiKhoan(userData);
+
+            console.log(res);
+            setSnackbarMessage(res);
+            setSnackbarOpen(true);
+        } catch (error) {
+            console.error("Error sending request:", error.message);
+            setSnackbarMessage("Đã có lỗi xảy ra");
+            setSnackbarOpen(true);
+        }
+    };
+
+    // Khi nhấn nút đăng ký tài khoản
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Thêm xử lý đăng ký ở đây
-        console.log("Đăng ký thành công:", formData);
+
+        const validationError = validateForm();
+
+        if (validationError) {
+            setSnackbarMessage(validationError);
+            setSnackbarOpen(true);
+            return;
+        }
+
+        //Gọi API
+        fetchData();
     };
 
     return (
         <Container component="main" maxWidth="xs">
             <Paper
                 elevation={3}
-                style={{ padding: "20px", marginTop: "100px" }}
+                style={{ padding: "20px", margin: "200px 0px 50px 0px" }}
             >
                 <Typography component="h1" variant="h5">
                     Đăng ký
@@ -51,6 +115,11 @@ const Register = () => {
                         name="username"
                         value={formData.username}
                         onChange={handleChange}
+                        error={usernameError}
+                        helperText={
+                            usernameError &&
+                            "Username chỉ được chứa chữ cái và số, dấu _ @ # &"
+                        }
                     />
                     <TextField
                         label="Mật khẩu"
@@ -62,21 +131,27 @@ const Register = () => {
                         name="password"
                         value={formData.password}
                         onChange={handleChange}
+                        error={passwordError}
+                        helperText={
+                            passwordError &&
+                            "Password chỉ được chứa chữ cái và số, dấu _ @ # &"
+                        }
                     />
-                    <FormControl fullWidth variant="outlined" margin="normal">
-                        <InputLabel id="role-label">Vai trò</InputLabel>
-                        <Select
-                            labelId="role-label"
-                            id="role"
-                            name="role"
-                            value={formData.role}
-                            onChange={handleChange}
-                            label="Vai trò"
-                        >
-                            <MenuItem value="Nhân viên">Nhân viên</MenuItem>
-                            <MenuItem value="Khách hàng">Khách hàng</MenuItem>
-                        </Select>
-                    </FormControl>
+                    <TextField
+                        label="Xác nhận mật khẩu"
+                        type="password"
+                        variant="outlined"
+                        margin="normal"
+                        fullWidth
+                        required
+                        name="confirmPassword"
+                        value={formData.confirmPassword}
+                        onChange={handleChange}
+                        error={confirmPasswordError}
+                        helperText={
+                            confirmPasswordError && "Mật khẩu không khớp"
+                        }
+                    />
                     <Button
                         type="submit"
                         variant="contained"
@@ -93,6 +168,13 @@ const Register = () => {
                     </Typography>
                 </form>
             </Paper>
+            <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={2000}
+                onClose={handleSnackbarClose}
+                message={snackbarMessage}
+                anchorOrigin={{ vertical: "top", horizontal: "right" }}
+            />
         </Container>
     );
 };

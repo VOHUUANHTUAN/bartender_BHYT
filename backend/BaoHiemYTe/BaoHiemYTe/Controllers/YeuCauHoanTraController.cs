@@ -2,6 +2,7 @@
 using BaoHiemYTe.Domain;
 using BaoHiemYTe.DTOs;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System;
 
@@ -121,7 +122,7 @@ namespace BaoHiemYTe.Controllers
 
             if (maYCHTs == null || !maYCHTs.Any())
             {
-                return NotFound($"Mã YC không có");
+                return NotFound($"Không có danh sách hoàn trả");
             }
             var MaYCEntities = userDbContext.YeuCauHoanTra
                 .Where(h => maYCHTs.Contains(h.MaYC))
@@ -178,7 +179,7 @@ namespace BaoHiemYTe.Controllers
                     MaKH = khachHang.MaKH,
                     ThoiGianDuyet = null,
                     MaNV = null,
-                    SoTienHoanTra = null
+                    SoTienHoanTra = yeuCauDTO.SoTienHoanTra
                 };
 
                 // Thêm vào context và lưu vào database
@@ -187,10 +188,26 @@ namespace BaoHiemYTe.Controllers
 
                 return Ok("Yêu cầu hoàn trả đã được tạo thành công");
             }
+            catch (DbUpdateException ex)
+            {
+                if (ex.InnerException is SqlException sqlException && sqlException.Number == 2601)
+                {
+                    // Lỗi 2601 là lỗi unique constraint
+                    // Xử lý lỗi unique constraint ở đây
+                    return StatusCode(400, "Mã hóa đơn khám bệnh đã tồn tại.");
+                }
+                else
+                {
+                    // Xử lý các trường hợp khác của DbUpdateException
+                    return StatusCode(500, "Lỗi: " + ex.InnerException?.Message);
+                }
+            }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Lỗi: {ex.Message}");
+                // Xử lý các ngoại lệ khác
+                return StatusCode(500, "Lỗi: " + ex.Message);
             }
+
         }
         [HttpPut("CapNhat/{id}")]
         public IActionResult CapNhatTinhTrangThoiGianDuyet(int id, [FromBody] CapNhatYeuCauHoanTraDTO capNhatDTO)
