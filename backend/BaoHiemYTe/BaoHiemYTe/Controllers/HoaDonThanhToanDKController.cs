@@ -1,5 +1,6 @@
 ﻿using BaoHiemYTe.Data;
 using BaoHiemYTe.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ namespace BaoHiemYTe.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+
     public class HoaDonThanhToanDKController : ControllerBase
     {
         // GET: api/<GoiBaoHiemController>
@@ -166,11 +168,20 @@ namespace BaoHiemYTe.Controllers
                 return StatusCode(500, $"Lỗi: {ex.Message}");
             }
         }
-        [HttpGet("GetHoaDonThanhToanByUserNameAndTinhTrang/{username}/{tinhTrang}")]
-        public IActionResult GetHoaDonThanhToanByUserNameAndTinhTrang(string username, string tinhTrang)
+        [HttpGet("GetHoaDonThanhToanByTinhTrang/{tinhTrang}")]
+        public IActionResult GetHoaDonThanhToanByTinhTrang(string tinhTrang)
         {
             try
             {
+                var tokenService = new TokenService();
+                // Sử dụng TokenService để lấy username từ token
+                var username = tokenService.GetUsernameFromToken(HttpContext.Request);
+
+                if (string.IsNullOrEmpty(username))
+                {
+                    return Unauthorized("Unauthorized: Token is missing or invalid");
+                }
+                //var username = "khachhang";
                 // Lấy thông tin MaKH từ bảng KhachHang
                 var maKH = userDbContext.KhachHang
                     .Where(u => u.username == username)
@@ -200,7 +211,7 @@ namespace BaoHiemYTe.Controllers
 
                 if (hoaDonThanhToanEntities == null || !hoaDonThanhToanEntities.Any())
                 {
-                    return NotFound($"Người dùng {username} không có Hóa Đơn Thanh Toán Đăng Ký với Tình Trạng Thanh Toán là {tinhTrang}");
+                    return NotFound($"Người dùng {username} không có hóa đơn {tinhTrang}!");
                 }
 
                 // Chuyển đổi từ List<HoaDonThanhToanDK> sang List<HoaDonThanhToanDKDTO>
@@ -212,7 +223,15 @@ namespace BaoHiemYTe.Controllers
                     HanKy = h.HanKy,
                     TinhTrangThanhToan = h.TinhTrangThanhToan,
                     ThoiGianThanhToan = h.ThoiGianThanhToan,
-                    MaDonDK = h.MaDonDK
+                    MaDonDK = h.MaDonDK,
+                    // Thêm tên Gói Bảo Hiểm
+                    TenGoiBH = userDbContext.GoiBaoHiem
+                        .Where(g => g.MaGoiBH == userDbContext.DonDangKy
+                                                        .Where(d => d.MaDonDK == h.MaDonDK)
+                                                        .Select(d => d.MaGoiBH)
+                                                        .FirstOrDefault())
+                        .Select(g => g.TenGoiBH)
+                        .FirstOrDefault()
                 }).ToList();
 
                 return Ok(hoaDonThanhToanDTOs);
@@ -222,6 +241,136 @@ namespace BaoHiemYTe.Controllers
                 return StatusCode(500, $"Lỗi: {ex.Message}");
             }
         }
+        [HttpGet("GetHoaDonDetails/{maHD}")]
+        public IActionResult GetHoaDonDetails(int maHD)
+        {
+            try
+            {
+                var hoaDonDetailsDTO = userDbContext.HoaDonThanhToanDK
+                    .Where(h => h.MaHD == maHD)
+                    .Select(h => new HoaDonTT_DonDangKy_GoiBaoHiemDTO
+                    {
+                        // Thông tin Gói Bảo Hiểm
+                        TenGoiBH = h.DonDangKy.GoiBaoHiem.TenGoiBH,
+                        MotaGoiBH = h.DonDangKy.GoiBaoHiem.MotaGoiBH,
+                        Gia = h.DonDangKy.GoiBaoHiem.Gia,
+                        TiLeHoanTien = h.DonDangKy.GoiBaoHiem.TiLeHoanTien,
+                        ThoiHanBaoVe = h.DonDangKy.GoiBaoHiem.ThoiHanBaoVe,
+
+                        // Thông tin Đơn Đăng Ký
+                        ThoiGianDK = h.DonDangKy.ThoiGianDK,
+                        ThoiGianBD = h.DonDangKy.ThoiGianBD,
+                        ThoiGianHetHan = h.DonDangKy.ThoiGianHetHan,
+                        TinhTrang = h.DonDangKy.TinhTrang,
+                        LuaChonThanhToan= h.DonDangKy.LuaChonThanhToan,
+                        // Thông tin Hóa Đơn Thanh Toán
+                        MaHD = h.MaHD,
+                        SoTien = h.SoTien,
+                        HanKy = h.HanKy,
+                        TinhTrangThanhToan = h.TinhTrangThanhToan,
+                        ThoiGianThanhToan = h.ThoiGianThanhToan,
+                        MaDonDK = h.MaDonDK,
+                        ThoiGianHetHanThanhToan=h.ThoiGianHetHan,
+                    })
+                    .FirstOrDefault();
+
+                if (hoaDonDetailsDTO == null)
+                {
+                    return NotFound($"Không tìm thấy Hóa Đơn Thanh Toán có mã {maHD}");
+                }
+
+                return Ok(hoaDonDetailsDTO);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Lỗi: {ex.Message}");
+            }
+        }
+        //Truyền vào maHD Từ token lấy username và từ user name lấy về SoDu trong table KhachHang,
+        //nếu SoDu lớn hơn hoặc bằng SoTien trong HoaDonThanhToanDK thì 
+        //Update tình trạng và thời gian thanh toán của hóa đơn khi bấm nút ThanhToan, nếu TinhTrang trong đơn đăng ký là "Chờ thanh toán" thì 
+        //cập nhập thành Đã kích hoạt, Sau đó update lại SoDu trong KhachHang =SoDu-SoTien
+        //nếu SoDu<SoTien thì báo SoDu k đủ
+        [HttpPost("updateKhiThanhToan/{maHD}")]
+        public async Task<IActionResult> UpdateKhiThanhToan(int maHD)
+        {
+            try
+            {
+                // Lấy thông tin từ token để lấy username
+                var tokenService = new TokenService();
+                var username = tokenService.GetUsernameFromToken(HttpContext.Request);
+                if (string.IsNullOrEmpty(username))
+                {
+                    return Unauthorized("Unauthorized: Token is missing or invalid");
+                }
+                //var username = "khachhang";
+                // Lấy thông tin MaKH từ bảng KhachHang
+                var maKH = userDbContext.KhachHang
+                    .Where(u => u.username == username)
+                    .Select(u => u.MaKH)
+                    .FirstOrDefault();
+
+                if (maKH == 0)
+                {
+                    return NotFound($"Không tìm thấy thông tin khách hàng của người dùng {username}");
+                }
+
+                // Lấy thông tin số dư từ bảng KhachHang
+                var soDu = userDbContext.KhachHang
+                    .Where(kh => kh.MaKH == maKH)
+                    .Select(kh => kh.SoDu)
+                    .FirstOrDefault();
+
+                // Lấy hóa đơn từ database
+                var hoaDon = userDbContext.HoaDonThanhToanDK
+                    .FirstOrDefault(hd => hd.MaHD == maHD);
+
+                if (hoaDon == null)
+                {
+                    return NotFound($"Không tìm thấy hóa đơn");
+                }
+
+                // Kiểm tra nếu số dư không đủ
+                if (soDu < hoaDon.SoTien)
+                {
+                    return BadRequest("Số dư không đủ để thanh toán hóa đơn");
+                }
+
+                // Cập nhật tình trạng hóa đơn
+                hoaDon.TinhTrangThanhToan = "Đã thanh toán";
+                hoaDon.ThoiGianThanhToan = DateTime.Now;
+
+                // Lấy đơn đăng ký từ database
+                var donDangKy = userDbContext.DonDangKy
+                    .FirstOrDefault(d => d.MaDonDK == hoaDon.MaDonDK);
+
+                if (donDangKy == null)
+                {
+                    return NotFound($"Không tìm thấy đơn đăng ký với mã {hoaDon.MaDonDK}");
+                }
+
+                // Cập nhật tình trạng đơn đăng ký
+                donDangKy.TinhTrang = "Đã kích hoạt";
+
+                // Cập nhật số dư trong bảng KhachHang
+                var khachHang = userDbContext.KhachHang
+                    .FirstOrDefault(kh => kh.MaKH == maKH);
+                khachHang.SoDu -= hoaDon.SoTien;
+
+                // Lưu thay đổi vào database
+                await userDbContext.SaveChangesAsync();
+
+                return Ok("Thanh toán thành công");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Lỗi: {ex.Message}");
+            }
+        }
+
+
+
+
 
 
     }

@@ -132,5 +132,38 @@ namespace BaoHiemYTe.Controllers
         //public void Delete(int id)
         //{
         //}
+        [HttpGet("GetAllKhachHang")]
+        public IActionResult GetAllKhachHang()
+        {
+            try
+            {
+                var khachHangList = userDbContext.KhachHang
+                    .Select(kh => new KhachHangDTO
+                    {
+                        MaKH = kh.MaKH,
+                        HoTen = kh.HoTen,
+                        DiaChi = kh.DiaChi,
+                        SDT = kh.SDT,
+                        Email = kh.Email,
+                        SoDu = kh.SoDu,
+                        username = kh.username
+                    })
+                    .ToList();
+
+                if (khachHangList != null && khachHangList.Any())
+                {
+                    return Ok(khachHangList);
+                }
+                else
+                {
+                    return NotFound("Không có khách hàng nào trong hệ thống.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Lỗi trong quá trình xử lý: {ex.Message}");
+            }
+        }
+
     }
 }
