@@ -107,14 +107,6 @@ const Login = () => {
         }
     };
 
-    const getUserInfo = async (res) => {
-        try {
-            const response = await getUserInfoByToken(res.token);
-            console.log(response);
-        } catch (error) {
-            console.log(error.message);
-        }
-    };
     return (
         <Container maxWidth="xs">
             <Paper

@@ -7,7 +7,6 @@ namespace BaoHiemYTe.Domain
     {
         [Key]
         public int MaBV { get; set; }
-       
         public string TenBV { get; set; }
         
     }

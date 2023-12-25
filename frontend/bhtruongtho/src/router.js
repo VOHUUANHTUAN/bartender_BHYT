@@ -15,6 +15,7 @@ import InsuranceRegistration from "./views/user/InsuranceRegistration";
 import ListDonDangKy from "./views/user/registrationForm/index.js";
 import DonDangKyDetail from "./views/user/registrationForm/regisdetail.js";
 import PersonalInfo from "./views/user/personalInfoPage/index.js";
+import Invoice from "./views/user/invoicePage";
 
 const AuthGuard = ({ component: Component, loginRequired }) => {
     const { user } = useUser();
@@ -85,6 +86,10 @@ const renderUserRouter = () => {
             path: ROUTERS.USER.DONDANGKY,
             component: <ListDonDangKy />,
         },
+        {
+            path: ROUTERS.USER.HOADON,
+            component: <Invoice />,
+        },
     ];
 
     return (
@@ -110,9 +115,14 @@ const renderUserRouter = () => {
                     path="registrationForms/detail/:id"
                     element={<DonDangKyDetail />}
                 />
-            {/* <Route path="product/detail/:id" element={<AuthGuard component={<ProductDetailPage />} loginRequired={true} />} /> */}
                 <Route
-                    path="registrationForms/detail/:id" element={<DonDangKyDetail />}
+                    path="InsuranceRegistration/:id"
+                    element={<InsuranceRegistration />}
+                />
+                {/* <Route path="product/detail/:id" element={<AuthGuard component={<ProductDetailPage />} loginRequired={true} />} /> */}
+                <Route
+                    path="registrationForms/detail/:id"
+                    element={<DonDangKyDetail />}
                 />
             </Routes>
         </MasterLayout>

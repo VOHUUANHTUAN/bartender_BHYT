@@ -12,20 +12,22 @@ import { useNavigate, Link } from "react-router-dom";
 import { TRUE } from "sass";
 
 const Register = () => {
-    const [snackbarOpen, setSnackbarOpen] = useState(false);
-    const [snackbarMessage, setSnackbarMessage] = useState("");
     const [usernameError, setUsernameError] = useState(false);
     const [passwordError, setPasswordError] = useState(false);
     const [confirmPasswordError, setConfirmPasswordError] = useState(false);
+
+    //Bảng thông báo
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState("");
+    const handleSnackbarClose = () => {
+        setSnackbarOpen(false);
+    };
 
     const [formData, setFormData] = useState({
         username: "",
         password: "",
         confirmPassword: "",
     });
-    const handleSnackbarClose = () => {
-        setSnackbarOpen(false);
-    };
 
     const handleChange = (e) => {
         setFormData({
@@ -67,12 +69,6 @@ const Register = () => {
             };
             // console.log(userData);
             const res = await KhachHang_DangKyTaiKhoan(userData);
-
-            if (res.errorMessage) {
-                setSnackbarMessage(res.errorMessage);
-                setSnackbarOpen(true);
-                return;
-            }
 
             console.log(res);
             setSnackbarMessage(res);

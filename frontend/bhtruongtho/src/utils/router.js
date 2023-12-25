@@ -11,6 +11,7 @@ export const ROUTERS = {
         PERSONALINFO: "PersonalInfo",
         INSURANCEREGISTRATION: "InsuranceRegistration",
         REQUESTINVOICE: "requestinvoice",
-        DONDANGKY: "registrationForms"
+        DONDANGKY: "registrationForms",
+        HOADON: "invoice",
     },
 };
