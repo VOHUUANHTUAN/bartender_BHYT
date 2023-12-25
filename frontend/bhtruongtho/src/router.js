@@ -14,23 +14,24 @@ import { useUser } from "../src/context/UserContext.js";
 import InsuranceRegistration from "./views/user/InsuranceRegistration";
 import ListDonDangKy from "./views/user/registrationForm/index.js";
 import DonDangKyDetail from "./views/user/registrationForm/regisdetail.js";
-import ListYeuCauHoanTra from "./views/user/CapNhatYeuCauHoanTra/index.js"
-import YeuCauHoanTraDetail from "./views/user/CapNhatYeuCauHoanTra/detailycht.js"
+import ListYeuCauHoanTra from "./views/user/CapNhatYeuCauHoanTra/index.js";
+import YeuCauHoanTraDetail from "./views/user/CapNhatYeuCauHoanTra/detailycht.js";
 import PersonalInfo from "./views/user/personalInfoPage/index.js";
 import Invoice from "./views/user/invoicePage";
+import { useEffect } from "react";
+import { dayCalendarSkeletonClasses } from "@mui/x-date-pickers";
+import { useLocation } from "react-router-dom";
+import { getUserInfoByToken } from "./api/connect";
 
-const AuthGuard = ({ component: Component, loginRequired }) => {
-    const { user } = useUser();
+// const AuthGuard = ({ component: Component, loginRequired }) => {
+//     if (loginRequired && !user) {
+//         // Redirect to login if login is required and the user is not authenticated
+//         return <Navigate to={`/${ROUTERS.USER.LOGIN}`} />;
+//     }
 
-    if (loginRequired && !user) {
-        // Redirect to login if login is required and the user is not authenticated
-        return <Navigate to={`/${ROUTERS.USER.LOGIN}`} />;
-    }
-
-    // Render the component if login is not required or the user is authenticated
-    return Component;
-};
-
+//     // Render the component if login is not required or the user is authenticated
+//     return Component;
+// };
 const renderUserRouter = () => {
     const userRouters = [
         {
@@ -86,11 +87,11 @@ const renderUserRouter = () => {
         },
         {
             path: ROUTERS.USER.DONDANGKY,
-            component: <ListDonDangKy />
+            component: <ListDonDangKy />,
         },
         {
             path: ROUTERS.USER.YEUCAUHOANTRA,
-            component: <ListYeuCauHoanTra />
+            component: <ListYeuCauHoanTra />,
         },
 
         {
@@ -106,12 +107,7 @@ const renderUserRouter = () => {
                     <Route
                         key={key}
                         path={item.path} //element={item.component}
-                        element={
-                            <AuthGuard
-                                component={item.component}
-                                loginRequired={item.loginRequired}
-                            />
-                        }
+                        element={item.component}
                     />
                 ))}
                 <Route
@@ -132,7 +128,8 @@ const renderUserRouter = () => {
                     element={<DonDangKyDetail />}
                 />
                 <Route
-                    path="requestrefund/detail/:id" element={<YeuCauHoanTraDetail />}
+                    path="requestrefund/detail/:id"
+                    element={<YeuCauHoanTraDetail />}
                 />
             </Routes>
         </MasterLayout>
@@ -140,6 +137,47 @@ const renderUserRouter = () => {
 };
 
 const RouterCustom = () => {
+    const location = useLocation();
+    const { user, login, logout } = useUser();
+
+    const getUserInfo = async (token) => {
+        try {
+            const response = await getUserInfoByToken(token);
+            if (response) {
+                logout();
+                login({
+                    username: response.username,
+                    token: token,
+                    firstLogin: response.firstLogin,
+                    role: response.role,
+                });
+                localStorage.clear();
+                localStorage.setItem("token", token);
+                console.log("Login successful");
+            } else {
+                localStorage.clear();
+                <Navigate to={`/${ROUTERS.USER.LOGIN}`} />;
+                console.log("Login fail");
+
+                logout();
+            }
+        } catch (error) {
+            localStorage.clear();
+            console.log("Login fail");
+            logout();
+            <Navigate to={`/${ROUTERS.USER.LOGIN}`} />;
+            console.log(error.message);
+        }
+    };
+
+    useEffect(() => {
+        // Hành động mà bạn muốn thực hiện khi đường dẫn thay đổi
+        getUserInfo(localStorage.getItem("token"));
+        console.log("Đường dẫn đã thay đổi:", location.pathname);
+
+        // Thêm các hành động cần thực hiện ở đây...
+    }, [location.pathname]);
+
     return renderUserRouter();
 };
 

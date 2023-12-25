@@ -321,27 +321,166 @@ const RequestInvoice = () => {
                     marginBottom: "100px",
                 }}
             >
-              {insurancePackages.map((packageItem) => (
-                <MenuItem key={packageItem.maGoiBH} value={packageItem.maGoiBH}>
-                  {packageItem.tenGoiBH}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <TextField
-            label="Số tiền hoàn trả"
-            value={refundAmount}
-            //onChange={(e) => setRefundAmount(e.target.value)}
-            fullWidth
-            margin="normal"
-          />
-          <Button type="submit" variant="contained" color="primary" >
-            Submit
-          </Button>
-        </form>
-      </Paper>
-    </Container>
-  );  
+                <div>
+                    <Tabs value={value} onChange={handleChangeTab}>
+                        <Tab label="Đơn yêu cầu" />
+                        <Tab label="Danh sách các đơn yêu cầu đã gửi" />
+                    </Tabs>
+                    {/* Nội dung tương ứng với từng tab */}
+                    {value === 0 && (
+                        <div style={{ padding: "20px", marginTop: "20px" }}>
+                            <Typography component="h1" variant="h5">
+                                Đơn yêu cầu hoàn trả hóa đơn
+                            </Typography>
+                            <form
+                                onSubmit={(e) => {
+                                    e.preventDefault();
+                                    handleRefundSubmit(e);
+                                }}
+                            >
+                                <TextField
+                                    label="Mã hóa đơn"
+                                    name="invoiceCode"
+                                    value={formData.invoiceCode}
+                                    onChange={handleChangeData}
+                                    fullWidth
+                                    required
+                                    margin="normal"
+                                    error={invoiceCodeError}
+                                    helperText={
+                                        invoiceCodeError &&
+                                        "Mã hóa đơn bắt đầu bằng chữ cái hoặc số và có ít nhất 6 kí tự"
+                                    }
+                                />
+                                <FormControl style={{ width: "100%" }}>
+                                    <InputLabel>Tên bệnh viện</InputLabel>
+                                    <Select
+                                        value={selectedHospitalName}
+                                        onChange={(e) =>
+                                            setSelectedHospitalName(
+                                                e.target.value
+                                            )
+                                        }
+                                    >
+                                        {hospitalNameList.map((hos_name) => (
+                                            <MenuItem
+                                                key={hos_name.maBV}
+                                                value={hos_name.maBV}
+                                            >
+                                                {hos_name.tenBV}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                                <TextField
+                                    label="Số tiền"
+                                    name="amount"
+                                    value={formData.amount}
+                                    onChange={handleChangeData}
+                                    fullWidth
+                                    required
+                                    margin="normal"
+                                    InputProps={{
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                $
+                                            </InputAdornment>
+                                        ),
+                                    }}
+                                    error={amountError}
+                                    helperText={
+                                        amountError && "Số tiền không hợp lệ"
+                                    }
+                                />
+                                <FormControl
+                                    style={{
+                                        width: "40%",
+                                        marginRight: "10px",
+                                    }}
+                                >
+                                    <InputLabel>Tên bệnh</InputLabel>
+                                    <Select
+                                        value={selectedDisease}
+                                        onChange={(e) =>
+                                            setSelectedDisease(e.target.value)
+                                        }
+                                    >
+                                        {diseases.map((disease) => (
+                                            <MenuItem
+                                                key={disease.maBenh}
+                                                value={disease.maBenh}
+                                            >
+                                                {disease.tenBenh}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                                <FormControl style={{ width: "40%" }}>
+                                    <InputLabel>Gói bảo hiểm</InputLabel>
+                                    <Select
+                                        value={selectedInsurancePackage || ""}
+                                        onChange={handleInsurancePackageChange}
+                                    >
+                                        {insurancePackages.map(
+                                            (packageItem) => (
+                                                <MenuItem
+                                                    key={packageItem.maGoiBH}
+                                                    value={packageItem.maGoiBH}
+                                                >
+                                                    {packageItem.tenGoiBH}
+                                                </MenuItem>
+                                            )
+                                        )}
+                                    </Select>
+                                </FormControl>
+                                <TextField
+                                    label="Số tiền hoàn trả"
+                                    value={refundAmount}
+                                    fullWidth
+                                    margin="normal"
+                                    InputProps={{ readOnly: true }}
+                                />
+                                <Button
+                                    type="submit"
+                                    variant="outlined"
+                                    color="primary"
+                                >
+                                    Tạo yêu cầu hoàn trả
+                                </Button>
+                            </form>
+                        </div>
+                    )}
+                    {value === 1 && (
+                        <div style={{ padding: "20px", marginTop: "20px" }}>
+                            <Box sx={{ height: 400, width: "100%" }}>
+                                <DataGrid
+                                    rows={rows}
+                                    columns={columns}
+                                    initialState={{
+                                        pagination: {
+                                            paginationModel: {
+                                                pageSize: 5,
+                                            },
+                                        },
+                                    }}
+                                    pageSizeOptions={[5]}
+                                    disableRowSelectionOnClick
+                                    getRowId={(row) => row.id}
+                                />
+                            </Box>
+                        </div>
+                    )}
+                </div>
+            </Paper>
+            <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={2000}
+                onClose={handleSnackbarClose}
+                message={snackbarMessage}
+                anchorOrigin={{ vertical: "top", horizontal: "right" }}
+            />
+        </Container>
+    );
 };
 
 export default memo(RequestInvoice);
