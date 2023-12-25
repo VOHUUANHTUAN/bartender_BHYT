@@ -4,6 +4,7 @@ using BaoHiemYTe.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BaoHiemYTe.Migrations
 {
     [DbContext(typeof(UserDbContext))]
-    partial class UserDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231221035224_FinalDB")]
+    partial class FinalDB
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -97,6 +100,7 @@ namespace BaoHiemYTe.Migrations
                         .HasColumnType("int");
 
                     b.Property<int?>("MaNV")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("ThoiGianBD")
@@ -340,17 +344,18 @@ namespace BaoHiemYTe.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("MaGoiBHApDung")
+                    b.Property<int>("MaGoiBHApDung")
                         .HasColumnType("int");
 
                     b.Property<string>("MaHDKhamBenh")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("MaKH")
                         .HasColumnType("int");
 
                     b.Property<int?>("MaNV")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int>("SoTienDaKham")
@@ -376,9 +381,6 @@ namespace BaoHiemYTe.Migrations
                     b.HasKey("MaYC");
 
                     b.HasIndex("MaGoiBHApDung");
-
-                    b.HasIndex("MaHDKhamBenh")
-                        .IsUnique();
 
                     b.HasIndex("MaKH");
 
@@ -423,7 +425,8 @@ namespace BaoHiemYTe.Migrations
                     b.HasOne("BaoHiemYTe.Domain.NhanVien", "NhanVien")
                         .WithMany()
                         .HasForeignKey("MaNV")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("GoiBaoHiem");
 
@@ -500,7 +503,8 @@ namespace BaoHiemYTe.Migrations
                     b.HasOne("BaoHiemYTe.Domain.GoiBaoHiem", "GoiBaoHiem")
                         .WithMany()
                         .HasForeignKey("MaGoiBHApDung")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("BaoHiemYTe.Domain.KhachHang", "KhachHang")
                         .WithMany()
@@ -511,7 +515,8 @@ namespace BaoHiemYTe.Migrations
                     b.HasOne("BaoHiemYTe.Domain.NhanVien", "NhanVien")
                         .WithMany()
                         .HasForeignKey("MaNV")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("GoiBaoHiem");
 

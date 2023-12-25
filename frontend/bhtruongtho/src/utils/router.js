@@ -10,5 +10,10 @@ export const ROUTERS = {
         REQUESTINVOICE: "requestinvoice",
         DONDANGKY: "registrationForms",
         YEUCAUHOANTRA: "requestrefund",
+        PERSONALINFO: "PersonalInfo",
+        INSURANCEREGISTRATION: "InsuranceRegistration",
+        REQUESTINVOICE: "requestinvoice",
+        DONDANGKY: "registrationForms",
+        HOADON: "invoice",
     },
 };

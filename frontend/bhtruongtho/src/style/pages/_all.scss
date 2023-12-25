@@ -11,6 +11,10 @@ body{
     padding: 0;
     margin: 0;
 }
+a {
+    text-decoration: none;
+    color: black;
+}
 .container__header__footer{
     max-width: 1201px;
     width: 100%;
@@ -21,7 +25,7 @@ body{
 }
 
 .container__body{
-    max-width: 1201px;
+    max-width: 1601px;
     width: 100%;
     padding-left: 15px;
     padding-right: 15px;
