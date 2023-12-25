@@ -12,8 +12,10 @@ export const ROUTERS = {
         YEUCAUHOANTRA: "requestrefund",
         PERSONALINFO: "PersonalInfo",
         INSURANCEREGISTRATION: "InsuranceRegistration",
-        REQUESTINVOICE: "requestinvoice",
         DONDANGKY: "registrationForms",
+        INSURANCEPACKM: "insurancePackManagement",
+        ADDINSPACK: "insurancePackManagement/add",
+        REQUESTINVOICE: "requestinvoice",
         HOADON: "invoice",
     },
 };

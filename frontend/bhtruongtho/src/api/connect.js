@@ -15,6 +15,8 @@ const END_POINT = {
     BENHVIEN: "BenhVien",
     DONDANGKY: "DONDANGKY",
     NHANVIEN: "NhanVien",
+    CHINHSACH: "chinhsach",
+    ADD: "add",
     CAPNHATYEUCAU: "CapNhat",
     GETALLYEUCAUHOANTRA: "GetAllYeuCauHoanTra",
     HOADONTHANHTOANDK: "HoaDonThanhToanDK",
@@ -159,6 +161,41 @@ export const putYeuCauHoanTraByID = async (ID, Data) => {
     }
 };
 
+export const updateInsPack = async (maGoiBH, goiBHData) => {
+    const response = await axiosClient.put(
+        `${END_POINT.GOIBAOHIEM}/${maGoiBH}/${END_POINT.UPDATE}`,
+        goiBHData
+    );
+    return response;
+};
+
+export const addBenhForGBH = async (MaGoiBH, MaBenh) => {
+    const response = await axiosClient.post(
+        `${END_POINT.CHINHSACH}/${END_POINT.ADD}`,
+        {MaGoiBH, MaBenh}
+    );
+    return response;
+};
+
+export const deleteBenhFromBGH = async (maGoiBH, maBenh) => {
+    try {
+        // Gọi API xóa bệnh khỏi Gói Bảo hiểm
+        const response = await axiosClient.delete( `${END_POINT.CHINHSACH}/${maGoiBH}/${maBenh}/delete`);
+        return response;
+      } catch (error) {
+        // Xử lý lỗi nếu cần
+        console.error('Lỗi khi xóa bệnh khỏi Gói Bảo hiểm:', error.message);
+        throw error;
+      }
+};
+
+export const addInsPack = async (goiBHData) => {
+    const response = await axiosClient.post(
+        `${END_POINT.GOIBAOHIEM}/${END_POINT.ADD}`,
+        goiBHData
+    );
+    return response;
+};
 export const getAllYeuCauHoanTra = () => {
     return axiosClient.get(`${END_POINT.YEUCAUHOANTRA}/${END_POINT.GETALLYEUCAUHOANTRA}`);
 };

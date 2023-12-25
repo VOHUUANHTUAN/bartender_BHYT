@@ -14,6 +14,11 @@ import { useUser } from "../src/context/UserContext.js";
 import InsuranceRegistration from "./views/user/InsuranceRegistration";
 import ListDonDangKy from "./views/user/registrationForm/index.js";
 import DonDangKyDetail from "./views/user/registrationForm/regisdetail.js";
+import InsurancePack from "./views/staff/insurancePackManagement/index.js";
+import InsPackDetailPage from "./views/staff/insurancePackManagement/insPackMDetail.js";
+import AddInsPack from "./views/staff/insurancePackManagement/addInsPack.js";
+
+
 import ListYeuCauHoanTra from "./views/user/CapNhatYeuCauHoanTra/index.js";
 import YeuCauHoanTraDetail from "./views/user/CapNhatYeuCauHoanTra/detailycht.js";
 import PersonalInfo from "./views/user/personalInfoPage/index.js";
@@ -70,7 +75,7 @@ const renderUserRouter = () => {
         {
             path: ROUTERS.USER.STAFF,
             component: <HomePageStaff />,
-            loginRequired: true,
+            loginRequired: false,
         },
         {
             path: ROUTERS.USER.REQUESTINVOICE,
@@ -87,7 +92,16 @@ const renderUserRouter = () => {
         },
         {
             path: ROUTERS.USER.DONDANGKY,
-            component: <ListDonDangKy />,
+            component: <ListDonDangKy />
+        },
+        {
+            path: ROUTERS.USER.INSURANCEPACKM,
+            component: <InsurancePack />
+        },
+        {
+            path: ROUTERS.USER.ADDINSPACK,
+            component: <AddInsPack />
+   
         },
         {
             path: ROUTERS.USER.YEUCAUHOANTRA,
@@ -131,7 +145,11 @@ const renderUserRouter = () => {
                     path="requestrefund/detail/:id"
                     element={<YeuCauHoanTraDetail />}
                 />
+                                <Route
+                    path="insurancePackManagement/detail/:id" element={<InsPackDetailPage />}
+                />
             </Routes>
+            
         </MasterLayout>
     );
 };

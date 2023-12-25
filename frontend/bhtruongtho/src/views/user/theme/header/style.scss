@@ -11,6 +11,8 @@
     display: flex;
     justify-content: flex-end;
     align-items: center;
+    text-transform: uppercase;
+    font-weight: bold;
 
     ul {
         display: flex;
@@ -68,7 +70,7 @@
 }
 
 .nav_header {
-    background: white;
+    background:  rgb(235, 233, 233);
 
 }
 
