@@ -12,6 +12,8 @@ const END_POINT = {
     GOIBHBYUS: "GetGoiBHByUs",
     DONDANGKY: "DONDANGKY",
     NHANVIEN: "NhanVien",
+    CAPNHATYEUCAU: "CapNhat",
+    GETALLYEUCAUHOANTRA: "GetAllYeuCauHoanTra",
 };
 export const getGoiBHAPI = () => {
     return axiosClient.get(`${END_POINT.GOIBAOHIEM}`);
@@ -84,6 +86,7 @@ export const getAllBenh = () => {
 
 export const getGoiBHByUsername = (username) => {
     return axiosClient.get(`${END_POINT.GOIBAOHIEM}/${END_POINT.GOIBHBYUS}/${username}`);
+}
 export const getDonDangKyList = () => {
     return axiosClient.get(`${END_POINT.DONDANGKY}`);
 }
@@ -109,3 +112,25 @@ export const putDonDangKyByID = async (ID, Data) => {
         throw new Error(`Error chang DDK: ${error.message}`);
     }
 };
+
+export const putYeuCauHoanTraByID = async (ID, Data) => {
+    try {
+        const response = await axiosClient.put(
+            `${END_POINT.YEUCAUHOANTRA}/${END_POINT.CAPNHATYEUCAU}/${ID}`,
+            Data,
+            { headers: { 'Content-Type': 'application/json' } }
+        );
+        return response.data;
+    } catch (error) {
+        console.error('Error:', error);
+        throw new Error(`Error chang DDK: ${error.message}`);
+    }
+};
+
+export const getAllYeuCauHoanTra = () => {
+    return axiosClient.get(`${END_POINT.YEUCAUHOANTRA}/${END_POINT.GETALLYEUCAUHOANTRA}`);
+};
+
+export const getAllYeuCauHoanTraBYID = (ID) => {
+    return axiosClient.get(`${END_POINT.YEUCAUHOANTRA}/${ID}`)
+}

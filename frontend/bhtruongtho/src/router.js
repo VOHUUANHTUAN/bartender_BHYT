@@ -12,6 +12,8 @@ import HomePageStaff from "./views/user/homePageStaff";
 import ChangePassword from "./views/user/ChangePasswordPage";
 import ListDonDangKy from "./views/user/registrationForm/index.js";
 import DonDangKyDetail from "./views/user/registrationForm/regisdetail.js";
+import ListYeuCauHoanTra from "./views/user/CapNhatYeuCauHoanTra/index.js"
+import YeuCauHoanTraDetail from "./views/user/CapNhatYeuCauHoanTra/detailycht.js"
 
 const renderUserRouter = () => {
     const userRouters = [
@@ -55,7 +57,12 @@ const renderUserRouter = () => {
         {
             path: ROUTERS.USER.DONDANGKY,
             component: <ListDonDangKy />
-        }
+        },
+        {
+            path: ROUTERS.USER.YEUCAUHOANTRA,
+            component: <ListYeuCauHoanTra />
+        },
+
     ];
     return (
         <MasterLayout>
@@ -71,6 +78,9 @@ const renderUserRouter = () => {
                 />
                 <Route
                     path="registrationForms/detail/:id" element={<DonDangKyDetail />}
+                />
+                <Route
+                    path="requestrefund/detail/:id" element={<YeuCauHoanTraDetail />}
                 />
             </Routes>
         </MasterLayout>
