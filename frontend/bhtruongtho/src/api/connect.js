@@ -15,6 +15,8 @@ const END_POINT = {
     BENHVIEN: "BenhVien",
     DONDANGKY: "DONDANGKY",
     NHANVIEN: "NhanVien",
+    CAPNHATYEUCAU: "CapNhat",
+    GETALLYEUCAUHOANTRA: "GetAllYeuCauHoanTra",
     HOADONTHANHTOANDK: "HoaDonThanhToanDK",
     KH_LICHSUGD: "HoaDonThanhToanDK/KH_GetLichSuGiaoDich",
 };
@@ -143,6 +145,27 @@ export const putDonDangKyByID = async (ID, Data) => {
     }
 };
 
+export const putYeuCauHoanTraByID = async (ID, Data) => {
+    try {
+        const response = await axiosClient.put(
+            `${END_POINT.YEUCAUHOANTRA}/${END_POINT.CAPNHATYEUCAU}/${ID}`,
+            Data,
+            { headers: { 'Content-Type': 'application/json' } }
+        );
+        return response.data;
+    } catch (error) {
+        console.error('Error:', error);
+        throw new Error(`Error chang DDK: ${error.message}`);
+    }
+};
+
+export const getAllYeuCauHoanTra = () => {
+    return axiosClient.get(`${END_POINT.YEUCAUHOANTRA}/${END_POINT.GETALLYEUCAUHOANTRA}`);
+};
+
+export const getAllYeuCauHoanTraBYID = (ID) => {
+    return axiosClient.get(`${END_POINT.YEUCAUHOANTRA}/${ID}`)
+}
 //Hàm đăng ký gói bảo hiểm mới cho khách
 export const KH_post_DonDangKy = (token, data) => {
     return axiosClient.post(`${END_POINT.DONDANGKY}`, data, {

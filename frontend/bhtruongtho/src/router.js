@@ -14,6 +14,8 @@ import { useUser } from "../src/context/UserContext.js";
 import InsuranceRegistration from "./views/user/InsuranceRegistration";
 import ListDonDangKy from "./views/user/registrationForm/index.js";
 import DonDangKyDetail from "./views/user/registrationForm/regisdetail.js";
+import ListYeuCauHoanTra from "./views/user/CapNhatYeuCauHoanTra/index.js"
+import YeuCauHoanTraDetail from "./views/user/CapNhatYeuCauHoanTra/detailycht.js"
 import PersonalInfo from "./views/user/personalInfoPage/index.js";
 import Invoice from "./views/user/invoicePage";
 
@@ -84,8 +86,13 @@ const renderUserRouter = () => {
         },
         {
             path: ROUTERS.USER.DONDANGKY,
-            component: <ListDonDangKy />,
+            component: <ListDonDangKy />
         },
+        {
+            path: ROUTERS.USER.YEUCAUHOANTRA,
+            component: <ListYeuCauHoanTra />
+        },
+
         {
             path: ROUTERS.USER.HOADON,
             component: <Invoice />,
@@ -123,6 +130,9 @@ const renderUserRouter = () => {
                 <Route
                     path="registrationForms/detail/:id"
                     element={<DonDangKyDetail />}
+                />
+                <Route
+                    path="requestrefund/detail/:id" element={<YeuCauHoanTraDetail />}
                 />
             </Routes>
         </MasterLayout>

@@ -8,6 +8,8 @@ export const ROUTERS = {
         STAFF: "staff",
         CHANGEPASSWORD: "changepassword",
         REQUESTINVOICE: "requestinvoice",
+        DONDANGKY: "registrationForms",
+        YEUCAUHOANTRA: "requestrefund",
         PERSONALINFO: "PersonalInfo",
         INSURANCEREGISTRATION: "InsuranceRegistration",
         REQUESTINVOICE: "requestinvoice",
