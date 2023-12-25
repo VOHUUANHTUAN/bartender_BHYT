@@ -7,6 +7,7 @@ const SnackbarProvider = ({ children }) => {
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState("");
     const [snackbarSeverity, setSnackbarSeverity] = useState("error"); // 'error', 'success', 'warning', 'info'
+
     const openSnackbar = (message) => {
         setSnackbarMessage(message);
         setSnackbarOpen(true);
