@@ -15,6 +15,9 @@ const END_POINT = {
     BENHVIEN: "BenhVien",
     DONDANGKY: "DONDANGKY",
     NHANVIEN: "NhanVien",
+    HOADONDK: "HoaDonThanhToanDK/GetHoaDonThanhToanByTinhTrang",
+    HOADONDKDETAIL: "HoaDonThanhToanDK/GetHoaDonDetails",
+    UPDATEHOADON: "HoaDonThanhToanDK/updateKhiThanhToan",
     CHINHSACH: "chinhsach",
     ADD: "add",
     CAPNHATYEUCAU: "CapNhat",
@@ -22,6 +25,7 @@ const END_POINT = {
     HOADONTHANHTOANDK: "HoaDonThanhToanDK",
     KH_LICHSUGD: "HoaDonThanhToanDK/KH_GetLichSuGiaoDich",
 };
+
 export const getGoiBHAPI = () => {
     return axiosClient.get(`${END_POINT.GOIBAOHIEM}`);
 };
@@ -146,6 +150,14 @@ export const putDonDangKyByID = async (ID, Data) => {
         throw new Error(`Error chang DDK: ${error.message}`);
     }
 };
+//Lấy hóa đơn theo  tình trạng
+export const getHoaDonDKbyTinhTrang = (token,tinhTrang) => {
+    return axiosClient.get(`${END_POINT.HOADONDK}/${tinhTrang}`,{
+         headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+};
 
 export const putYeuCauHoanTraByID = async (ID, Data) => {
     try {
@@ -210,6 +222,23 @@ export const KH_post_DonDangKy = (token, data) => {
             Authorization: `Bearer ${token}`,
         },
     });
+};
+//Lấy chi tiết hóa đơn (thông tin GoiBH, DonDangKy, HoaDon)
+export const getHoaDonDKDaThanhToanDetail = (maHD) => {
+    return axiosClient.get(`${END_POINT.HOADONDKDETAIL}/${maHD}`);
+};
+export const postUpdateHoaDon = (token, maHD) => {
+    console.log(token);
+    console.log(maHD);
+    return axiosClient.post(
+        `${END_POINT.UPDATEHOADON}/${maHD}`,
+        {},
+        {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        }
+    );
 };
 
 //Hàm đăng ký gói bảo hiểm mới cho khách

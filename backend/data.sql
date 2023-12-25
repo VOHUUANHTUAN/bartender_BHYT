@@ -9,7 +9,9 @@
 --ALTER COLUMN MaNV INT NULL;
 --ALTER TABLE YeuCauHoanTra
 --ALTER COLUMN MaGoiBHApDung INT NULL;
-
+--select *from HoaDonThanhToanDK where MaHD='7'
+--select *from DonDangKy 
+--select *from khachhang
 insert into Users values('khachhang','123456',N'Khách hàng',0)
 insert into Users values('anhtuan','123456',N'Khách hàng',0)
 insert into Users values('thuha','123456',N'Khách hàng',0)

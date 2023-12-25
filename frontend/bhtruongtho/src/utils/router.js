@@ -16,6 +16,7 @@ export const ROUTERS = {
         INSURANCEPACKM: "insurancePackManagement",
         ADDINSPACK: "insurancePackManagement/add",
         REQUESTINVOICE: "requestinvoice",
+        PAY: "pay",
         HOADON: "invoice",
     },
 };
