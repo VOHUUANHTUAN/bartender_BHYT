@@ -13,7 +13,7 @@ namespace BaoHiemYTe.Domain
         public DateTime ThoiGianTao { get; set; }
         public int MaYC { get; set; }
 
-       
+      
 
         [ForeignKey("MaYC")]
         public YeuCauHoanTra YeuCauHoanTra { get; set; }

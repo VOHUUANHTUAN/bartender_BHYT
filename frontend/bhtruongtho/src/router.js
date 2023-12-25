@@ -12,26 +12,31 @@ import HomePageStaff from "./views/user/homePageStaff";
 import ChangePassword from "./views/user/ChangePasswordPage";
 import { useUser } from "../src/context/UserContext.js";
 import InsuranceRegistration from "./views/user/InsuranceRegistration";
-import ChangeInformation from "./views/user/changeInfoPage/index.js";
 import ListDonDangKy from "./views/user/registrationForm/index.js";
 import DonDangKyDetail from "./views/user/registrationForm/regisdetail.js";
 import InsurancePack from "./views/staff/insurancePackManagement/index.js";
 import InsPackDetailPage from "./views/staff/insurancePackManagement/insPackMDetail.js";
 import AddInsPack from "./views/staff/insurancePackManagement/addInsPack.js";
-const AuthGuard = ({ component: Component, loginRequired }) => {
-    const { user } = useUser();
-  
-    if (loginRequired && !user) {
-      // Redirect to login if login is required and the user is not authenticated
-      return <Navigate to={`/${ROUTERS.USER.LOGIN}`}/>;
-    }
-  
-    // Render the component if login is not required or the user is authenticated
-    return Component
-  };
 
 
+import ListYeuCauHoanTra from "./views/user/CapNhatYeuCauHoanTra/index.js";
+import YeuCauHoanTraDetail from "./views/user/CapNhatYeuCauHoanTra/detailycht.js";
+import PersonalInfo from "./views/user/personalInfoPage/index.js";
+import Invoice from "./views/user/invoicePage";
+import { useEffect } from "react";
+import { dayCalendarSkeletonClasses } from "@mui/x-date-pickers";
+import { useLocation } from "react-router-dom";
+import { getUserInfoByToken } from "./api/connect";
 
+// const AuthGuard = ({ component: Component, loginRequired }) => {
+//     if (loginRequired && !user) {
+//         // Redirect to login if login is required and the user is not authenticated
+//         return <Navigate to={`/${ROUTERS.USER.LOGIN}`} />;
+//     }
+
+//     // Render the component if login is not required or the user is authenticated
+//     return Component;
+// };
 const renderUserRouter = () => {
     const userRouters = [
         {
@@ -76,11 +81,10 @@ const renderUserRouter = () => {
             path: ROUTERS.USER.REQUESTINVOICE,
             component: <RequestInvoicePage />,
             loginRequired: true,
-        }, 
-        {    
-
+        },
+        {
             path: ROUTERS.USER.PERSONALINFO,
-            component: <ChangeInformation />,
+            component: <PersonalInfo />,
         },
         {
             path: ROUTERS.USER.INSURANCEREGISTRATION,
@@ -97,6 +101,16 @@ const renderUserRouter = () => {
         {
             path: ROUTERS.USER.ADDINSPACK,
             component: <AddInsPack />
+   
+        },
+        {
+            path: ROUTERS.USER.YEUCAUHOANTRA,
+            component: <ListYeuCauHoanTra />,
+        },
+
+        {
+            path: ROUTERS.USER.HOADON,
+            component: <Invoice />,
         },
     ];
 
@@ -105,17 +119,31 @@ const renderUserRouter = () => {
             <Routes>
                 {userRouters.map((item, key) => (
                     <Route
-
-                        key={key} path={item.path} //element={item.component}
-                        element={<AuthGuard component={item.component} loginRequired={item.loginRequired}/>}
+                        key={key}
+                        path={item.path} //element={item.component}
+                        element={item.component}
                     />
                 ))}
                 <Route
-                    path="product/detail/:id" element={<ProductDetailPage />}
+                    path="product/detail/:id"
+                    element={<ProductDetailPage />}
                 />
-            {/* <Route path="product/detail/:id" element={<AuthGuard component={<ProductDetailPage />} loginRequired={true} />} /> */}
                 <Route
-                    path="registrationForms/detail/:id" element={<DonDangKyDetail />}
+                    path="registrationForms/detail/:id"
+                    element={<DonDangKyDetail />}
+                />
+                <Route
+                    path="InsuranceRegistration/:id"
+                    element={<InsuranceRegistration />}
+                />
+                {/* <Route path="product/detail/:id" element={<AuthGuard component={<ProductDetailPage />} loginRequired={true} />} /> */}
+                <Route
+                    path="registrationForms/detail/:id"
+                    element={<DonDangKyDetail />}
+                />
+                <Route
+                    path="requestrefund/detail/:id"
+                    element={<YeuCauHoanTraDetail />}
                 />
                                 <Route
                     path="insurancePackManagement/detail/:id" element={<InsPackDetailPage />}
@@ -127,6 +155,47 @@ const renderUserRouter = () => {
 };
 
 const RouterCustom = () => {
+    const location = useLocation();
+    const { user, login, logout } = useUser();
+
+    const getUserInfo = async (token) => {
+        try {
+            const response = await getUserInfoByToken(token);
+            if (response) {
+                logout();
+                login({
+                    username: response.username,
+                    token: token,
+                    firstLogin: response.firstLogin,
+                    role: response.role,
+                });
+                localStorage.clear();
+                localStorage.setItem("token", token);
+                console.log("Login successful");
+            } else {
+                localStorage.clear();
+                <Navigate to={`/${ROUTERS.USER.LOGIN}`} />;
+                console.log("Login fail");
+
+                logout();
+            }
+        } catch (error) {
+            localStorage.clear();
+            console.log("Login fail");
+            logout();
+            <Navigate to={`/${ROUTERS.USER.LOGIN}`} />;
+            console.log(error.message);
+        }
+    };
+
+    useEffect(() => {
+        // Hành động mà bạn muốn thực hiện khi đường dẫn thay đổi
+        getUserInfo(localStorage.getItem("token"));
+        console.log("Đường dẫn đã thay đổi:", location.pathname);
+
+        // Thêm các hành động cần thực hiện ở đây...
+    }, [location.pathname]);
+
     return renderUserRouter();
 };
 
@@ -135,12 +204,12 @@ export default RouterCustom;
 // const AuthGuard = ({ component, loginRequired }) => {
 //     // Kiểm tra xem user có tồn tại hay không
 //     const isAuthenticated = user !== null;
-  
+
 //     // Nếu yêu cầu đăng nhập và user không tồn tại, chuyển hướng đến trang đăng nhập
 //     if (loginRequired && !isAuthenticated) {
 //       return <Navigate to={ROUTERS.USER.LOGIN} />;
 //     }
-  
+
 //     // Nếu user tồn tại hoặc không yêu cầu đăng nhập, hiển thị component được chuyển vào
 //     return component;
 //   };

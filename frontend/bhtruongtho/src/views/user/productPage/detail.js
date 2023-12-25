@@ -1,8 +1,7 @@
-
-import { memo, useEffect, useState } from "react"
+import { memo, useEffect, useState } from "react";
 import { getGoiBHByMaGBH, getBenhByMaGBH } from "../../../api/connect";
-import "./style.scss"
-import { Link, useParams } from 'react-router-dom';
+import "./style.scss";
+import { Link, useParams } from "react-router-dom";
 import { ROUTERS } from "../../../utils/router";
 const ProductDetailPage = () => {
     const params = useParams();
@@ -39,40 +38,56 @@ const ProductDetailPage = () => {
         return <p>Error: {error.message}</p>;
     }
 
-    return <><div className="container__body">
-        <div className="detail__page">
-            <div className="detail__container">
-                <div className="img-container">
-                    <img src="" alt=""></img>
-                </div>
-                <div className="card-content">
-                    <div className="detail__title">
-                        <h3> {dataGoiBH.tenGoiBH}</h3>
+    return (
+        <>
+            <div className="container__body">
+                <div className="detail__page">
+                    <div className="detail__container">
+                        <div className="img-container">
+                            <img src="" alt=""></img>
+                        </div>
+                        <div className="card-content">
+                            <div className="detail__title">
+                                <h3> {dataGoiBH.tenGoiBH}</h3>
+                            </div>
+                            <div className="detail__body">
+                                <p>{dataGoiBH.motaGoiBH}</p>
+                                <p>Giá: {dataGoiBH.gia} VND</p>
+                                <p>
+                                    Tỉ lệ hoàn tiền: {dataGoiBH.tiLeHoanTien}%
+                                </p>
+                                <p>
+                                    Thời hạn bảo vệ: {dataGoiBH.thoiHanBaoVe}{" "}
+                                    năm
+                                </p>
+                                <p>
+                                    Gói bảo hiểm áp dụng hoàn tiền cho các bệnh
+                                    sau:
+                                </p>
+                                <ul className="benh__list">
+                                    {dataBenh.map((benhItem, index) => (
+                                        <li key={index}>
+                                            {`${benhItem.tenBenh}: ${benhItem.moTa}`}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        </div>
+                        <div className="detail__btn">
+                            <Link to={`../${ROUTERS.USER.PRODUCT}`}>
+                                <p>Quay lại</p>
+                            </Link>
+                            <Link
+                                to={`../../${ROUTERS.USER.INSURANCEREGISTRATION}/${params.id}`}
+                            >
+                                <p>Đăng ký</p>
+                            </Link>
+                        </div>
                     </div>
-                    <div className="detail__body">
-                        <p>{dataGoiBH.motaGoiBH}</p>
-                        <p>Giá: {dataGoiBH.gia} VND</p>
-                        <p>Tỉ lệ hoàn tiền: {dataGoiBH.tiLeHoanTien}%</p>
-                        <p>Thời hạn bảo vệ: {dataGoiBH.thoiHanBaoVe} năm</p>
-                        <p>Gói bảo hiểm áp dụng hoàn tiền cho các bệnh sau:</p>
-                        <ul className="benh__list">
-                            {dataBenh.map((benhItem, index) => (
-                                <li key={index} >
-                                    {`${benhItem.tenBenh}: ${benhItem.moTa}`}
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                </div>
-                <div className="detail__btn">
-                    <Link to={`../${ROUTERS.USER.PRODUCT}`}>
-                        <p>Quay lại</p>
-                    </Link>
                 </div>
             </div>
-        </div>
-    </div>
-    </>
+        </>
+    );
 };
 
 export default memo(ProductDetailPage);

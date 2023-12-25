@@ -1,23 +1,21 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+﻿using BaoHiemYTe.Domain;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace BaoHiemYTe.Domain
+namespace BaoHiemYTe.DTOs
 {
-    public class HoaDonThanhToanDK
+    public class HoaDonThanhToanDKDTO
     {
-        [Key]
         public int MaHD { get; set; }
 
         public int SoTien { get; set; }
 
         public DateTime ThoiGianHetHan { get; set; }
         public string HanKy { get; set; }
-        
+
         public string TinhTrangThanhToan { get; set; }
         public DateTime? ThoiGianThanhToan { get; set; }
         public int MaDonDK { get; set; }
+
         
-        [ForeignKey("MaDonDK")]
-        public DonDangKy DonDangKy { get; set; }
     }
 }
