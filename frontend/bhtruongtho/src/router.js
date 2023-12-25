@@ -15,7 +15,9 @@ import InsuranceRegistration from "./views/user/InsuranceRegistration";
 import ChangeInformation from "./views/user/changeInfoPage/index.js";
 import ListDonDangKy from "./views/user/registrationForm/index.js";
 import DonDangKyDetail from "./views/user/registrationForm/regisdetail.js";
-
+import InsurancePack from "./views/staff/insurancePackManagement/index.js";
+import InsPackDetailPage from "./views/staff/insurancePackManagement/insPackMDetail.js";
+import AddInsPack from "./views/staff/insurancePackManagement/addInsPack.js";
 const AuthGuard = ({ component: Component, loginRequired }) => {
     const { user } = useUser();
   
@@ -68,7 +70,7 @@ const renderUserRouter = () => {
         {
             path: ROUTERS.USER.STAFF,
             component: <HomePageStaff />,
-            loginRequired: true,
+            loginRequired: false,
         },
         {
             path: ROUTERS.USER.REQUESTINVOICE,
@@ -87,7 +89,15 @@ const renderUserRouter = () => {
         {
             path: ROUTERS.USER.DONDANGKY,
             component: <ListDonDangKy />
-        }
+        },
+        {
+            path: ROUTERS.USER.INSURANCEPACKM,
+            component: <InsurancePack />
+        },
+        {
+            path: ROUTERS.USER.ADDINSPACK,
+            component: <AddInsPack />
+        },
     ];
 
     return (
@@ -107,7 +117,11 @@ const renderUserRouter = () => {
                 <Route
                     path="registrationForms/detail/:id" element={<DonDangKyDetail />}
                 />
+                                <Route
+                    path="insurancePackManagement/detail/:id" element={<InsPackDetailPage />}
+                />
             </Routes>
+            
         </MasterLayout>
     );
 };

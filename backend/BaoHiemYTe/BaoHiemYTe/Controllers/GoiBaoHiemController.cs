@@ -1,4 +1,5 @@
 ﻿using BaoHiemYTe.Data;
+using BaoHiemYTe.Domain;
 using BaoHiemYTe.DTOs;
 using Microsoft.AspNetCore.Mvc;
 
@@ -89,6 +90,68 @@ namespace BaoHiemYTe.Controllers
         }).ToList();
 
             return Ok(GoiBHDTOs);
+        }
+
+        [HttpPut("{MaGoiBH}/update")]
+        public IActionResult ChangeGoiBaoHiem(int MaGoiBH, [FromBody] UpdateGoiBaoHiemDTO updateGoiBaoHiemDTO)
+        {
+            try
+            {
+                var goiBH = userDbContext.GoiBaoHiem.FirstOrDefault(u => u.MaGoiBH == MaGoiBH);
+
+                if (goiBH == null)
+                {
+                    return NotFound("Không tìm thấy gói bảo hiểm");
+                }
+                
+                goiBH.TenGoiBH = updateGoiBaoHiemDTO.TenGoiBH;
+                goiBH.MotaGoiBH = updateGoiBaoHiemDTO.MotaGoiBH;
+                goiBH.Gia = updateGoiBaoHiemDTO.Gia;
+                goiBH.TiLeHoanTien = updateGoiBaoHiemDTO.TiLeHoanTien;
+                goiBH.ThoiHanBaoVe = updateGoiBaoHiemDTO.ThoiHanBaoVe;
+                userDbContext.SaveChanges();
+                var update_GBH_dto = new GoiBaoHiemDTO
+                {
+                    MaGoiBH = goiBH.MaGoiBH,
+                    TenGoiBH = goiBH.TenGoiBH,
+                    MotaGoiBH = goiBH.MotaGoiBH,
+                    Gia = goiBH.Gia,
+                    TiLeHoanTien = goiBH.TiLeHoanTien,
+                    ThoiHanBaoVe = goiBH.ThoiHanBaoVe
+                };
+
+                return Ok("Đổi thông tin gói bảo hiểm thành công");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Lỗi: {ex.Message}");
+            }
+        }
+
+        [HttpPost("add")]
+        public IActionResult AddGoiBaoHiem([FromBody] AddGoiBaoHiemDTO goiBaoHiemDTO)
+        {
+            try
+            {
+                var goiBaoHiem = new GoiBaoHiem
+                {
+                    TenGoiBH = goiBaoHiemDTO.TenGoiBH,
+                    MotaGoiBH = goiBaoHiemDTO.MotaGoiBH,
+                    Gia = goiBaoHiemDTO.Gia,
+                    TiLeHoanTien = goiBaoHiemDTO.TiLeHoanTien,
+                    ThoiHanBaoVe = goiBaoHiemDTO.ThoiHanBaoVe
+                };
+
+                // Thêm vào context và lưu vào database
+                userDbContext.GoiBaoHiem.Add(goiBaoHiem);
+                userDbContext.SaveChanges();
+
+                return Ok("Gói Bảo Hiểm được tạo thành công");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Lỗi: {ex.Message}");
+            }
         }
         /*
         [HttpGet]
