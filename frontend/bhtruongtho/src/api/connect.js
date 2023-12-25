@@ -18,6 +18,12 @@ const END_POINT = {
     HOADONDK: "HoaDonThanhToanDK/GetHoaDonThanhToanByTinhTrang",
     HOADONDKDETAIL: "HoaDonThanhToanDK/GetHoaDonDetails",
     UPDATEHOADON: "HoaDonThanhToanDK/updateKhiThanhToan",
+    CHINHSACH: "chinhsach",
+    ADD: "add",
+    CAPNHATYEUCAU: "CapNhat",
+    GETALLYEUCAUHOANTRA: "GetAllYeuCauHoanTra",
+    HOADONTHANHTOANDK: "HoaDonThanhToanDK",
+    KH_LICHSUGD: "HoaDonThanhToanDK/KH_GetLichSuGiaoDich",
 };
 
 export const getGoiBHAPI = () => {
@@ -147,6 +153,71 @@ export const putDonDangKyByID = async (ID, Data) => {
 //Lấy hóa đơn theo  tình trạng
 export const getHoaDonDKbyTinhTrang = (token,tinhTrang) => {
     return axiosClient.get(`${END_POINT.HOADONDK}/${tinhTrang}`,{
+         headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+};
+
+export const putYeuCauHoanTraByID = async (ID, Data) => {
+    try {
+        const response = await axiosClient.put(
+            `${END_POINT.YEUCAUHOANTRA}/${END_POINT.CAPNHATYEUCAU}/${ID}`,
+            Data,
+            { headers: { 'Content-Type': 'application/json' } }
+        );
+        return response.data;
+    } catch (error) {
+        console.error('Error:', error);
+        throw new Error(`Error chang DDK: ${error.message}`);
+    }
+};
+
+export const updateInsPack = async (maGoiBH, goiBHData) => {
+    const response = await axiosClient.put(
+        `${END_POINT.GOIBAOHIEM}/${maGoiBH}/${END_POINT.UPDATE}`,
+        goiBHData
+    );
+    return response;
+};
+
+export const addBenhForGBH = async (MaGoiBH, MaBenh) => {
+    const response = await axiosClient.post(
+        `${END_POINT.CHINHSACH}/${END_POINT.ADD}`,
+        {MaGoiBH, MaBenh}
+    );
+    return response;
+};
+
+export const deleteBenhFromBGH = async (maGoiBH, maBenh) => {
+    try {
+        // Gọi API xóa bệnh khỏi Gói Bảo hiểm
+        const response = await axiosClient.delete( `${END_POINT.CHINHSACH}/${maGoiBH}/${maBenh}/delete`);
+        return response;
+      } catch (error) {
+        // Xử lý lỗi nếu cần
+        console.error('Lỗi khi xóa bệnh khỏi Gói Bảo hiểm:', error.message);
+        throw error;
+      }
+};
+
+export const addInsPack = async (goiBHData) => {
+    const response = await axiosClient.post(
+        `${END_POINT.GOIBAOHIEM}/${END_POINT.ADD}`,
+        goiBHData
+    );
+    return response;
+};
+export const getAllYeuCauHoanTra = () => {
+    return axiosClient.get(`${END_POINT.YEUCAUHOANTRA}/${END_POINT.GETALLYEUCAUHOANTRA}`);
+};
+
+export const getAllYeuCauHoanTraBYID = (ID) => {
+    return axiosClient.get(`${END_POINT.YEUCAUHOANTRA}/${ID}`)
+}
+//Hàm đăng ký gói bảo hiểm mới cho khách
+export const KH_post_DonDangKy = (token, data) => {
+    return axiosClient.post(`${END_POINT.DONDANGKY}`, data, {
         headers: {
             Authorization: `Bearer ${token}`,
         },
@@ -168,4 +239,13 @@ export const postUpdateHoaDon = (token, maHD) => {
             },
         }
     );
+};
+
+//Hàm đăng ký gói bảo hiểm mới cho khách
+export const KH_getBillList = (token) => {
+    return axiosClient.get(`${END_POINT.KH_LICHSUGD}`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
 };

@@ -17,6 +17,7 @@ import Typography from "@mui/material/Typography";
 import Tooltip from "@mui/material/Tooltip";
 import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
+import { getUserInfoByToken } from "../../../../api/connect";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 const Header = () => {
     const navigate = useNavigate();
@@ -32,15 +33,38 @@ const Header = () => {
 
     useEffect(() => {
         // Kiểm tra xem có thông tin người dùng trong local storage không
-
-        var temp = localStorage.getItem("username");
-        if (temp)
-            login({
-                username: localStorage.getItem("username"),
-                token: localStorage.getItem("token"),
-            });
+        getUserInfo(localStorage.getItem("token"));
     }, []);
 
+    const getUserInfo = async (token) => {
+        try {
+            const response = await getUserInfoByToken(token);
+            if (response) {
+                login({
+                    username: response.username,
+                    token: token,
+                    firstLogin: response.firstLogin,
+                    auth: true,
+                    role: response.role,
+                });
+                localStorage.setItem("token", token);
+                localStorage.setItem("username", response.username);
+                localStorage.setItem("firstLogin", response.firstLogin);
+                localStorage.setItem("role", response.role);
+                localStorage.setItem("auth", true);
+                console.log("Login successful");
+            } else {
+                localStorage.clear();
+                console.log("Login fail");
+                logout();
+            }
+        } catch (error) {
+            localStorage.clear();
+            console.log("Login fail");
+            logout();
+            console.log(error.message);
+        }
+    };
     const [menus, setMenus] = useState([
         {
             name: "Trang chủ",
@@ -78,7 +102,7 @@ const Header = () => {
     return (
         <>
             <div className="section">
-                <div className="header_top">
+                {/* <div className="header_top">
                     <div className="container__header__footer">
                         <div className="row">
                             <div className="col-6 header_top_left">
@@ -171,9 +195,7 @@ const Header = () => {
                                                     vertical: "bottom",
                                                 }}
                                             >
-                                                {/* <MenuItem onClick={handleClose}>
-                                                    <Avatar /> Profile
-                                                </MenuItem> */}
+
                                                 <MenuItem onClick={handleClose}>
                                                     <ListItemIcon>
                                                         <AccountCircleIcon fontSize="small" />
@@ -202,19 +224,21 @@ const Header = () => {
     {/* Các MenuItem khác */}
                                                 <MenuItem onClick={handleClose}>
                                                     <ListItemIcon>
+                                                        <LockIcon fontSize="small" />
+                                                    </ListItemIcon>
+                                                    <Link to="/invoice">
+                                                        Lịch sử giao dịch
+                                                    </Link>
+                                                </MenuItem>
+                                                <MenuItem onClick={handleClose}>
+                                                    <ListItemIcon>
                                                         <AddCircleIcon fontSize="small" />
                                                     </ListItemIcon>
                                                     <Link to="/requestinvoice">
                                                         Tạo yêu cầu hoàn trả
                                                     </Link>
                                                 </MenuItem>
-                                                {/* <MenuItem onClick={handleClose}>
-                                                    <ListItemIcon>
-                                                        <Settings fontSize="small" />
-                                                    </ListItemIcon>
-                                                    Settings
-                                                </MenuItem> */}
-                                                
+
                                                 <MenuItem onClick={handleClose}>
                                                     <ListItemIcon>
                                                         <Logout fontSize="small" />
@@ -246,7 +270,7 @@ const Header = () => {
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> */}
 
                 <div className="nav_header">
                     <div className="container__header__footer">
@@ -298,8 +322,114 @@ const Header = () => {
                                     </ul>
                                 </nav>
                             </div>
-                            <div className="col-xl-3 col-lg-3 header_reg">
-                                <span>Đăng ký tư vấn</span>
+                            <div className="col-xl-3 col-lg-3 header_top_right">
+                                {/* <span>Đăng ký tư vấn</span> */}
+                                <ul>
+                                    {user ? (
+                                        <>
+                                            <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
+                                                <Typography sx={{ minWidth: 100 }}>Xin chào, {user.username}!</Typography>
+                                                <Tooltip title="Account">
+                                                    <IconButton
+                                                        onClick={handleClick}
+                                                        size="small"
+                                                        sx={{ ml: 2 }}
+                                                        aria-controls={open ? 'account-menu' : undefined}
+                                                        aria-haspopup="true"
+                                                        aria-expanded={open ? 'true' : undefined}
+                                                    >
+                                                        <AccountCircleIcon />
+                                                    </IconButton>
+                                                </Tooltip>
+                                            </Box>
+                                            <Menu
+                                                anchorEl={anchorEl}
+                                                id="account-menu"
+                                                open={open}
+                                                onClose={handleClose}
+                                                onClick={handleClose}
+                                                slotProps={{
+                                                    elevation: 0,
+                                                    sx: {
+                                                        overflow: 'visible',
+                                                        filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+                                                        mt: 1.5,
+                                                        '& .MuiAvatar-root': {
+                                                            width: 32,
+                                                            height: 32,
+                                                            ml: -0.5,
+                                                            mr: 1,
+                                                        },
+                                                        '&:before': {
+                                                            content: '""',
+                                                            display: 'block',
+                                                            position: 'absolute',
+                                                            top: 0,
+                                                            right: 14,
+                                                            width: 10,
+                                                            height: 10,
+                                                            bgcolor: 'background.paper',
+                                                            transform: 'translateY(-50%) rotate(45deg)',
+                                                            zIndex: 0,
+                                                        },
+                                                    },
+                                                }}
+                                                transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                                                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                                            >
+                                                {/* <MenuItem onClick={handleClose}>
+                                                    <Avatar /> Profile
+                                                </MenuItem> */}
+                                                <MenuItem onClick={handleClose}>
+                                                    <Avatar />                                                 <Link to="/changepassword">
+                                                    Đổi mật khẩu
+                                                </Link>
+                                                </MenuItem>
+                                                <Divider />
+                                                <MenuItem onClick={handleClose}>
+                                                    <ListItemIcon>
+                                                        <AddCircleIcon fontSize="small" />
+                                                    </ListItemIcon>
+                                                    <Link to="/requestinvoice">
+                                                    Tạo yêu cầu hoàn trả
+                                                </Link>
+                                                </MenuItem>
+                                                {/* <MenuItem onClick={handleClose}>
+                                                    <ListItemIcon>
+                                                        <Settings fontSize="small" />
+                                                    </ListItemIcon>
+                                                    Settings
+                                                </MenuItem> */}
+                                                <MenuItem onClick={handleClose}>
+                                                    <ListItemIcon>
+                                                        <Logout fontSize="small" />
+                                                    </ListItemIcon>
+                                                    <a
+                                                    onClick={handleLogout}
+                                                    className="logout-button"
+                                                >
+                                                    Đăng xuất
+                                                </a>
+                                                </MenuItem>
+                                            </Menu>
+
+
+                                        </>
+                                    ) : (
+                                        <>
+                                            <li>
+                                                <Link to="/login">
+                                                    Đăng nhập
+                                                </Link>
+                                            </li>
+                                            <li>
+                                                <Link to="/register">
+                                                    Đăng ký
+                                                </Link>
+                                            </li>
+                                        </>
+                                    )}
+                                </ul>
                             </div>
                         </div>
                     </div>

@@ -14,10 +14,12 @@ namespace BaoHiemYTe.Controllers
     public class DonDangKyController : ControllerBase
     {
         private readonly UserDbContext _dbContext;
+        private readonly TokenService tokenService;
 
-        public DonDangKyController(UserDbContext dbContext)
+        public DonDangKyController(UserDbContext dbContext, TokenService tokenService)
         {
             _dbContext = dbContext;
+            this.tokenService = tokenService;
         }
 
         // GET: api/DonDangKy
@@ -84,6 +86,98 @@ namespace BaoHiemYTe.Controllers
 
             return Ok(donDangKyDTO);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> PostDonDangKy([FromBody] DonDangKyDTO donDangKyDTO)
+        {
+            using (var transaction = _dbContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    //if (!ModelState.IsValid)
+                    //{
+                    //    return BadRequest(ModelState);
+                    //}
+
+                    //var tokenService = new TokenService();
+                    //var username_ = tokenService.GetUsernameFromToken(HttpContext.Request);
+                    var username_ = "quyetvang";
+                    if (string.IsNullOrEmpty(username_))
+                    {
+                        return Unauthorized("Unauthorized: Token is missing or invalid");
+                    }
+
+                    var khachHang = _dbContext.KhachHang.FirstOrDefault(kh => kh.username == username_);
+                    if (khachHang == null)
+                    {
+                        return NotFound($"Người dùng với username {username_} không tồn tại");
+                    }
+
+                    var donDangKy = new DonDangKy
+                    {
+                        MaGoiBH = donDangKyDTO.MaGoiBH,
+                        ThoiGianDK = donDangKyDTO.ThoiGianDK,
+                        ThoiGianBD = donDangKyDTO.ThoiGianBD,
+                        ThoiGianHetHan = donDangKyDTO.ThoiGianHetHan,
+                        TinhTrang = donDangKyDTO.TinhTrang,
+                        LuaChonThanhToan = "nothing",
+                        TongGia = donDangKyDTO.TongGia,
+                        MaKH = khachHang.MaKH,
+                        MaNV = null,
+                    };
+
+                    _dbContext.DonDangKy.Add(donDangKy);
+                    await _dbContext.SaveChangesAsync();
+
+                    // Chèn danh sách id bệnh vào TinhTrangBenh
+                    foreach (var benhId in donDangKyDTO.BenhIds)
+                    {
+                        var tinhTrangBenh = new TinhTrangBenh
+                        {
+                            MaDonDK = donDangKy.MaDonDK,
+                            MaBenh = benhId,
+                            TinhTrang = "SomeStatus" // Thay bằng tình trạng thích hợp
+                        };
+
+                        _dbContext.TinhTrangBenh.Add(tinhTrangBenh);
+                    }
+
+                    // Chèn danh sách thông tin hoá đơn thanh toán vào HoaDonThanhToanDK
+                    foreach (var hoaDonThanhToanDTO in donDangKyDTO.HoaDonThanhToanList)
+                    {
+                        var hoaDonThanhToan = new HoaDonThanhToanDK
+                        {
+                            SoTien = hoaDonThanhToanDTO.SoTien,
+                            ThoiGianHetHan = hoaDonThanhToanDTO.ThoiGianHetHan,
+                            HanKy = hoaDonThanhToanDTO.HanKy,
+                            TinhTrangThanhToan = hoaDonThanhToanDTO.TinhTrangThanhToan,
+                            ThoiGianThanhToan = null, // Thời gian thanh toán có thể để null nếu chưa thanh toán
+                            MaDonDK = donDangKy.MaDonDK,
+                        };
+
+                        _dbContext.HoaDonThanhToanDK.Add(hoaDonThanhToan);
+                    }
+
+                    await _dbContext.SaveChangesAsync();
+                    transaction.Commit();
+
+                    return Ok("Đăng ký gói bảo hiểm thành công");
+                }
+                catch (DbUpdateException ex)
+                {
+                    // Xử lý lỗi từ Entity Framework, ví dụ: khóa ngoại không hợp lệ
+                    transaction.Rollback();
+                    return BadRequest("Dữ liệu không hợp lệ. Vui lòng kiểm tra lại thông tin đăng ký.");
+                }
+                catch (Exception ex)
+                {
+                    // Xử lý lỗi khác
+                    transaction.Rollback();
+                    return StatusCode(500, "Đã xảy ra lỗi trong quá trình đăng ký gói bảo hiểm");
+                }
+            }
+        }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateDonDangKyStatus(int id, [FromBody] DonDangKyUpdateDto updateDto)
         {

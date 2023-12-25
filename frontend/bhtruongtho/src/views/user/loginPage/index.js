@@ -13,9 +13,10 @@ import {
     Snackbar,
 } from "@mui/material";
 
+import { useSnackbar } from "../../../context/SnackbarContext";
+
 const Login = () => {
-    const [snackbarOpen, setSnackbarOpen] = useState(false);
-    const [snackbarMessage, setSnackbarMessage] = useState("");
+    const { openSnackbar } = useSnackbar();
     const [usernameError, setUsernameError] = useState(false);
     const [passwordError, setPasswordError] = useState(false);
     const { user, login } = useUser();
@@ -26,9 +27,6 @@ const Login = () => {
     const [loginError, setLoginError] = useState(null); // Thêm state để theo dõi lỗi đăng nhập
     const navigate = useNavigate();
 
-    const handleSnackbarClose = () => {
-        setSnackbarOpen(false);
-    };
     const handleChange = (e) => {
         setFormData({
             ...formData,
@@ -63,8 +61,8 @@ const Login = () => {
             const validationError = validateForm();
 
             if (validationError) {
-                setSnackbarMessage(validationError);
-                setSnackbarOpen(true);
+                openSnackbar(validationError);
+
                 return;
             }
             const res = await logingettoken(
@@ -84,10 +82,6 @@ const Login = () => {
                     role: res.role,
                 });
                 localStorage.setItem("token", res.token);
-                localStorage.setItem("username", formData.username);
-                localStorage.setItem("firstLogin", res.firstLogin);
-                localStorage.setItem("role", res.role);
-                localStorage.setItem("auth", true);
 
                 console.log("Login successful.");
 
@@ -95,26 +89,19 @@ const Login = () => {
                     navigate("/PersonalInfo");
                     return;
                 }
+                openSnackbar("Đăng nhập thành công");
                 navigate("/");
             }
         } catch (error) {
+            console.log(error.response.data);
             try {
-                setSnackbarMessage(error.response.data);
+                openSnackbar(error.response.data);
             } catch {
-                setSnackbarMessage("Có lỗi xảy ra khi kết nối với máy chủ");
+                openSnackbar("Có lỗi xảy ra khi kết nối với máy chủ");
             }
-            setSnackbarOpen(true);
         }
     };
 
-    const getUserInfo = async (res) => {
-        try {
-            const response = await getUserInfoByToken(res.token);
-            console.log(response);
-        } catch (error) {
-            console.log(error.message);
-        }
-    };
     return (
         <Container maxWidth="xs">
             <Paper
@@ -188,13 +175,6 @@ const Login = () => {
                     </Grid>
                 </form>
             </Paper>
-            <Snackbar
-                open={snackbarOpen}
-                autoHideDuration={2000}
-                onClose={handleSnackbarClose}
-                message={snackbarMessage}
-                anchorOrigin={{ vertical: "top", horizontal: "right" }}
-            />
         </Container>
     );
 };

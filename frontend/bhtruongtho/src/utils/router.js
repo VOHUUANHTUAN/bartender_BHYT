@@ -8,10 +8,15 @@ export const ROUTERS = {
         STAFF: "staff",
         CHANGEPASSWORD: "changepassword",
         REQUESTINVOICE: "requestinvoice",
+        DONDANGKY: "registrationForms",
+        YEUCAUHOANTRA: "requestrefund",
         PERSONALINFO: "PersonalInfo",
         INSURANCEREGISTRATION: "InsuranceRegistration",
-        REQUESTINVOICE: "requestinvoice",
         DONDANGKY: "registrationForms",
-        PAY: "pay"
+        INSURANCEPACKM: "insurancePackManagement",
+        ADDINSPACK: "insurancePackManagement/add",
+        REQUESTINVOICE: "requestinvoice",
+        PAY: "pay",
+        HOADON: "invoice",
     },
 };

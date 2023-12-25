@@ -77,6 +77,11 @@ const ProductDetailPage = () => {
                             <Link to={`../${ROUTERS.USER.PRODUCT}`}>
                                 <p>Quay lại</p>
                             </Link>
+                            <Link
+                                to={`../../${ROUTERS.USER.INSURANCEREGISTRATION}/${params.id}`}
+                            >
+                                <p>Đăng ký</p>
+                            </Link>
                         </div>
                     </div>
                 </div>
