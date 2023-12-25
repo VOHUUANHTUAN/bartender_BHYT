@@ -14,6 +14,12 @@ import { useUser } from "../src/context/UserContext.js";
 import InsuranceRegistration from "./views/user/InsuranceRegistration";
 import ListDonDangKy from "./views/user/registrationForm/index.js";
 import DonDangKyDetail from "./views/user/registrationForm/regisdetail.js";
+import PersonalInfo from "./views/user/personalInfoPage/index.js";
+import Pay from "./views/user/payPage/index.js";
+import PaidDetail from "./views/user/payPage/paidDetail.js";
+import UnPaidDetail from "./views/user/payPage/unpaidDetail.js";
+
+    const { user } = useUser();
 import InsurancePack from "./views/staff/insurancePackManagement/index.js";
 import InsPackDetailPage from "./views/staff/insurancePackManagement/insPackMDetail.js";
 import AddInsPack from "./views/staff/insurancePackManagement/addInsPack.js";
@@ -70,6 +76,12 @@ const renderUserRouter = () => {
             path: ROUTERS.USER.CHANGEPASSWORD,
 
             component: <ChangePassword />,
+            loginRequired: true,
+        },
+        {
+            path: ROUTERS.USER.PAY,
+
+            component: <Pay />,
             loginRequired: true,
         },
         {
@@ -147,6 +159,12 @@ const renderUserRouter = () => {
                 />
                                 <Route
                     path="insurancePackManagement/detail/:id" element={<InsPackDetailPage />}
+                />
+                 <Route
+                    path="pay/detailPaid/:id" element={<PaidDetail />}
+                />
+                  <Route
+                    path="pay/detailUnpaid/:id" element={<UnPaidDetail />}
                 />
             </Routes>
             
