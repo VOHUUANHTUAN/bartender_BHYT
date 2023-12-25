@@ -192,6 +192,15 @@ const Header = () => {
                                                 </MenuItem>
                                                 <Divider />
                                                 <MenuItem onClick={handleClose}>
+        <ListItemIcon>
+            <AddCircleIcon fontSize="small" />
+        </ListItemIcon>
+        <Link to="/pay">
+            Hóa đơn
+        </Link>
+    </MenuItem>
+    {/* Các MenuItem khác */}
+                                                <MenuItem onClick={handleClose}>
                                                     <ListItemIcon>
                                                         <AddCircleIcon fontSize="small" />
                                                     </ListItemIcon>
