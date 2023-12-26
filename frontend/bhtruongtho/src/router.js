@@ -19,15 +19,12 @@ import Pay from "./views/user/payPage/index.js";
 import PaidDetail from "./views/user/payPage/paidDetail.js";
 import UnPaidDetail from "./views/user/payPage/unpaidDetail.js";
 
-    const { user } = useUser();
 import InsurancePack from "./views/staff/insurancePackManagement/index.js";
 import InsPackDetailPage from "./views/staff/insurancePackManagement/insPackMDetail.js";
 import AddInsPack from "./views/staff/insurancePackManagement/addInsPack.js";
 
-
 import ListYeuCauHoanTra from "./views/user/CapNhatYeuCauHoanTra/index.js";
 import YeuCauHoanTraDetail from "./views/user/CapNhatYeuCauHoanTra/detailycht.js";
-import PersonalInfo from "./views/user/personalInfoPage/index.js";
 import Invoice from "./views/user/invoicePage";
 import { useEffect } from "react";
 import { dayCalendarSkeletonClasses } from "@mui/x-date-pickers";
@@ -104,16 +101,15 @@ const renderUserRouter = () => {
         },
         {
             path: ROUTERS.USER.DONDANGKY,
-            component: <ListDonDangKy />
+            component: <ListDonDangKy />,
         },
         {
             path: ROUTERS.USER.INSURANCEPACKM,
-            component: <InsurancePack />
+            component: <InsurancePack />,
         },
         {
             path: ROUTERS.USER.ADDINSPACK,
-            component: <AddInsPack />
-   
+            component: <AddInsPack />,
         },
         {
             path: ROUTERS.USER.YEUCAUHOANTRA,
@@ -157,17 +153,13 @@ const renderUserRouter = () => {
                     path="requestrefund/detail/:id"
                     element={<YeuCauHoanTraDetail />}
                 />
-                                <Route
-                    path="insurancePackManagement/detail/:id" element={<InsPackDetailPage />}
+                <Route
+                    path="insurancePackManagement/detail/:id"
+                    element={<InsPackDetailPage />}
                 />
-                 <Route
-                    path="pay/detailPaid/:id" element={<PaidDetail />}
-                />
-                  <Route
-                    path="pay/detailUnpaid/:id" element={<UnPaidDetail />}
-                />
+                <Route path="pay/detailPaid/:id" element={<PaidDetail />} />
+                <Route path="pay/detailUnpaid/:id" element={<UnPaidDetail />} />
             </Routes>
-            
         </MasterLayout>
     );
 };

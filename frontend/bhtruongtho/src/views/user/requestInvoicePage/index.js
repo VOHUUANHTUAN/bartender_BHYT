@@ -356,6 +356,7 @@ const RequestInvoice = () => {
                                     <InputLabel>Tên bệnh viện</InputLabel>
                                     <Select
                                         value={selectedHospitalName}
+                                        label="Tên bệnh viện"
                                         onChange={(e) =>
                                             setSelectedHospitalName(
                                                 e.target.value
@@ -401,6 +402,7 @@ const RequestInvoice = () => {
                                     <InputLabel>Tên bệnh</InputLabel>
                                     <Select
                                         value={selectedDisease}
+                                        label="Tên bệnh"
                                         onChange={(e) =>
                                             setSelectedDisease(e.target.value)
                                         }
@@ -419,6 +421,7 @@ const RequestInvoice = () => {
                                     <InputLabel>Gói bảo hiểm</InputLabel>
                                     <Select
                                         value={selectedInsurancePackage || ""}
+                                        label="Gói bảo hiểm"
                                         onChange={handleInsurancePackageChange}
                                     >
                                         {insurancePackages.map(
