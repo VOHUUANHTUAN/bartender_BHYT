@@ -10,12 +10,12 @@ const DetailPage = () => {
     const [loading, setLoading] = useState(true);
     const [donDangKy, setDonDangKy] = useState([]);
     const [nhanVien, setNhanVien] = useState([]);
-    const [maNV, SetmaNV] = useState('');
+    const [maNV, setmaNV] = useState('');
     const [thoiGianBD, setThoiGianBD] = useState('');
     const [thoiGianHetHan, setThoiGianHetHan] = useState('')
-    const [diaChi, SetDiaChi] = useState('');
-    const [hoTen, SetHoTen] = useState('')
-    const [email, SetEmail] = useState('')
+    const [diaChi, setDiaChi] = useState('');
+    const [hoTen, setHoTen] = useState('')
+    const [email, setEmail] = useState('')
     const [sdt, setSdt] = useState('')
     const today = new Date()
     const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -51,14 +51,14 @@ const DetailPage = () => {
                 if (user.username) {
                     const data = await getNhanVienByID(user.username);
                     setNhanVien(data);
-                    SetmaNV(data.maNV);
+                    setmaNV(data.maNV);
                     setThoiGianBD(today);
                     const oneYearLater = new Date(today);
                     oneYearLater.setFullYear(today.getFullYear() + 1);
                     setThoiGianHetHan(oneYearLater);
-                    SetDiaChi(data.diaChi);
-                    SetEmail(data.email);
-                    SetHoTen(data.hoTen);
+                    setDiaChi(data.diaChi);
+                    setEmail(data.email);
+                    setHoTen(data.hoTen);
                     setSdt(data.sdt)
                 } else {
                     console.error('No username found.');

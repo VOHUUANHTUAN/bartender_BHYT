@@ -101,13 +101,13 @@ const Header = () => {
     };
     return (
         <>
-            <div className="nav_header">
+            <div className=" nav_header">
                 <div className="container__header__footer">
                     <div className="row">
-                        <div className="col-xl-3 col-lg-3 header_logo">
+                        <div className="col-xl-3 header_logo">
                             <div>BARTENDER_HCMUS</div>
                         </div>
-                        <div className="col-xl-6 col-lg-3">
+                        <div className="col-xl-6">
                             <nav className="header_menu">
                                 <ul>
                                     {menus?.map((menu, menuKey) => (
@@ -149,7 +149,7 @@ const Header = () => {
                                 </ul>
                             </nav>
                         </div>
-                        <div className="col-xl-3 col-lg-3 header_top_right">
+                        <div className="col-xl-3 header_top_right">
                             {/* <span>Đăng ký tư vấn</span> */}
                             <ul>
                                 {user ? (

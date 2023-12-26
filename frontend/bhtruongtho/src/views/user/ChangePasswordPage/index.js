@@ -8,7 +8,8 @@ import {
     Button,
     Typography,
 } from "@mui/material";
-
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 const ChangePasswordForm = () => {
     const { user } = useUser();
     const [currentPassword, setCurrentPassword] = useState("");
@@ -17,33 +18,48 @@ const ChangePasswordForm = () => {
     const [loading, setLoading] = useState(false);
 
     const isButtonDisabled = !currentPassword || !newPassword || !confirmPassword || newPassword !== confirmPassword;
-
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState('');
+    const [snackbarSeverity, setSnackbarSeverity] = useState('error');
     const handleChangePassword = async (e) => {
         console.log(user)
 
-        e.preventDefault(); // Prevent default form submission
+        e.preventDefault();
 
         if (isButtonDisabled) {
+            openSnackbar('Mật khẩu không trùng khớp', 'warning')
             return;
         }
 
         setLoading(true);
 
         try {
-            await changePasswordAPI(user.username, {
+            const response = await changePasswordAPI(user.username, {
                 currentPassword,
                 newPassword,
                 confirmPassword,
             });
-
-            alert("Password changed successfully!");
+            if (response)
+                openSnackbar('Thay đổi password thành công', 'success')
         } catch (error) {
-            alert(`Error changing password: ${error.message}`);
+            console.log(error)
+            openSnackbar(error.response.data, 'warning')
         } finally {
             setLoading(false);
+
         }
     };
-
+    const openSnackbar = (message, severity) => {
+        setSnackbarMessage(message);
+        setSnackbarSeverity(severity);
+        setSnackbarOpen(true);
+    };
+    const handleCloseSnackbar = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setSnackbarOpen(false);
+    };
     return (
         <Container component="main" maxWidth="xs">
             <Paper elevation={3}
@@ -97,6 +113,21 @@ const ChangePasswordForm = () => {
                     </Button>
                 </form>
             </Paper>
+            <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={6000}
+                onClose={handleCloseSnackbar}
+                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+            >
+                <MuiAlert
+                    elevation={6}
+                    variant="filled"
+                    severity={snackbarSeverity}
+                    onClose={handleCloseSnackbar}
+                >
+                    {snackbarMessage}
+                </MuiAlert>
+            </Snackbar>
         </Container>
     );
 };
