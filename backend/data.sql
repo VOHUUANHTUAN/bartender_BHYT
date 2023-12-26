@@ -27,8 +27,6 @@ insert into KhachHang values(N'Lê Thị Thu Hà','TPHCM','0123123125','ha@gmail
 insert into KhachHang values(N'Võ Hữu Anh Tuấn','TPHCM','0123123126','tuan@gmail.com',5000000,'anhtuan')
 insert into KhachHang values(N'Đinh Hoàng Bảo Châu','TPHCM','0123123127','chau@gmail.com',5000000,'baochau')
 insert into KhachHang values(N'Lê Minh Tiến','TPHCM','0123123123','tien@gmail.com',5000000,'minhtien')
-
-
 insert into NhanVien values(N'Nguyễn Văn An','TPHCM','0123456789','nguyenvanan@gmail.com','admin')
 insert into NhanVien values(N'Nguyễn Thị Hoa','TPHCM','0123456788','nguyenthihoa@gmail.com','nhanvien')
 
