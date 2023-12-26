@@ -3,7 +3,8 @@ import { putYeuCauHoanTraByID, getNhanVienByID, getAllYeuCauHoanTraBYID } from '
 import { useParams } from 'react-router-dom';
 import { useUser } from "../../../context/UserContext";
 import { Grid, Paper, Typography, Select, MenuItem, Button, TableContainer, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
-
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 const DetailPage = () => {
     const [loading, setLoading] = useState(true);
     const [yeuCauHoanTra, setYeuCauHoanTra] = useState({});
@@ -15,7 +16,9 @@ const DetailPage = () => {
 
     const params = useParams();
     const { user } = useUser();
-
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState('');
+    const [snackbarSeverity, setSnackbarSeverity] = useState('error');
 
 
     useEffect(() => {
@@ -37,21 +40,26 @@ const DetailPage = () => {
         };
 
         fetchUserData();
-    }, [user.username]);
+    }, [user]);
 
     const updateStatus = async () => {
         try {
-            // Send a request to the backend to update the status to "Đã hoàn tiền"
-            await putYeuCauHoanTraByID(params.id, {
-                tinhTrang: "Đã hoàn tiền",
-                maNV,
-                thoiGianDuyet,
-            });
+            if (yeuCauHoanTra.tinhTrang === 'Chờ duyệt') {
+                // Send a request to the backend to update the status to "Đã hoàn tiền"
+                await putYeuCauHoanTraByID(params.id, {
+                    tinhTrang: "Đã hoàn tiền",
+                    maNV,
+                    thoiGianDuyet,
+                });
+                openSnackbar('Cập nhật thành công!', 'success');
+            }
+            else {
+                openSnackbar('Trạng thái này không thể kích hoạt', 'warning');
 
-            // No need to set the state again here, as it will trigger a re-render
-
+            }
         } catch (error) {
             console.error('Error updating status:', error);
+            openSnackbar('Có lỗi xảy ra khi cập nhật!', 'error');
         }
     };
     useEffect(() => {
@@ -75,7 +83,17 @@ const DetailPage = () => {
         // Trigger data fetching when yeuCauHoanTra or params.id changes
         fetchData();
     }, [params.id, yeuCauHoanTra]);
-
+    const openSnackbar = (message, severity) => {
+        setSnackbarMessage(message);
+        setSnackbarSeverity(severity);
+        setSnackbarOpen(true);
+    };
+    const handleCloseSnackbar = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setSnackbarOpen(false);
+    };
     // Vietnamese names for keys
     const allrows = {
         maYC: <strong>Mã YC</strong>,
@@ -129,6 +147,21 @@ const DetailPage = () => {
 
                     </Paper>
                 </Grid>
+                <Snackbar
+                    open={snackbarOpen}
+                    autoHideDuration={6000}
+                    onClose={handleCloseSnackbar}
+                    anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                >
+                    <MuiAlert
+                        elevation={6}
+                        variant="filled"
+                        severity={snackbarSeverity}
+                        onClose={handleCloseSnackbar}
+                    >
+                        {snackbarMessage}
+                    </MuiAlert>
+                </Snackbar>
             </Grid>
         </div >
     );
