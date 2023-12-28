@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 
 namespace BaoHiemYTe.Domain
 {
@@ -7,8 +8,10 @@ namespace BaoHiemYTe.Domain
     {
         [Key]
         public int MaYC { get; set; }
-
+    
         public string MaHDKhamBenh { get; set; }
+        [ForeignKey("MaHDKhamBenh")]
+        public HoaDonKhamBenh HoaDonKhamBenh { get; set; }
 
         public string  TenBenhVien { get; set; }
         public int SoTienDaKham { get; set; }

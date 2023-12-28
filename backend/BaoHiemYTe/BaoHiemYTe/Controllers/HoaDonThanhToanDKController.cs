@@ -262,7 +262,7 @@ namespace BaoHiemYTe.Controllers
                         ThoiGianBD = h.DonDangKy.ThoiGianBD,
                         ThoiGianHetHan = h.DonDangKy.ThoiGianHetHan,
                         TinhTrang = h.DonDangKy.TinhTrang,
-                        LuaChonThanhToan= h.DonDangKy.LuaChonThanhToan,
+                        SoKyHanThanhToan = h.DonDangKy.SoKyHanThanhToan,
                         // Thông tin Hóa Đơn Thanh Toán
                         MaHD = h.MaHD,
                         SoTien = h.SoTien,
