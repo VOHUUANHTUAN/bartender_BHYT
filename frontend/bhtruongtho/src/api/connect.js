@@ -90,10 +90,10 @@ export const changePasswordAPI = async (username, changePasswordData) => {
             { headers: { "Content-Type": "application/json" } }
         );
 
-        return response.data;
+        return response;
     } catch (error) {
         //console.error('Error:', error);
-        throw new Error(`Error changing password: ${error.message}`);
+        throw (error);
     }
 };
 
@@ -151,9 +151,9 @@ export const putDonDangKyByID = async (ID, Data) => {
     }
 };
 //Lấy hóa đơn theo  tình trạng
-export const getHoaDonDKbyTinhTrang = (token,tinhTrang) => {
-    return axiosClient.get(`${END_POINT.HOADONDK}/${tinhTrang}`,{
-         headers: {
+export const getHoaDonDKbyTinhTrang = (token, tinhTrang) => {
+    return axiosClient.get(`${END_POINT.HOADONDK}/${tinhTrang}`, {
+        headers: {
             Authorization: `Bearer ${token}`,
         },
     });
@@ -184,7 +184,7 @@ export const updateInsPack = async (maGoiBH, goiBHData) => {
 export const addBenhForGBH = async (MaGoiBH, MaBenh) => {
     const response = await axiosClient.post(
         `${END_POINT.CHINHSACH}/${END_POINT.ADD}`,
-        {MaGoiBH, MaBenh}
+        { MaGoiBH, MaBenh }
     );
     return response;
 };
@@ -192,13 +192,13 @@ export const addBenhForGBH = async (MaGoiBH, MaBenh) => {
 export const deleteBenhFromBGH = async (maGoiBH, maBenh) => {
     try {
         // Gọi API xóa bệnh khỏi Gói Bảo hiểm
-        const response = await axiosClient.delete( `${END_POINT.CHINHSACH}/${maGoiBH}/${maBenh}/delete`);
+        const response = await axiosClient.delete(`${END_POINT.CHINHSACH}/${maGoiBH}/${maBenh}/delete`);
         return response;
-      } catch (error) {
+    } catch (error) {
         // Xử lý lỗi nếu cần
         console.error('Lỗi khi xóa bệnh khỏi Gói Bảo hiểm:', error.message);
         throw error;
-      }
+    }
 };
 
 export const addInsPack = async (goiBHData) => {

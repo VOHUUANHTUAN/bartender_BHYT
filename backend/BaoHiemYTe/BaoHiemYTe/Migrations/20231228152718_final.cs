@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BaoHiemYTe.Migrations
 {
     /// <inheritdoc />
-    public partial class FinalDB : Migration
+    public partial class final : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -46,9 +46,11 @@ namespace BaoHiemYTe.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     TenGoiBH = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MotaGoiBH = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DoTuoi = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Gia = table.Column<int>(type: "int", nullable: false),
                     TiLeHoanTien = table.Column<int>(type: "int", nullable: false),
-                    ThoiHanBaoVe = table.Column<int>(type: "int", nullable: false)
+                    ThoiHanBaoVe = table.Column<int>(type: "int", nullable: false),
+                    TinhTrang = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -67,6 +69,25 @@ namespace BaoHiemYTe.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.username);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "HoaDonKhamBenh",
+                columns: table => new
+                {
+                    MaHDKhamBenh = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    MaBV = table.Column<int>(type: "int", nullable: false),
+                    TinhTrang = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_HoaDonKhamBenh", x => x.MaHDKhamBenh);
+                    table.ForeignKey(
+                        name: "FK_HoaDonKhamBenh_BenhVien_MaBV",
+                        column: x => x.MaBV,
+                        principalTable: "BenhVien",
+                        principalColumn: "MaBV",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -148,13 +169,15 @@ namespace BaoHiemYTe.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     MaGoiBH = table.Column<int>(type: "int", nullable: false),
                     ThoiGianDK = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ThoiGianBD = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ThoiGianHetHan = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ThoiGianBD = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ThoiGianHetHan = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TinhTrang = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LuaChonThanhToan = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LiDoTuChoi = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SoKyHanThanhToan = table.Column<int>(type: "int", nullable: false),
                     TongGia = table.Column<int>(type: "int", nullable: false),
                     MaKH = table.Column<int>(type: "int", nullable: false),
-                    MaNV = table.Column<int>(type: "int", nullable: false)
+                    MaNV = table.Column<int>(type: "int", nullable: true),
+                    ThoiGianDuyet = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -185,16 +208,16 @@ namespace BaoHiemYTe.Migrations
                 {
                     MaYC = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    MaHDKhamBenh = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    MaHDKhamBenh = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     TenBenhVien = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SoTienDaKham = table.Column<int>(type: "int", nullable: false),
                     Benh = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ThoiGianTao = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TinhTrang = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    MaGoiBHApDung = table.Column<int>(type: "int", nullable: false),
+                    MaGoiBHApDung = table.Column<int>(type: "int", nullable: true),
                     SoTienHoanTra = table.Column<int>(type: "int", nullable: true),
                     MaKH = table.Column<int>(type: "int", nullable: false),
-                    MaNV = table.Column<int>(type: "int", nullable: false),
+                    MaNV = table.Column<int>(type: "int", nullable: true),
                     ThoiGianDuyet = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
@@ -205,7 +228,13 @@ namespace BaoHiemYTe.Migrations
                         column: x => x.MaGoiBHApDung,
                         principalTable: "GoiBaoHiem",
                         principalColumn: "MaGoiBH",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_YeuCauHoanTra_HoaDonKhamBenh_MaHDKhamBenh",
+                        column: x => x.MaHDKhamBenh,
+                        principalTable: "HoaDonKhamBenh",
+                        principalColumn: "MaHDKhamBenh",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_YeuCauHoanTra_KhachHang_MaKH",
                         column: x => x.MaKH,
@@ -230,6 +259,9 @@ namespace BaoHiemYTe.Migrations
                     ThoiGianHetHan = table.Column<DateTime>(type: "datetime2", nullable: false),
                     HanKy = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TinhTrangThanhToan = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TienPhat = table.Column<int>(type: "int", nullable: false),
+                    LiDoPhat = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    TongTien = table.Column<int>(type: "int", nullable: false),
                     ThoiGianThanhToan = table.Column<DateTime>(type: "datetime2", nullable: true),
                     MaDonDK = table.Column<int>(type: "int", nullable: false)
                 },
@@ -322,9 +354,28 @@ namespace BaoHiemYTe.Migrations
                 column: "MaYC");
 
             migrationBuilder.CreateIndex(
+                name: "IX_HoaDonKhamBenh_MaBV",
+                table: "HoaDonKhamBenh",
+                column: "MaBV");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_HoaDonThanhToanDK_LiDoPhat",
+                table: "HoaDonThanhToanDK",
+                column: "LiDoPhat",
+                unique: true,
+                filter: "[LiDoPhat] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_HoaDonThanhToanDK_MaDonDK",
                 table: "HoaDonThanhToanDK",
                 column: "MaDonDK");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_HoaDonThanhToanDK_ThoiGianThanhToan",
+                table: "HoaDonThanhToanDK",
+                column: "ThoiGianThanhToan",
+                unique: true,
+                filter: "[ThoiGianThanhToan] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_KhachHang_username",
@@ -347,6 +398,13 @@ namespace BaoHiemYTe.Migrations
                 column: "MaGoiBHApDung");
 
             migrationBuilder.CreateIndex(
+                name: "IX_YeuCauHoanTra_MaHDKhamBenh",
+                table: "YeuCauHoanTra",
+                column: "MaHDKhamBenh",
+                unique: true,
+                filter: "[MaHDKhamBenh] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_YeuCauHoanTra_MaKH",
                 table: "YeuCauHoanTra",
                 column: "MaKH");
@@ -360,9 +418,6 @@ namespace BaoHiemYTe.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "BenhVien");
-
             migrationBuilder.DropTable(
                 name: "ChinhSach");
 
@@ -385,6 +440,9 @@ namespace BaoHiemYTe.Migrations
                 name: "DonDangKy");
 
             migrationBuilder.DropTable(
+                name: "HoaDonKhamBenh");
+
+            migrationBuilder.DropTable(
                 name: "GoiBaoHiem");
 
             migrationBuilder.DropTable(
@@ -392,6 +450,9 @@ namespace BaoHiemYTe.Migrations
 
             migrationBuilder.DropTable(
                 name: "NhanVien");
+
+            migrationBuilder.DropTable(
+                name: "BenhVien");
 
             migrationBuilder.DropTable(
                 name: "Users");
