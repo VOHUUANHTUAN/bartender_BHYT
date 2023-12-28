@@ -71,7 +71,7 @@ const DetailPage = () => {
         };
 
         fetchUserData();
-    }, [user.username]);
+    }, [user]);
 
     const updateStatus = async () => {
         console.log('donDangKy.tinhTrang:', donDangKy.tinhTrang);
