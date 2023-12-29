@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BaoHiemYTe.Migrations
 {
     [DbContext(typeof(UserDbContext))]
-    [Migration("20231228152718_final")]
-    partial class final
+    [Migration("20231229061610_tien_final")]
+    partial class tien_final
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -201,7 +201,14 @@ namespace BaoHiemYTe.Migrations
                     b.Property<string>("MaHDKhamBenh")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("CCCD")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("MaBV")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SoTienKham")
                         .HasColumnType("int");
 
                     b.Property<int>("TinhTrang")
@@ -274,6 +281,10 @@ namespace BaoHiemYTe.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MaKH"));
 
+                    b.Property<string>("CCCD")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("DiaChi")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -282,9 +293,16 @@ namespace BaoHiemYTe.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("GioiTinh")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("HoTen")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("NgaySinh")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("SDT")
                         .IsRequired()
