@@ -164,11 +164,11 @@ export const putYeuCauHoanTraByID = async (ID, Data) => {
         const response = await axiosClient.put(
             `${END_POINT.YEUCAUHOANTRA}/${END_POINT.CAPNHATYEUCAU}/${ID}`,
             Data,
-            { headers: { 'Content-Type': 'application/json' } }
+            { headers: { "Content-Type": "application/json" } }
         );
         return response.data;
     } catch (error) {
-        console.error('Error:', error);
+        console.error("Error:", error);
         throw new Error(`Error chang DDK: ${error.message}`);
     }
 };
@@ -196,7 +196,7 @@ export const deleteBenhFromBGH = async (maGoiBH, maBenh) => {
         return response;
     } catch (error) {
         // Xử lý lỗi nếu cần
-        console.error('Lỗi khi xóa bệnh khỏi Gói Bảo hiểm:', error.message);
+        console.error("Lỗi khi xóa bệnh khỏi Gói Bảo hiểm:", error.message);
         throw error;
     }
 };
@@ -209,12 +209,14 @@ export const addInsPack = async (goiBHData) => {
     return response;
 };
 export const getAllYeuCauHoanTra = () => {
-    return axiosClient.get(`${END_POINT.YEUCAUHOANTRA}/${END_POINT.GETALLYEUCAUHOANTRA}`);
+    return axiosClient.get(
+        `${END_POINT.YEUCAUHOANTRA}/${END_POINT.GETALLYEUCAUHOANTRA}`
+    );
 };
 
 export const getAllYeuCauHoanTraBYID = (ID) => {
-    return axiosClient.get(`${END_POINT.YEUCAUHOANTRA}/${ID}`)
-}
+    return axiosClient.get(`${END_POINT.YEUCAUHOANTRA}/${ID}`);
+};
 //Hàm đăng ký gói bảo hiểm mới cho khách
 export const KH_post_DonDangKy = (token, data) => {
     return axiosClient.post(`${END_POINT.DONDANGKY}`, data, {
