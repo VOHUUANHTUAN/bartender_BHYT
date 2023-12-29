@@ -14,6 +14,10 @@ namespace BaoHiemYTe.Domain
         public string HanKy { get; set; }
         
         public string TinhTrangThanhToan { get; set; }
+        public int TienPhat { get; set; }
+        public string? LiDoPhat { get; set; }
+        public int TongTien { get; set; }
+
         public DateTime? ThoiGianThanhToan { get; set; }
         public int MaDonDK { get; set; }
         
