@@ -86,8 +86,7 @@ namespace BaoHiemYTe.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MaDonDK"));
 
-                    b.Property<string>("LuaChonThanhToan")
-                        .IsRequired()
+                    b.Property<string>("LiDoTuChoi")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("MaGoiBH")
@@ -99,13 +98,19 @@ namespace BaoHiemYTe.Migrations
                     b.Property<int?>("MaNV")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("ThoiGianBD")
+                    b.Property<int>("SoKyHanThanhToan")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ThoiGianBD")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("ThoiGianDK")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("ThoiGianHetHan")
+                    b.Property<DateTime?>("ThoiGianDuyet")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ThoiGianHetHan")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("TinhTrang")
@@ -134,6 +139,10 @@ namespace BaoHiemYTe.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MaGoiBH"));
 
+                    b.Property<string>("DoTuoi")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("Gia")
                         .HasColumnType("int");
 
@@ -150,6 +159,10 @@ namespace BaoHiemYTe.Migrations
 
                     b.Property<int>("TiLeHoanTien")
                         .HasColumnType("int");
+
+                    b.Property<string>("TinhTrang")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("MaGoiBH");
 
@@ -180,6 +193,31 @@ namespace BaoHiemYTe.Migrations
                     b.ToTable("HoaDonHoanTra");
                 });
 
+            modelBuilder.Entity("BaoHiemYTe.Domain.HoaDonKhamBenh", b =>
+                {
+                    b.Property<string>("MaHDKhamBenh")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("CCCD")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("MaBV")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SoTienKham")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TinhTrang")
+                        .HasColumnType("int");
+
+                    b.HasKey("MaHDKhamBenh");
+
+                    b.HasIndex("MaBV");
+
+                    b.ToTable("HoaDonKhamBenh");
+                });
+
             modelBuilder.Entity("BaoHiemYTe.Domain.HoaDonThanhToanDK", b =>
                 {
                     b.Property<int>("MaHD")
@@ -191,6 +229,9 @@ namespace BaoHiemYTe.Migrations
                     b.Property<string>("HanKy")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LiDoPhat")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("MaDonDK")
                         .HasColumnType("int");
@@ -204,13 +245,27 @@ namespace BaoHiemYTe.Migrations
                     b.Property<DateTime?>("ThoiGianThanhToan")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("TienPhat")
+                        .HasColumnType("int");
+
                     b.Property<string>("TinhTrangThanhToan")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("TongTien")
+                        .HasColumnType("int");
+
                     b.HasKey("MaHD");
 
+                    b.HasIndex("LiDoPhat")
+                        .IsUnique()
+                        .HasFilter("[LiDoPhat] IS NOT NULL");
+
                     b.HasIndex("MaDonDK");
+
+                    b.HasIndex("ThoiGianThanhToan")
+                        .IsUnique()
+                        .HasFilter("[ThoiGianThanhToan] IS NOT NULL");
 
                     b.ToTable("HoaDonThanhToanDK");
                 });
@@ -223,6 +278,10 @@ namespace BaoHiemYTe.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MaKH"));
 
+                    b.Property<string>("CCCD")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("DiaChi")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -231,9 +290,16 @@ namespace BaoHiemYTe.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("GioiTinh")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("HoTen")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("NgaySinh")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("SDT")
                         .IsRequired()
@@ -344,7 +410,6 @@ namespace BaoHiemYTe.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("MaHDKhamBenh")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("MaKH")
@@ -378,7 +443,8 @@ namespace BaoHiemYTe.Migrations
                     b.HasIndex("MaGoiBHApDung");
 
                     b.HasIndex("MaHDKhamBenh")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[MaHDKhamBenh] IS NOT NULL");
 
                     b.HasIndex("MaKH");
 
@@ -443,6 +509,17 @@ namespace BaoHiemYTe.Migrations
                     b.Navigation("YeuCauHoanTra");
                 });
 
+            modelBuilder.Entity("BaoHiemYTe.Domain.HoaDonKhamBenh", b =>
+                {
+                    b.HasOne("BaoHiemYTe.Domain.BenhVien", "BenhVien")
+                        .WithMany()
+                        .HasForeignKey("MaBV")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("BenhVien");
+                });
+
             modelBuilder.Entity("BaoHiemYTe.Domain.HoaDonThanhToanDK", b =>
                 {
                     b.HasOne("BaoHiemYTe.Domain.DonDangKy", "DonDangKy")
@@ -502,6 +579,11 @@ namespace BaoHiemYTe.Migrations
                         .HasForeignKey("MaGoiBHApDung")
                         .OnDelete(DeleteBehavior.Restrict);
 
+                    b.HasOne("BaoHiemYTe.Domain.HoaDonKhamBenh", "HoaDonKhamBenh")
+                        .WithMany()
+                        .HasForeignKey("MaHDKhamBenh")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("BaoHiemYTe.Domain.KhachHang", "KhachHang")
                         .WithMany()
                         .HasForeignKey("MaKH")
@@ -514,6 +596,8 @@ namespace BaoHiemYTe.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("GoiBaoHiem");
+
+                    b.Navigation("HoaDonKhamBenh");
 
                     b.Navigation("KhachHang");
 

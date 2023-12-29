@@ -20,7 +20,7 @@ namespace BaoHiemYTe.DTOs
         public DateTime? ThoiGianBD { get; set; }
         public DateTime? ThoiGianHetHan { get; set; }
         public string TinhTrang { get; set; }
-        public string LuaChonThanhToan { get; set; }
+        public int SoKyHanThanhToan { get; set; }
 
         //Hóa đơn thanh toán
         public int MaHD { get; set; }

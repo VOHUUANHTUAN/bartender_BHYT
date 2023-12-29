@@ -65,13 +65,13 @@ namespace BaoHiemYTe.Data
                 .WithMany()
                 .HasForeignKey(d => d.MaKH)
                 .OnDelete(DeleteBehavior.Restrict);
+           
             modelBuilder.Entity<DonDangKy>()
-               .Property(y => y.ThoiGianBD)
-               .IsRequired(false);
+              .Property(y => y.ThoiGianDuyet)
+              .IsRequired(false);
             modelBuilder.Entity<DonDangKy>()
-               .Property(y => y.ThoiGianHetHan)
-               .IsRequired(false);
-
+             .Property(y => y.LiDoTuChoi)
+             .IsRequired(false);
             //YeuCauHoanTra
             modelBuilder.Entity<YeuCauHoanTra>()
                 .HasOne(y => y.NhanVien)
@@ -97,18 +97,39 @@ namespace BaoHiemYTe.Data
             modelBuilder.Entity<YeuCauHoanTra>()
                 .Property(y => y.SoTienHoanTra)
                 .IsRequired(false);
+            //modelBuilder.Entity<YeuCauHoanTra>()
+            //    .HasIndex(hd => hd.MaHDKhamBenh)
+            //    .IsUnique();
+            // YeuCauHoanTra
             modelBuilder.Entity<YeuCauHoanTra>()
-                .HasIndex(hd => hd.MaHDKhamBenh)
+                .HasOne(y => y.HoaDonKhamBenh)
+                .WithMany()
+                .HasForeignKey(y => y.MaHDKhamBenh)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<YeuCauHoanTra>()
+                .HasIndex(y => y.MaHDKhamBenh)
                 .IsUnique();
+
+            //HoaDonThanhToanDK
+            modelBuilder.Entity<HoaDonThanhToanDK>()
+               .HasIndex(hd => hd.LiDoPhat)
+               .IsUnique();
+            modelBuilder.Entity<HoaDonThanhToanDK>()
+              .HasIndex(hd => hd.ThoiGianThanhToan)
+              .IsUnique();
+
         }
 
         public DbSet<DonDangKy> DonDangKy { get; set; }
         public DbSet<TinhTrangBenh> TinhTrangBenh { get; set; }
         public DbSet<HoaDonThanhToanDK> HoaDonThanhToanDK { get; set; }
         public DbSet<BenhVien> BenhVien { get; set; }
+        public DbSet<HoaDonKhamBenh> HoaDonKhamBenh { get; set; }
         public DbSet<YeuCauHoanTra> YeuCauHoanTra { get; set; }
         public DbSet<HoaDonHoanTra> HoaDonHoanTra { get; set; }
 
-
+       
     }
 }

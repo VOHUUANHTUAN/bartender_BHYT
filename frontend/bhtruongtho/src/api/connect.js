@@ -90,10 +90,10 @@ export const changePasswordAPI = async (username, changePasswordData) => {
             { headers: { "Content-Type": "application/json" } }
         );
 
-        return response.data;
+        return response;
     } catch (error) {
         //console.error('Error:', error);
-        throw new Error(`Error changing password: ${error.message}`);
+        throw (error);
     }
 };
 
@@ -192,9 +192,7 @@ export const addBenhForGBH = async (MaGoiBH, MaBenh) => {
 export const deleteBenhFromBGH = async (maGoiBH, maBenh) => {
     try {
         // Gọi API xóa bệnh khỏi Gói Bảo hiểm
-        const response = await axiosClient.delete(
-            `${END_POINT.CHINHSACH}/${maGoiBH}/${maBenh}/delete`
-        );
+        const response = await axiosClient.delete(`${END_POINT.CHINHSACH}/${maGoiBH}/${maBenh}/delete`);
         return response;
     } catch (error) {
         // Xử lý lỗi nếu cần

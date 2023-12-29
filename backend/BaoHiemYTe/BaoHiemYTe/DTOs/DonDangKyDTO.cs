@@ -8,11 +8,11 @@ public class DonDangKyDTO
     public int MaGoiBH { get; set; }
 
     public DateTime ThoiGianDK { get; set; }
-    public DateTime? ThoiGianBD { get; set; }
-    public DateTime? ThoiGianHetHan { get; set; }
+    public DateTime ThoiGianBD { get; set; }
+    public DateTime ThoiGianHetHan { get; set; }
     public string TinhTrang { get; set; }
     //LuaChonThanhToan(1 lần/Năm)
-    public string? LuaChonThanhToan { get; set; }
+    public int SoKyHanThanhToan { get; set; }
     public int TongGia { get; set; }
     public int? MaKH { get; set; }
     public int? MaNV { get; set; }
