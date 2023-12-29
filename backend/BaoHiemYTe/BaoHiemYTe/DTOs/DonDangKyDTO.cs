@@ -22,14 +22,7 @@ public class DonDangKyDTO
 
     public NhanVien? NhanVien { get; set; }
     public List<int> BenhIds { get; set; }  // Danh sách id bệnh
-    public List<HoaDonThanhToanDTO> HoaDonThanhToanList { get; set; }  // Danh sách các thông tin hoá đơn thanh toán
 }
 
-public class HoaDonThanhToanDTO
-{
-    public int SoTien { get; set; }
-    public DateTime ThoiGianHetHan { get; set; }
-    public string HanKy { get; set; }
-    public string TinhTrangThanhToan { get; set; }
-}
+
 

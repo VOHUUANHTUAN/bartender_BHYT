@@ -59,7 +59,7 @@ const ChangeInformation = () => {
                 setSoDienThoai(khachHangData.sdt || "");
                 setEmail(khachHangData.email || "");
                 setSoDu(khachHangData.soDu || "");
-                setUsername(localStorage.getItem("username") || "");
+                setUsername(khachHangData.username || "");
                 // Do not update SoDu and username as they should remain constant
             }
             const res = await getUserInfoByToken(token);

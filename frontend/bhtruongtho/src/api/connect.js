@@ -151,9 +151,9 @@ export const putDonDangKyByID = async (ID, Data) => {
     }
 };
 //Lấy hóa đơn theo  tình trạng
-export const getHoaDonDKbyTinhTrang = (token,tinhTrang) => {
-    return axiosClient.get(`${END_POINT.HOADONDK}/${tinhTrang}`,{
-         headers: {
+export const getHoaDonDKbyTinhTrang = (token, tinhTrang) => {
+    return axiosClient.get(`${END_POINT.HOADONDK}/${tinhTrang}`, {
+        headers: {
             Authorization: `Bearer ${token}`,
         },
     });
@@ -164,11 +164,11 @@ export const putYeuCauHoanTraByID = async (ID, Data) => {
         const response = await axiosClient.put(
             `${END_POINT.YEUCAUHOANTRA}/${END_POINT.CAPNHATYEUCAU}/${ID}`,
             Data,
-            { headers: { 'Content-Type': 'application/json' } }
+            { headers: { "Content-Type": "application/json" } }
         );
         return response.data;
     } catch (error) {
-        console.error('Error:', error);
+        console.error("Error:", error);
         throw new Error(`Error chang DDK: ${error.message}`);
     }
 };
@@ -184,7 +184,7 @@ export const updateInsPack = async (maGoiBH, goiBHData) => {
 export const addBenhForGBH = async (MaGoiBH, MaBenh) => {
     const response = await axiosClient.post(
         `${END_POINT.CHINHSACH}/${END_POINT.ADD}`,
-        {MaGoiBH, MaBenh}
+        { MaGoiBH, MaBenh }
     );
     return response;
 };
@@ -192,13 +192,15 @@ export const addBenhForGBH = async (MaGoiBH, MaBenh) => {
 export const deleteBenhFromBGH = async (maGoiBH, maBenh) => {
     try {
         // Gọi API xóa bệnh khỏi Gói Bảo hiểm
-        const response = await axiosClient.delete( `${END_POINT.CHINHSACH}/${maGoiBH}/${maBenh}/delete`);
+        const response = await axiosClient.delete(
+            `${END_POINT.CHINHSACH}/${maGoiBH}/${maBenh}/delete`
+        );
         return response;
-      } catch (error) {
+    } catch (error) {
         // Xử lý lỗi nếu cần
-        console.error('Lỗi khi xóa bệnh khỏi Gói Bảo hiểm:', error.message);
+        console.error("Lỗi khi xóa bệnh khỏi Gói Bảo hiểm:", error.message);
         throw error;
-      }
+    }
 };
 
 export const addInsPack = async (goiBHData) => {
@@ -209,12 +211,14 @@ export const addInsPack = async (goiBHData) => {
     return response;
 };
 export const getAllYeuCauHoanTra = () => {
-    return axiosClient.get(`${END_POINT.YEUCAUHOANTRA}/${END_POINT.GETALLYEUCAUHOANTRA}`);
+    return axiosClient.get(
+        `${END_POINT.YEUCAUHOANTRA}/${END_POINT.GETALLYEUCAUHOANTRA}`
+    );
 };
 
 export const getAllYeuCauHoanTraBYID = (ID) => {
-    return axiosClient.get(`${END_POINT.YEUCAUHOANTRA}/${ID}`)
-}
+    return axiosClient.get(`${END_POINT.YEUCAUHOANTRA}/${ID}`);
+};
 //Hàm đăng ký gói bảo hiểm mới cho khách
 export const KH_post_DonDangKy = (token, data) => {
     return axiosClient.post(`${END_POINT.DONDANGKY}`, data, {
