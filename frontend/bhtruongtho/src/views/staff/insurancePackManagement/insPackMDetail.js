@@ -2,6 +2,8 @@ import React, { memo, useState, useEffect } from 'react';
 import { getBenhByMaGBH, getYCHTByUsername, updateInsPack, getGoiBHByMaGBH, getAllBenh, addBenhForGBH, deleteBenhFromBGH } from "../../../api/connect";
 import { useParams } from 'react-router-dom';
 import { useUser } from "../../../context/UserContext";
+import { ROUTERS } from "../../../utils/router";
+import { Link } from 'react-router-dom';
 import Chip from '@mui/material/Chip';
 import Autocomplete from '@mui/material/Autocomplete';
 import Stack from '@mui/material/Stack';
@@ -198,59 +200,59 @@ const InsPackDetailPage = () => {
     return null; // Validation passed
   };
   //handle cho nút Tạo yêu cầu
-  const handleUpdateInsPackSubmit = async (e) => {
-    e.preventDefault(); // Prevent default form submission
-    //gọi hàm validate
-    const validationError = validateForm();
-    if (validationError) {
-      setSnackbarMessage(validationError);
-      setSnackbarOpen(true);
-      return;
-    }
-    // Handle form submission logic here
-    setLoading(true);
-    const updateData = {
-      // Populate with the necessary data
-      tenGoiBH: formData.Ten,
-      motaGoiBH: formData.Mota,
-      gia: formData.Gia,
-      tiLeHoanTien: formData.TiLeHoanTien,
-      thoiHanBaoVe: formData.ThoiHanBaoVe
-    };
+  const handleVoHieuGBH = async (e) => {
+    // e.preventDefault(); // Prevent default form submission
+    // //gọi hàm validate
+    // const validationError = validateForm();
+    // if (validationError) {
+    //   setSnackbarMessage(validationError);
+    //   setSnackbarOpen(true);
+    //   return;
+    // }
+    // // Handle form submission logic here
+    // setLoading(true);
+    // const updateData = {
+    //   // Populate with the necessary data
+    //   tenGoiBH: formData.Ten,
+    //   motaGoiBH: formData.Mota,
+    //   gia: formData.Gia,
+    //   tiLeHoanTien: formData.TiLeHoanTien,
+    //   thoiHanBaoVe: formData.ThoiHanBaoVe
+    // };
 
-    const currentBenhList = dataBenhByGBH.map((item) => item.tenBenh);
-    const newBenhs = selectedValues.filter(value => !currentBenhList.includes(value));
+    // const currentBenhList = dataBenhByGBH.map((item) => item.tenBenh);
+    // const newBenhs = selectedValues.filter(value => !currentBenhList.includes(value));
   
-    const removedBenhs = currentBenhList.filter(benh => !selectedValues.includes(benh));
+    // const removedBenhs = currentBenhList.filter(benh => !selectedValues.includes(benh));
 
-    // Lấy mã bệnh cho các tên bệnh được chọn
-    const newBenhsValues = newBenhs.map(mapTenBenhToMaBenh);
-    const removedBenhsValues = removedBenhs.map(mapTenBenhToMaBenh);
+    // // Lấy mã bệnh cho các tên bệnh được chọn
+    // const newBenhsValues = newBenhs.map(mapTenBenhToMaBenh);
+    // const removedBenhsValues = removedBenhs.map(mapTenBenhToMaBenh);
 
-    try {
-      //gọi api post
-      const responseData = await updateInsPack(params.id, updateData)
-         // Thực hiện gọi API thêm bệnh cho từng bệnh mới được chọn
-    for (const newBenh of newBenhsValues) {
-      console.log(params.id)
-      await addBenhForGBH(params.id, newBenh);
-    }
+    // try {
+    // //   //gọi api post
+    // //   const responseData = await updateInsPack(params.id, updateData)
+    // //      // Thực hiện gọi API thêm bệnh cho từng bệnh mới được chọn
+    // // for (const newBenh of newBenhsValues) {
+    // //   console.log(params.id)
+    // //   await addBenhForGBH(params.id, newBenh);
+    // // }
 
-    // Thực hiện gọi API xóa bệnh cho từng bệnh không còn được chọn
-    for (const removedBenh of removedBenhsValues) {
-      await deleteBenhFromBGH(params.id, removedBenh);
-    }
-      //thông báo thành công
-      setSnackbarMessage(responseData);
-      setSnackbarOpen(true);
-    } catch (error) {
-      // Xử lý các lỗi khác (ví dụ: mất kết nối)
-      //thông báo lỗi
-      setSnackbarMessage(error.response.data);
-      setSnackbarOpen(true);
-    } finally {
-      setLoading(false);
-    }
+    // // // Thực hiện gọi API xóa bệnh cho từng bệnh không còn được chọn
+    // // for (const removedBenh of removedBenhsValues) {
+    // //   await deleteBenhFromBGH(params.id, removedBenh);
+    // // }
+    //   //thông báo thành công
+    //   setSnackbarMessage(responseData);
+    //   setSnackbarOpen(true);
+    // } catch (error) {
+    //   // Xử lý các lỗi khác (ví dụ: mất kết nối)
+    //   //thông báo lỗi
+    //   setSnackbarMessage(error.response.data);
+    //   setSnackbarOpen(true);
+    // } finally {
+    //   setLoading(false);
+    // }
   };
   //xử lý gọi api
   useEffect(() => {
@@ -403,14 +405,13 @@ const InsPackDetailPage = () => {
         elevation={3}
         style={{ padding: "20px", marginTop: "120px", marginBottom: "100px" }}
       >
+          <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
+        <Typography component="h1" variant="h5" color="primary">
+          Chi tiết gói bảo hiểm
+        </Typography>
+      </div>
         <div>
-          <Tabs value={value} onChange={handleChangeTab}>
-            <Tab label="Cập nhật gói bảo hiểm" />
-            <Tab label="Vô hiệu gói bảo hiểm" />
-          </Tabs>
-          {/* Nội dung tương ứng với từng tab */}
-          {value === 0 && <div style={{ padding: "20px", marginTop: "20px" }}>
-          <Grid container spacing={2}>
+          {/* <Grid container spacing={2}> */}
       <Grid item xs={12} sm={5}>
         <Paper elevation={3} style={{padding: 16 }}>
         {dataGoiBH ? (
@@ -440,10 +441,18 @@ const InsPackDetailPage = () => {
             ))}
           </List>
         </Paper>
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px'}}>
+        <Button variant="outlined" onClick={handleVoHieuGBH} style={{ marginRight: '10px' }}>
+          Vô hiệu gói bảo hiểm
+        </Button>
+        <Button variant="outlined" component={Link} to={`../${ROUTERS.USER.INSURANCEPACKM}`}>
+          Quay lại
+        </Button>
+        </div>
         </Grid>
 
-<Grid item xs={12} sm={7}>
-    <Paper elevation={3} style={{ padding: 16 }}>
+    {/*<Grid item xs={12} sm={7}>
+ <Paper elevation={3} style={{ padding: 16 }}>
             <Typography component="h1" variant="h5">
               Cập nhật gói bảo hiểm
             </Typography>
@@ -512,27 +521,9 @@ const InsPackDetailPage = () => {
     </div>
 
             </form> </Paper>      </Grid>
-    </Grid></div>}
+    </Grid> */}
             
-          {value === 1 &&
-            <div style={{ padding: "20px", marginTop: "20px" }}>
-              <Box sx={{ height: 400, width: '100%' }}>
-                <DataGrid
-                  rows={rows}
-                  columns={columns}
-                  initialState={{
-                    pagination: {
-                      paginationModel: {
-                        pageSize: 5,
-                      },
-                    },
-                  }}
-                  pageSizeOptions={[5]}
-                  disableRowSelectionOnClick
-                  getRowId={(row) => row.id}
-                />
-              </Box>
-            </div>}
+        
         </div>
 
       </Paper>

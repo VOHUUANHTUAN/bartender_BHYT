@@ -105,6 +105,8 @@ const InsuranceRegistration = () => {
             paymentFrequency,
             startDate
         );
+        console.log(HoaDonList);
+
         var data_DonDangKy = {
             MaGoiBH: selectedPackage.maGoiBH,
             ThoiGianDK: dayjs().format("YYYY-MM-DDTHH:mm:ss.SSS[Z]"), //getdate,
@@ -115,7 +117,6 @@ const InsuranceRegistration = () => {
             TinhTrang: "Chờ duyệt",
             TongGia: calculateTotalAmount(),
             BenhIDs: selectedBenhs,
-            HoaDonThanhToanList: HoaDonList,
         };
         // console.log(data_DonDangKy);
         // console.log(selectedBenhs);
@@ -232,7 +233,7 @@ const InsuranceRegistration = () => {
                                         >
                                             <InputLabel id="start-date-label"></InputLabel>
                                             <DatePicker
-                                                label="Ngày bắt đầu đăng ký"
+                                                label="Ngày bắt đầu sử dụng bảo hiểm"
                                                 value={startDate}
                                                 onChange={(date) =>
                                                     setStartDate(date)
@@ -254,7 +255,7 @@ const InsuranceRegistration = () => {
                                         >
                                             <InputLabel id="end-date-label"></InputLabel>
                                             <TextField
-                                                label="Ngày kết thúc đăng ký"
+                                                label="Ngày kết thúc sử dụng bảo hiểm"
                                                 id="end-date"
                                                 value={calculateEndDate(
                                                     startDate,

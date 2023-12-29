@@ -31,46 +31,46 @@ import { dayCalendarSkeletonClasses } from "@mui/x-date-pickers";
 import { useLocation } from "react-router-dom";
 import { getUserInfoByToken } from "./api/connect";
 
-// const AuthGuard = ({ component: Component, loginRequired }) => {
-//     if (loginRequired && !user) {
-//         // Redirect to login if login is required and the user is not authenticated
-//         return <Navigate to={`/${ROUTERS.USER.LOGIN}`} />;
-//     }
+const AuthGuard = ({ component: Component, loginRequired }) => {
+    if (loginRequired && !localStorage.getItem("token")) {
+        // Redirect to login if login is required and the user is not authenticated
+        return <Navigate to={`/${ROUTERS.USER.LOGIN}`} />;
+    }
 
-//     // Render the component if login is not required or the user is authenticated
-//     return Component;
-// };
-const renderUserRouter = () => {
-	const userRouters = [
-		{
-			path: ROUTERS.USER.HOME,
-			component: <HomePage />,
-			loginRequired: false,
-		},
-		{
-			path: ROUTERS.USER.NEWS,
-			component: <NewsPage />,
-			loginRequired: false,
-		},
-		{
-			path: ROUTERS.USER.PRODUCT,
-			component: <ProductPage />,
-			//loginRequired: false,
-			loginRequired: false,
-		},
-		{
-			path: ROUTERS.USER.LOGIN,
-			component: <Login />,
-		},
-		{
-			path: ROUTERS.USER.REGISTER,
-			component: <Register />,
-			showHeader: false, // Không hiển thị header ở trang đăng ký
-			showFooter: false, // Không hiển thị footer ở trang đăng ký
-			loginRequired: false,
-		},
-		{
-			path: ROUTERS.USER.CHANGEPASSWORD,
+    // Render the component if login is not required or the user is authenticated
+    return Component;
+};
+const RouterCustom = () => {
+    const userRouters = [
+        {
+            path: ROUTERS.USER.HOME,
+            component: <HomePage />,
+            loginRequired: false,
+        },
+        {
+            path: ROUTERS.USER.NEWS,
+            component: <NewsPage />,
+            loginRequired: false,
+        },
+        {
+            path: ROUTERS.USER.PRODUCT,
+            component: <ProductPage />,
+            //loginRequired: false,
+            loginRequired: false,
+        },
+        {
+            path: ROUTERS.USER.LOGIN,
+            component: <Login />,
+        },
+        {
+            path: ROUTERS.USER.REGISTER,
+            component: <Register />,
+            showHeader: false, // Không hiển thị header ở trang đăng ký
+            showFooter: false, // Không hiển thị footer ở trang đăng ký
+            loginRequired: false,
+        },
+        {
+            path: ROUTERS.USER.CHANGEPASSWORD,
 
 			component: <ChangePassword />,
 			loginRequired: true,
@@ -116,57 +116,13 @@ const renderUserRouter = () => {
 			component: <ListYeuCauHoanTra />,
 		},
 
-		{
-			path: ROUTERS.USER.HOADON,
-			component: <Invoice />,
-		},
-	];
-
-	return (
-		<MasterLayout>
-			<Routes>
-				{userRouters.map((item, key) => (
-					<Route
-						key={key}
-						path={item.path} //element={item.component}
-						element={item.component}
-					/>
-				))}
-				<Route
-					path="product/detail/:id"
-					element={<ProductDetailPage />}
-				/>
-				<Route
-					path="registrationForms/detail/:id"
-					element={<DonDangKyDetail />}
-				/>
-				<Route
-					path="InsuranceRegistration/:id"
-					element={<InsuranceRegistration />}
-				/>
-				{/* <Route path="product/detail/:id" element={<AuthGuard component={<ProductDetailPage />} loginRequired={true} />} /> */}
-				<Route
-					path="registrationForms/detail/:id"
-					element={<DonDangKyDetail />}
-				/>
-				<Route
-					path="requestrefund/detail/:id"
-					element={<YeuCauHoanTraDetail />}
-				/>
-				<Route
-					path="insurancePackManagement/detail/:id"
-					element={<InsPackDetailPage />}
-				/>
-				<Route path="pay/detailPaid/:id" element={<PaidDetail />} />
-				<Route path="pay/detailUnpaid/:id" element={<UnPaidDetail />} />
-			</Routes>
-		</MasterLayout>
-	);
-};
-
-const RouterCustom = () => {
-	const location = useLocation();
-	const { user, login, logout } = useUser();
+        {
+            path: ROUTERS.USER.HOADON,
+            component: <Invoice />,
+        },
+    ];
+    const location = useLocation();
+    const { user, login, logout } = useUser();
 
 	const getUserInfo = async (token) => {
 		try {
@@ -198,15 +154,56 @@ const RouterCustom = () => {
 		}
 	};
 
-	useEffect(() => {
-		// Hành động mà bạn muốn thực hiện khi đường dẫn thay đổi
-		getUserInfo(localStorage.getItem("token"));
-		console.log("Đường dẫn đã thay đổi:", location.pathname);
+    useEffect(() => {
+        // Hành động mà bạn muốn thực hiện khi đường dẫn thay đổi
+        // getUserInfo(localStorage.getItem("token"));
+        console.log("Đường dẫn đã thay đổi:", location.pathname);
+        // console.log("loginRequired:", userRouters.loginRequired);
 
 		// Thêm các hành động cần thực hiện ở đây...
 	}, [location.pathname]);
 
-	return renderUserRouter();
+    return (
+        <MasterLayout>
+            <Routes>
+                {userRouters.map((item, key) => (
+                    <Route
+                        key={key}
+                        path={item.path}
+                        element={item.component}
+                        // element={<AuthGuard item.component item.loginRequired  />}
+                    />
+                ))}
+                <Route
+                    path="product/detail/:id"
+                    element={<ProductDetailPage />}
+                />
+                <Route
+                    path="registrationForms/detail/:id"
+                    element={<DonDangKyDetail />}
+                />
+                <Route
+                    path="InsuranceRegistration/:id"
+                    element={<InsuranceRegistration />}
+                />
+                {/* <Route path="product/detail/:id" element={<AuthGuard component={<ProductDetailPage />} loginRequired={true} />} /> */}
+                <Route
+                    path="registrationForms/detail/:id"
+                    element={<DonDangKyDetail />}
+                />
+                <Route
+                    path="requestrefund/detail/:id"
+                    element={<YeuCauHoanTraDetail />}
+                />
+                <Route
+                    path="insurancePackManagement/detail/:id"
+                    element={<InsPackDetailPage />}
+                />
+                <Route path="pay/detailPaid/:id" element={<PaidDetail />} />
+                <Route path="pay/detailUnpaid/:id" element={<UnPaidDetail />} />
+            </Routes>
+        </MasterLayout>
+    );
 };
 
 export default RouterCustom;

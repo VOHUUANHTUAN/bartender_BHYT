@@ -8,5 +8,6 @@
         public int Gia { get; set; }
         public int TiLeHoanTien { get; set; }
         public int ThoiHanBaoVe { get; set; }
+        public string TinhTrang { get; set; }
     }
 }
