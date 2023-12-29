@@ -41,172 +41,172 @@ import { getUserInfoByToken } from "./api/connect";
 //     return Component;
 // };
 const renderUserRouter = () => {
-    const userRouters = [
-        {
-            path: ROUTERS.USER.HOME,
-            component: <HomePage />,
-            loginRequired: false,
-        },
-        {
-            path: ROUTERS.USER.NEWS,
-            component: <NewsPage />,
-            loginRequired: false,
-        },
-        {
-            path: ROUTERS.USER.PRODUCT,
-            component: <ProductPage />,
-            //loginRequired: false,
-            loginRequired: false,
-        },
-        {
-            path: ROUTERS.USER.LOGIN,
-            component: <Login />,
-        },
-        {
-            path: ROUTERS.USER.REGISTER,
-            component: <Register />,
-            showHeader: false, // Không hiển thị header ở trang đăng ký
-            showFooter: false, // Không hiển thị footer ở trang đăng ký
-            loginRequired: false,
-        },
-        {
-            path: ROUTERS.USER.CHANGEPASSWORD,
+	const userRouters = [
+		{
+			path: ROUTERS.USER.HOME,
+			component: <HomePage />,
+			loginRequired: false,
+		},
+		{
+			path: ROUTERS.USER.NEWS,
+			component: <NewsPage />,
+			loginRequired: false,
+		},
+		{
+			path: ROUTERS.USER.PRODUCT,
+			component: <ProductPage />,
+			//loginRequired: false,
+			loginRequired: false,
+		},
+		{
+			path: ROUTERS.USER.LOGIN,
+			component: <Login />,
+		},
+		{
+			path: ROUTERS.USER.REGISTER,
+			component: <Register />,
+			showHeader: false, // Không hiển thị header ở trang đăng ký
+			showFooter: false, // Không hiển thị footer ở trang đăng ký
+			loginRequired: false,
+		},
+		{
+			path: ROUTERS.USER.CHANGEPASSWORD,
 
-            component: <ChangePassword />,
-            loginRequired: true,
-        },
-        {
-            path: ROUTERS.USER.PAY,
+			component: <ChangePassword />,
+			loginRequired: true,
+		},
+		{
+			path: ROUTERS.USER.PAY,
 
-            component: <Pay />,
-            loginRequired: true,
-        },
-        {
-            path: ROUTERS.USER.STAFF,
-            component: <HomePageStaff />,
-            loginRequired: false,
-        },
-        {
-            path: ROUTERS.USER.REQUESTINVOICE,
-            component: <RequestInvoicePage />,
-            loginRequired: true,
-        },
-        {
-            path: ROUTERS.USER.PERSONALINFO,
-            component: <PersonalInfo />,
-        },
-        {
-            path: ROUTERS.USER.INSURANCEREGISTRATION,
-            component: <InsuranceRegistration />,
-        },
-        {
-            path: ROUTERS.USER.DONDANGKY,
-            component: <ListDonDangKy />,
-        },
-        {
-            path: ROUTERS.USER.INSURANCEPACKM,
-            component: <InsurancePack />,
-        },
-        {
-            path: ROUTERS.USER.ADDINSPACK,
-            component: <AddInsPack />,
-        },
-        {
-            path: ROUTERS.USER.YEUCAUHOANTRA,
-            component: <ListYeuCauHoanTra />,
-        },
+			component: <Pay />,
+			loginRequired: true,
+		},
+		{
+			path: ROUTERS.USER.STAFF,
+			component: <HomePageStaff />,
+			loginRequired: false,
+		},
+		{
+			path: ROUTERS.USER.REQUESTINVOICE,
+			component: <RequestInvoicePage />,
+			loginRequired: true,
+		},
+		{
+			path: ROUTERS.USER.PERSONALINFO,
+			component: <PersonalInfo />,
+		},
+		{
+			path: ROUTERS.USER.INSURANCEREGISTRATION,
+			component: <InsuranceRegistration />,
+		},
+		{
+			path: ROUTERS.USER.DONDANGKY,
+			component: <ListDonDangKy />,
+		},
+		{
+			path: ROUTERS.USER.INSURANCEPACKM,
+			component: <InsurancePack />,
+		},
+		{
+			path: ROUTERS.USER.ADDINSPACK,
+			component: <AddInsPack />,
+		},
+		{
+			path: ROUTERS.USER.YEUCAUHOANTRA,
+			component: <ListYeuCauHoanTra />,
+		},
 
-        {
-            path: ROUTERS.USER.HOADON,
-            component: <Invoice />,
-        },
-    ];
+		{
+			path: ROUTERS.USER.HOADON,
+			component: <Invoice />,
+		},
+	];
 
-    return (
-        <MasterLayout>
-            <Routes>
-                {userRouters.map((item, key) => (
-                    <Route
-                        key={key}
-                        path={item.path} //element={item.component}
-                        element={item.component}
-                    />
-                ))}
-                <Route
-                    path="product/detail/:id"
-                    element={<ProductDetailPage />}
-                />
-                <Route
-                    path="registrationForms/detail/:id"
-                    element={<DonDangKyDetail />}
-                />
-                <Route
-                    path="InsuranceRegistration/:id"
-                    element={<InsuranceRegistration />}
-                />
-                {/* <Route path="product/detail/:id" element={<AuthGuard component={<ProductDetailPage />} loginRequired={true} />} /> */}
-                <Route
-                    path="registrationForms/detail/:id"
-                    element={<DonDangKyDetail />}
-                />
-                <Route
-                    path="requestrefund/detail/:id"
-                    element={<YeuCauHoanTraDetail />}
-                />
-                <Route
-                    path="insurancePackManagement/detail/:id"
-                    element={<InsPackDetailPage />}
-                />
-                <Route path="pay/detailPaid/:id" element={<PaidDetail />} />
-                <Route path="pay/detailUnpaid/:id" element={<UnPaidDetail />} />
-            </Routes>
-        </MasterLayout>
-    );
+	return (
+		<MasterLayout>
+			<Routes>
+				{userRouters.map((item, key) => (
+					<Route
+						key={key}
+						path={item.path} //element={item.component}
+						element={item.component}
+					/>
+				))}
+				<Route
+					path="product/detail/:id"
+					element={<ProductDetailPage />}
+				/>
+				<Route
+					path="registrationForms/detail/:id"
+					element={<DonDangKyDetail />}
+				/>
+				<Route
+					path="InsuranceRegistration/:id"
+					element={<InsuranceRegistration />}
+				/>
+				{/* <Route path="product/detail/:id" element={<AuthGuard component={<ProductDetailPage />} loginRequired={true} />} /> */}
+				<Route
+					path="registrationForms/detail/:id"
+					element={<DonDangKyDetail />}
+				/>
+				<Route
+					path="requestrefund/detail/:id"
+					element={<YeuCauHoanTraDetail />}
+				/>
+				<Route
+					path="insurancePackManagement/detail/:id"
+					element={<InsPackDetailPage />}
+				/>
+				<Route path="pay/detailPaid/:id" element={<PaidDetail />} />
+				<Route path="pay/detailUnpaid/:id" element={<UnPaidDetail />} />
+			</Routes>
+		</MasterLayout>
+	);
 };
 
 const RouterCustom = () => {
-    const location = useLocation();
-    const { user, login, logout } = useUser();
+	const location = useLocation();
+	const { user, login, logout } = useUser();
 
-    const getUserInfo = async (token) => {
-        try {
-            const response = await getUserInfoByToken(token);
-            if (response) {
-                logout();
-                login({
-                    username: response.username,
-                    token: token,
-                    firstLogin: response.firstLogin,
-                    role: response.role,
-                });
-                localStorage.clear();
-                localStorage.setItem("token", token);
-                console.log("Login successful");
-            } else {
-                localStorage.clear();
-                <Navigate to={`/${ROUTERS.USER.LOGIN}`} />;
-                console.log("Login fail");
+	const getUserInfo = async (token) => {
+		try {
+			const response = await getUserInfoByToken(token);
+			if (response) {
+				logout();
+				login({
+					username: response.username,
+					token: token,
+					firstLogin: response.firstLogin,
+					role: response.role,
+				});
+				localStorage.clear();
+				localStorage.setItem("token", token);
+				console.log("Login successful");
+			} else {
+				localStorage.clear();
+				<Navigate to={`/${ROUTERS.USER.LOGIN}`} />;
+				console.log("Login fail");
 
-                logout();
-            }
-        } catch (error) {
-            localStorage.clear();
-            console.log("Login fail");
-            logout();
-            <Navigate to={`/${ROUTERS.USER.LOGIN}`} />;
-            console.log(error.message);
-        }
-    };
+				logout();
+			}
+		} catch (error) {
+			localStorage.clear();
+			console.log("Login fail");
+			logout();
+			<Navigate to={`/${ROUTERS.USER.LOGIN}`} />;
+			console.log(error.message);
+		}
+	};
 
-    useEffect(() => {
-        // Hành động mà bạn muốn thực hiện khi đường dẫn thay đổi
-        getUserInfo(localStorage.getItem("token"));
-        console.log("Đường dẫn đã thay đổi:", location.pathname);
+	useEffect(() => {
+		// Hành động mà bạn muốn thực hiện khi đường dẫn thay đổi
+		getUserInfo(localStorage.getItem("token"));
+		console.log("Đường dẫn đã thay đổi:", location.pathname);
 
-        // Thêm các hành động cần thực hiện ở đây...
-    }, [location.pathname]);
+		// Thêm các hành động cần thực hiện ở đây...
+	}, [location.pathname]);
 
-    return renderUserRouter();
+	return renderUserRouter();
 };
 
 export default RouterCustom;
