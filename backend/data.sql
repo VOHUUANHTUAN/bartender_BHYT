@@ -21,12 +21,15 @@ insert into Users values('minhtien','123456',N'Khách hàng',0)
 insert into Users values('admin','123',N'Nhân viên',0)
 insert into Users values('nhanvien','123',N'Nhân viên',0)
 
-insert into KhachHang values(N'Lê Thị Hàng','TPHCM','0123123111','hang@gmail.com',5000000,'khachhang')
-insert into KhachHang values(N'Mai Quyết Vang','TPHCM','0123123124','vang@gmail.com',5000000,'quyetvang')
-insert into KhachHang values(N'Lê Thị Thu Hà','TPHCM','0123123125','ha@gmail.com',5000000,'thuha')
-insert into KhachHang values(N'Võ Hữu Anh Tuấn','TPHCM','0123123126','tuan@gmail.com',5000000,'anhtuan')
-insert into KhachHang values(N'Đinh Hoàng Bảo Châu','TPHCM','0123123127','chau@gmail.com',5000000,'baochau')
-insert into KhachHang values(N'Lê Minh Tiến','TPHCM','0123123123','tien@gmail.com',5000000,'minhtien')
+INSERT INTO KhachHang (HoTen, NgaySinh, GioiTinh, CCCD, DiaChi, SDT, Email, SoDu, username)
+VALUES
+  (N'Lê Thị Hàng', '1995-01-15', N'Nữ', '123456789012', 'TPHCM', '0123123111', 'hang@gmail.com', 5000000, 'khachhang'),
+  (N'Mai Quyết Vang', '1992-03-22', N'Nam', '234567890123', 'TPHCM', '0123123124', 'vang@gmail.com', 5000000, 'quyetvang'),
+  (N'Lê Thị Thu Hà', '1990-07-10', N'Nữ', '345678901234', 'TPHCM', '0123123125', 'ha@gmail.com', 5000000, 'thuha'),
+  (N'Võ Hữu Anh Tuấn', '1998-11-28', N'Nam', '456789012345', 'TPHCM', '0123123126', 'tuan@gmail.com', 5000000, 'anhtuan'),
+  (N'Đinh Hoàng Bảo Châu', '1996-05-03', N'Nam', '567890123456', 'TPHCM', '0123123127', 'chau@gmail.com', 5000000, 'baochau'),
+  (N'Lê Minh Tiến', '2000-09-18', N'Nam', '678901234567', 'TPHCM', '0123123123', 'tien@gmail.com', 5000000, 'minhtien');
+
 insert into NhanVien values(N'Nguyễn Văn An','TPHCM','0123456789','nguyenvanan@gmail.com','admin')
 insert into NhanVien values(N'Nguyễn Thị Hoa','TPHCM','0123456788','nguyenthihoa@gmail.com','nhanvien')
 
@@ -135,6 +138,7 @@ INSERT INTO ChinhSach VALUES
 (15,13),
 (15,14);
 
+
 -- Khi tạo đơn đăng ký thì Khách hàng chọn Thời gian bắt đầu và số năm (trên frontend)-> Thời gian hết hạn
 -- TinhTrang: khi khách hàng đăng ký thì tình trạng là "Chờ duyệt", sau đó đơn được chuyển qua bên Nhân viên,"Duyệt"-> TinhTrang=N'Chờ thanh toán
 -- "Từ chối" -> TinhTrang=N'Bị từ chối' và Ghi LiDoTuChoi
@@ -225,50 +229,33 @@ INSERT INTO BenhVien(TenBV) values
 	(N'Bệnh viện Nhi đông 2'),
 	(N'Bệnh viện Nhân dân 115');
 
-INSERT INTO HoaDonKhamBenh (MaHDKhamBenh, MaBV, TinhTrang)
+INSERT INTO HoaDonKhamBenh (MaHDKhamBenh, MaBV, SoTienKham, CCCD, TinhTrang)
 VALUES
-    ('FD6-5WE-Q1D', 1, 1),
-    ('ABC-123-XYZ', 2, 1),
-    ('JKL-987-MNO', 3, 1),
-    ('PQR-456-STU', 4, 1),
-    ('XYZ-789-ABC', 5, 1),
-    ('123-XYZ-456', 6, 1),
-    ('MNO-789-JKL', 7, 1),
-    ('STU-123-PQR', 8, 1),
-    ('456-ABC-789', 9, 0),
-    ('789-PQR-123', 10, 0),
-    ('QWE-789-RTY', 11, 0),
-    ('UIO-123-PLK', 12, 0),
-    ('ZXC-456-VBN', 1, 0),
-    ('LKJ-789-POI', 2, 0),
-    ('HGF-123-DSA', 3, 0),
-    ('RTY-456-CVB', 4, 0),
-    ('FDS-789-XCV', 5, 0),
-    ('POI-123-JKL', 6, 0),
-    ('MNB-456-ZXC', 7, 0),
-    ('XCV-789-QWE', 8, 0),
-    ('QAZ-123-WSX', 9, 0),
-    ('EDC-456-RFV', 10, 0),
-	('QWE-456-ASD', 11, 0),
-    ('PLK-789-UIO', 12, 0),
-    ('XCV-123-FGH', 1, 0),
-    ('JKL-456-RTY', 2, 0),
-    ('UIO-789-POI', 3, 0),
-    ('MNB-123-XCV', 4, 0),
-    ('QWE-456-ZXC', 5, 0),
-    ('UIO-789-RTY', 6, 0),
-    ('JKL-123-POI', 7, 0),
-    ('XCV-456-FGH', 8, 0),
-    ('PLK-789-ZXC', 9, 0),
-    ('MNB-123-UIO', 10, 0),
-    ('QWE-456-POI', 11, 0),
-    ('JKL-789-RTY', 12, 0),
-    ('PLK-123-ZXC', 1, 0),
-    ('MNB-456-UIO', 2, 0),
-    ('QWE-789-POI', 3, 0),
-    ('JKL-123-FGH', 4, 0),
-    ('UIO-456-ZXC', 5, 0),
-    ('PLK-789-RTY', 6, 0);
+    ('FD6-5WE-Q1D', 1, 1000000, '123456789012', 1),
+    ('ABC-123-XYZ', 2, 1000000, '234567890123', 1),
+    ('JKL-987-MNO', 3, 1000000, '234567890123', 1),
+    ('PQR-456-STU', 4, 1200000, '123456789012', 1),
+    ('XYZ-789-ABC', 5, 2000000, '123456789012', 1),
+    ('123-XYZ-456', 6, 1600000, '123456789012', 1),
+    ('MNO-789-JKL', 7, 1200000, '123456789012', 1),
+    ('STU-123-PQR', 8, 2000000, '234567890123', 1),
+    ('456-ABC-789', 9, 3500000, '123456789012', 0),
+    ('789-PQR-123', 10, 2000000, '456789012345', 0),
+    ('QWE-789-RTY', 11, 4500000, '567890123456', 0),
+    ('UIO-123-PLK', 12, 3000000, '678901234567', 0),
+    ('ZXC-456-VBN', 1, 1500000, '123456789012', 0),
+    ('LKJ-789-POI', 2, 900000, '234567890123', 0),
+    ('HGF-123-DSA', 3, 3000000, '345678901234', 0),
+    ('RTY-456-CVB', 4, 2000000, '456789012345', 0),
+    ('FDS-789-XCV', 5, 4000000, '567890123456', 0),
+    ('POI-123-JKL', 6, 2500000, '678901234567', 0),
+    ('MNB-456-ZXC', 7, 1500000, '123456789012', 0),
+    ('XCV-789-QWE', 8, 3500000, '234567890123', 0),
+    ('QAZ-123-WSX', 9, 450000, '345678901234', 0),
+    ('EDC-456-RFV', 10, 3000000, '456789012345', 0),
+    ('QWE-456-ASD', 11, 2000000, '567890123456', 0),
+    ('PLK-789-UIO', 12,  1500000, '678901234567', 0);
+
 
 --Tình trạng: 
 --1.Chờ duyệt :là chờ đã đủ điều kiện áp dụng chính sách, 

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BaoHiemYTe.Migrations
 {
     /// <inheritdoc />
-    public partial class final : Migration
+    public partial class tien_final : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -76,6 +76,8 @@ namespace BaoHiemYTe.Migrations
                 columns: table => new
                 {
                     MaHDKhamBenh = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    SoTienKham = table.Column<int>(type: "int", nullable: false),
+                    CCCD = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MaBV = table.Column<int>(type: "int", nullable: false),
                     TinhTrang = table.Column<int>(type: "int", nullable: false)
                 },
@@ -121,6 +123,9 @@ namespace BaoHiemYTe.Migrations
                     MaKH = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     HoTen = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    NgaySinh = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    GioiTinh = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CCCD = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DiaChi = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SDT = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
