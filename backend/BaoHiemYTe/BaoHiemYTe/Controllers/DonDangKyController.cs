@@ -94,14 +94,14 @@ namespace BaoHiemYTe.Controllers
             {
                 try
                 {
-                    //if (!ModelState.IsValid)
-                    //{
-                    //    return BadRequest(ModelState);
-                    //}
+                    if (!ModelState.IsValid)
+                    {
+                        return BadRequest(ModelState);
+                    }
 
-                    //var tokenService = new TokenService();
-                    //var username_ = tokenService.GetUsernameFromToken(HttpContext.Request);
-                    var username_ = "quyetvang";
+                    var tokenService = new TokenService();
+                    var username_ = tokenService.GetUsernameFromToken(HttpContext.Request);
+                    //var username_ = "quyetvang";
                     if (string.IsNullOrEmpty(username_))
                     {
                         return Unauthorized("Unauthorized: Token is missing or invalid");
@@ -136,27 +136,13 @@ namespace BaoHiemYTe.Controllers
                         {
                             MaDonDK = donDangKy.MaDonDK,
                             MaBenh = benhId,
-                            TinhTrang = "SomeStatus" // Thay bằng tình trạng thích hợp
+                            TinhTrang = "" // Thay bằng tình trạng thích hợp
                         };
 
                         _dbContext.TinhTrangBenh.Add(tinhTrangBenh);
                     }
 
-                    // Chèn danh sách thông tin hoá đơn thanh toán vào HoaDonThanhToanDK
-                    foreach (var hoaDonThanhToanDTO in donDangKyDTO.HoaDonThanhToanList)
-                    {
-                        var hoaDonThanhToan = new HoaDonThanhToanDK
-                        {
-                            SoTien = hoaDonThanhToanDTO.SoTien,
-                            ThoiGianHetHan = hoaDonThanhToanDTO.ThoiGianHetHan,
-                            HanKy = hoaDonThanhToanDTO.HanKy,
-                            TinhTrangThanhToan = hoaDonThanhToanDTO.TinhTrangThanhToan,
-                            ThoiGianThanhToan = null, // Thời gian thanh toán có thể để null nếu chưa thanh toán
-                            MaDonDK = donDangKy.MaDonDK,
-                        };
-
-                        _dbContext.HoaDonThanhToanDK.Add(hoaDonThanhToan);
-                    }
+                   
 
                     await _dbContext.SaveChangesAsync();
                     transaction.Commit();

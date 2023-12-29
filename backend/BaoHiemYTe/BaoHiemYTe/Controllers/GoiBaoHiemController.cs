@@ -13,14 +13,26 @@ namespace BaoHiemYTe.Controllers
     {
         // GET: api/<GoiBaoHiemController>
         private readonly UserDbContext userDbContext;
-
-        public GoiBaoHiemController(UserDbContext userDbContext)
+        private readonly TokenService tokenService;
+        public GoiBaoHiemController(UserDbContext userDbContext, TokenService tokenService)
         {
             this.userDbContext = userDbContext;
+            this.tokenService = tokenService;
         }
         [HttpGet]
         public IActionResult GetAll()
         {
+            var tokenService = new TokenService();
+            var username = tokenService.GetUsernameFromToken(HttpContext.Request);
+            if (string.IsNullOrEmpty(username))
+            {
+                return Unauthorized("Unauthorized: Token is missing or invalid");
+            }
+            var role = tokenService.GetRoleFromToken(HttpContext.Request);
+                if (role != "Nhân viên")
+                {
+                    return Unauthorized("Unauthorized: role is missing or invalid");
+                }
             var goiBH = userDbContext.GoiBaoHiem.ToList();
             return Ok(goiBH);
         }
@@ -44,8 +56,15 @@ namespace BaoHiemYTe.Controllers
         }
         [HttpGet]
         [Route("GetGoiBHByUs/{username}")]
-        public IActionResult GetGoiBHByUsername(string username)
+        public IActionResult GetGoiBHByUser()
         {
+            // Check for the presence and validity of the token
+            var tokenService = new TokenService();
+            var username = tokenService.GetUsernameFromToken(HttpContext.Request);
+            if (string.IsNullOrEmpty(username))
+            {
+                return Unauthorized("Unauthorized: Token is missing or invalid");
+            }
             // Lấy thông tin MaKH từ bảng KhachHang
             var maKH = userDbContext.KhachHang
                 .Where(u => u.username == username)
