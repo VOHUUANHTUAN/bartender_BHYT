@@ -29,7 +29,7 @@ const DetailPage = () => {
         const fetchData = async () => {
             try {
                 if (params.id) {
-                    const data = await getDonDangKyByID(params.id);
+                    const data = await getDonDangKyByID(localStorage.getItem("token"), params.id);
                     setDonDangKy(data);
 
                 } else {

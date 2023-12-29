@@ -15,7 +15,7 @@ const ListDonDangKy = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await getDonDangKyList();
+        const data = await getDonDangKyList(localStorage.getItem("token"));
         setDonDangKyList(data);
       } catch (error) {
         console.error('Error fetching data:', error);

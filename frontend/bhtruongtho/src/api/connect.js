@@ -125,12 +125,20 @@ export const getYCHTByUsername = (username) => {
 export const getBenhVienAPI = () => {
     return axiosClient.get(`${END_POINT.BENHVIEN}`);
 };
-export const getDonDangKyList = () => {
-    return axiosClient.get(`${END_POINT.DONDANGKY}`);
+export const getDonDangKyList = (token) => {
+    return axiosClient.get(`${END_POINT.DONDANGKY}`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
 };
 
-export const getDonDangKyByID = (ID) => {
-    return axiosClient.get(`${END_POINT.DONDANGKY}/${ID}`);
+export const getDonDangKyByID = (token, ID) => {
+    return axiosClient.get(`${END_POINT.DONDANGKY}/${ID}`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
 };
 
 export const getNhanVienByID = (ID) => {
@@ -169,7 +177,7 @@ export const putYeuCauHoanTraByID = async (ID, Data) => {
         return response.data;
     } catch (error) {
         console.error('Error:', error);
-        throw new Error(`Error chang DDK: ${error.message}`);
+        throw new Error(`Error change YCHT: ${error.message}`);
     }
 };
 
