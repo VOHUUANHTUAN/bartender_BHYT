@@ -1,10 +1,11 @@
 import React, { memo, useState, useEffect } from "react";
 import {
     createRequest,
-    getGoiBHByUsername,
+    getGoiBHByCus,
     getBenhByMaGBH,
-    getYCHTByUsername,
+    getYCHTByCus,
     getBenhVienAPI,
+    getSoTienKhamByCus,
 } from "../../../api/connect";
 import { useUser } from "../../../context/UserContext";
 import {
@@ -17,13 +18,12 @@ import {
     MenuItem,
     FormControl,
     InputLabel,
-    InputAdornment,
     Tabs,
     Tab,
     Snackbar,
 } from "@mui/material";
 import Box from "@mui/material/Box";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 const RequestInvoice = () => {
     //user context
     const { user } = useUser();
@@ -31,6 +31,7 @@ const RequestInvoice = () => {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
     //khai báo các biến
+    const [amount, setAmount] = useState("");
     const [hospitalNameList, setHospitalNameList] = useState([]);
     const [refundAmount, setRefundAmount] = useState("");
     const [diseases, setDiseases] = useState([]);
@@ -51,7 +52,7 @@ const RequestInvoice = () => {
     //Dữ liệu nhập cần validate
     const [formData, setFormData] = useState({
         invoiceCode: "",
-        amount: "",
+        //amount: "",
         // ... other fields
     });
 
@@ -72,15 +73,9 @@ const RequestInvoice = () => {
             ...formData,
             [e.target.name]: e.target.value,
         });
-
-        //regex cho số tiền
-        if (e.target.name === "amount") {
-            const amountRegex = /^\d+(\.\d{0,2})?$/;
-            setAmountError(!amountRegex.test(e.target.value));
-        }
         //regex cho mã hóa đơn
         if (e.target.name === "invoiceCode") {
-            const invoiceCodeRegex = /^[a-zA-Z0-9_@#&]+$/;
+            const invoiceCodeRegex = /^[a-zA-Z0-9_@#&-]+$/;
             setInvoiceCodeError(!invoiceCodeRegex.test(e.target.value));
         }
     };
@@ -89,11 +84,11 @@ const RequestInvoice = () => {
         if (!formData.invoiceCode) {
             return "Mã hóa đơn không được để trống";
         }
+        if (!amount) {
+            return "Thông tin chưa hợp lệ";
+        }
         if (!selectedHospitalName) {
             return "Tên bệnh viện không được để trống";
-        }
-        if (!formData.amount) {
-            return "Số tiền không được để trống";
         }
         if (!selectedDisease) {
             return "Tên bệnh không được để trống";
@@ -101,12 +96,39 @@ const RequestInvoice = () => {
         if (!selectedInsurancePackage) {
             return "Gói bảo hiểm không được để trống";
         }
-        if (invoiceCodeError || amountError) {
+        if (invoiceCodeError) {
             return "Thông tin chưa hợp lệ";
         }
         return null; // Validation passed
     };
+    //xử lí api số tiền khám
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                setLoading(true);
+                //Nếu đã chọn bệnh viện và nhập mã hóa đơn
+                if (selectedHospitalName && formData.invoiceCode !== "") {
+                    // Gọi API
+                    try {
+                        const soTienKhamBenh = await getSoTienKhamByCus(localStorage.getItem("token"), formData.invoiceCode, selectedHospitalName);
+                        // Gọi API thành công, thiết lập giá trị cho amount
+                        setAmount(soTienKhamBenh);
+                    } catch (error) {
+                        // Xử lý lỗi khi không thể gọi được API
+                        setSnackbarMessage(error.response.data);
+                        setSnackbarOpen(true);
+                        setAmount("");
+                    }
 
+                }
+            } catch (error) {
+                setError(error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchData();
+    }, [user, selectedHospitalName, formData.invoiceCode]);
     //xử lý gọi api
     useEffect(() => {
         const fetchData = async () => {
@@ -114,7 +136,7 @@ const RequestInvoice = () => {
                 setLoading(true);
                 //API cho tab1
                 // Gọi API để lấy dữ liệu về gói Bảo hiểm
-                const goiBHByUs = await getGoiBHByUsername(user.username);
+                const goiBHByUs = await getGoiBHByCus(localStorage.getItem("token"));
                 setInsurancePackages(goiBHByUs);
                 //gọi api lấy dữ liệu tất cả bệnh viện
                 const benhVien = await getBenhVienAPI();
@@ -128,10 +150,9 @@ const RequestInvoice = () => {
                     );
                     setDiseases(benhData);
                 }
-
                 //API cho tab2
                 //Gọi API để lấy yêu cầu hoàn trả theo username
-                const yCHTByUs = await getYCHTByUsername(user.username);
+                const yCHTByUs = await getYCHTByCus(localStorage.getItem("token"));
                 setRequestList(yCHTByUs);
             } catch (error) {
                 setError(error);
@@ -177,7 +198,7 @@ const RequestInvoice = () => {
         const refundRate = selectedGoiBH ? selectedGoiBH.tiLeHoanTien : 0;
 
         // Convert the amount to a float, defaulting to 0 if NaN
-        const amountFloat = parseFloat(formData.amount) || 0;
+        const amountFloat = parseFloat(amount) || 0;
 
         //Nếu nhập số bé hơn không thì gán số tiền hoàn trả = 0
         if (amountFloat < 0) {
@@ -194,7 +215,7 @@ const RequestInvoice = () => {
             : calculatedRefundAmount;
         // Set the calculated refund amount to the state
         setRefundAmount(refundAmountValue);
-    }, [selectedInsurancePackage, insurancePackages, formData.amount]);
+    }, [selectedInsurancePackage, insurancePackages, amount]);
 
     //handle cho nút Tạo yêu cầu
     const handleRefundSubmit = async (e) => {
@@ -212,7 +233,7 @@ const RequestInvoice = () => {
             // Populate with the necessary data
             maHDKhamBenh: formData.invoiceCode,
             tenBenhVien: getHospitalName(selectedHospitalName),
-            soTienDaKham: formData.amount,
+            soTienDaKham: amount,
             benh: getDiseaseName(selectedDisease),
             maGoiBHApDung: selectedInsurancePackage,
             username: user.username,
@@ -376,22 +397,12 @@ const RequestInvoice = () => {
                                 <TextField
                                     label="Số tiền"
                                     name="amount"
-                                    value={formData.amount}
-                                    onChange={handleChangeData}
+                                    value={amount}
+                                    //onChange={handleChangeData}
                                     fullWidth
                                     required
                                     margin="normal"
-                                    InputProps={{
-                                        startAdornment: (
-                                            <InputAdornment position="start">
-                                                $
-                                            </InputAdornment>
-                                        ),
-                                    }}
-                                    error={amountError}
-                                    helperText={
-                                        amountError && "Số tiền không hợp lệ"
-                                    }
+                                    InputProps={{ readOnly: true }}
                                 />
                                 <FormControl
                                     style={{
@@ -459,6 +470,12 @@ const RequestInvoice = () => {
                                 <DataGrid
                                     rows={rows}
                                     columns={columns}
+                                    slots={{ toolbar: GridToolbar }}
+                                    slotProps={{
+                                        toolbar: {
+                                            showQuickFilter: true,
+                                        },
+                                    }}
                                     initialState={{
                                         pagination: {
                                             paginationModel: {

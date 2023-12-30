@@ -43,6 +43,9 @@ namespace BaoHiemYTe.Controllers
                     {
                         MaKH = existingKhachHang.MaKH,
                         HoTen = existingKhachHang.HoTen,
+                        NgaySinh = existingKhachHang.NgaySinh,
+                        GioiTinh = existingKhachHang.GioiTinh,
+                        CCCD = existingKhachHang.CCCD,
                         DiaChi = existingKhachHang.DiaChi,
                         SDT = existingKhachHang.SDT,
                         Email = existingKhachHang.Email   ,

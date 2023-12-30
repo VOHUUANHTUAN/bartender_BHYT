@@ -1,27 +1,15 @@
 import React, { memo, useState, useEffect } from 'react';
-import { getGoiBHAPI } from '../../../api/connect';
+import { getGoiBHByNV } from '../../../api/connect';
 import { Link } from 'react-router-dom';
-import { useUser } from "../../../context/UserContext";
 import {
   Container,
   Paper,
-  TextField,
   Button,
   Typography,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  InputAdornment,
-  Tabs,
-  Tab,
-  Snackbar,
 } from "@mui/material";
 import Box from '@mui/material/Box';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridToolbar  } from '@mui/x-data-grid';
 
-
-import "./style.scss"
 
 const InsurancePack = () => {
   const [loading, setLoading] = useState(true);
@@ -30,7 +18,7 @@ const InsurancePack = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await getGoiBHAPI();
+        const data = await getGoiBHByNV(localStorage.getItem("token"));
         setGoiBaoHiemList(data);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -57,7 +45,8 @@ const InsurancePack = () => {
     motaGoiBH: item.motaGoiBH,
     gia: item.gia,
     tiLeHoanTien: item.tiLeHoanTien,
-    thoiHanBaoVe: item.thoiHanBaoVe 
+    thoiHanBaoVe: item.thoiHanBaoVe,
+    tinhTrang: item.tinhTrang
   }));
 
   const columns = [
@@ -66,12 +55,27 @@ const InsurancePack = () => {
     { field: 'motaGoiBH', headerName: 'Mô Tả Gói BH', width: 250 },
     { field: 'gia', headerName: 'Giá', width: 100 },
     { field: 'tiLeHoanTien', headerName: 'Tỉ lệ Hoàn Tiền', width: 150 },
-    { field: 'thoiHanBaoVe', headerName: 'Thời Hạn Bảo Vệ', width: 150 }
+    { field: 'thoiHanBaoVe', headerName: 'Thời Hạn Bảo Vệ', width: 150 },
+    {  //một chút màu sắc cho cột tình trạng
+      field: "tinhTrang",
+      headerName: "Tình Trạng",
+      width: 180,
+      renderCell: (params) => {
+          const tinhTrangValue = params.value;
+          let cellColor;
+          // Set colors based on tinhTrangValue
+          switch (tinhTrangValue) {
+              case "Đang cung cấp":
+                  cellColor = "green";
+                  break;
+              // Add more cases as needed
+              default:
+                  cellColor = "gray";
+          }
+          return <div style={{ color: cellColor }}>{tinhTrangValue}</div>;
+      },}
   ];
-  const handleButtonClick = () => {
-    // Handle button click logic here
-    console.log('Button Clicked');
-  };
+  
   return (
     <Container component="main" maxWidth="lg">
     <Paper
@@ -91,6 +95,12 @@ const InsurancePack = () => {
       <DataGrid
         rows={rows}
         columns={columns}
+        slots={{ toolbar: GridToolbar }}
+        slotProps={{
+          toolbar: {
+            showQuickFilter: true,
+          },
+        }}
         initialState={{
           pagination: {
             paginationModel: {
@@ -113,13 +123,6 @@ const InsurancePack = () => {
     </Box>
     </div>
     </Paper>
-      {/* <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={2000}
-        onClose={handleSnackbarClose}
-        message={snackbarMessage}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-      /> */}
     </Container>
   );
 };
