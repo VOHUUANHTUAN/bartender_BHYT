@@ -130,6 +130,5 @@ namespace BaoHiemYTe.Data
         public DbSet<YeuCauHoanTra> YeuCauHoanTra { get; set; }
         public DbSet<HoaDonHoanTra> HoaDonHoanTra { get; set; }
 
-       
     }
 }

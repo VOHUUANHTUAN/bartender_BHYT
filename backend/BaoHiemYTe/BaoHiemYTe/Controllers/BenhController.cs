@@ -13,10 +13,12 @@ namespace BaoHiemYTe.Controllers
     {
         // GET: api/<GoiBaoHiemController>
         private readonly UserDbContext userDbContext;
+        private readonly TokenService tokenService;
 
-        public BenhController(UserDbContext userDbContext)
+        public BenhController(UserDbContext userDbContext, TokenService tokenService)
         {
             this.userDbContext = userDbContext;
+            this.tokenService = tokenService;
         }
         [HttpGet]
         public IActionResult GetAll()

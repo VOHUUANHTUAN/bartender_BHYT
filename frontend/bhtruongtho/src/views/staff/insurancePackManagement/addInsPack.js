@@ -1,13 +1,14 @@
 import React, { memo, useState, useEffect } from 'react';
-import { getBenhByMaGBH, getGoiBHByMaGBH, getAllBenh, addBenhForGBH, deleteBenhFromBGH, addInsPack, getGoiBHAPI } from "../../../api/connect";
+import { getAllBenh, addBenhForGBH, getGoiBHByNV, addInsPack } from "../../../api/connect";
 import { useUser } from "../../../context/UserContext";
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
-import TableCell, { tableCellClasses } from '@mui/material/TableCell';
+import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import Slider from '@mui/material/Slider';
 import Chip from '@mui/material/Chip';
 import Autocomplete from '@mui/material/Autocomplete';
 import { ROUTERS } from "../../../utils/router";
@@ -18,16 +19,9 @@ import {
   TextField,
   Button,
   Typography,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  InputAdornment,
-  Tabs,
-  Tab,
   Snackbar,
 } from "@mui/material";
-import Box from '@mui/material/Box';
+
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${theme.palette.mode === 'light' ? 'head' : 'body'}`]: {
     backgroundColor: theme.palette.mode === 'light' ? theme.palette.common.black : theme.palette.common.white,
@@ -53,7 +47,6 @@ const AddInsPack = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   //khai báo các biến
-  const [dataGoiBH, setDataGoiBH] = useState(null);
   const [dataBenhByGBH, setDataBenhByGBH] = useState([]);
   const [allBenh, setAllBenh] = useState([]);
   const [selectedValues, setSelectedValues] = useState([]);
@@ -122,6 +115,7 @@ const AddInsPack = () => {
       setSnackbarOpen(true);
       return;
     }
+    const ageText = `Từ ${age[0]}-${age[1]}`;
     // Handle form submission logic here
     setLoading(true);
     const addData = {
@@ -129,18 +123,16 @@ const AddInsPack = () => {
       tenGoiBH: formData.Ten,
       motaGoiBH: formData.Mota,
       gia: formData.Gia,
+      doTuoi: ageText,
       tiLeHoanTien: formData.TiLeHoanTien,
-      thoiHanBaoVe: formData.ThoiHanBaoVe
+      thoiHanBaoVe: formData.ThoiHanBaoVe,
+      tinhTrang: "Đang cung cấp"
     };
 
-    // const currentBenhList = dataBenhByGBH.map((item) => item.tenBenh);
-    // const newBenhs = selectedValues.filter(value => !currentBenhList.includes(value));
 
-    // const removedBenhs = currentBenhList.filter(benh => !selectedValues.includes(benh));
+    const allGBH = await getGoiBHByNV(localStorage.getItem("token"))
+    const lengthOfAllGBH = allGBH.length;
 
-    // // Lấy mã bệnh cho các tên bệnh được chọn
-    // const newBenhsValues = newBenhs.map(mapTenBenhToMaBenh);
-    // const removedBenhsValues = removedBenhs.map(mapTenBenhToMaBenh);
     const listMaBenh = selectedValues.map(mapTenBenhToMaBenh)
     if (listMaBenh.length === 0) {
       setSnackbarMessage('Vui lòng chọn ít nhất một bệnh');
@@ -150,20 +142,15 @@ const AddInsPack = () => {
     try {
       //gọi api post
       //const responseData = await updateInsPack(params.id, updateData)
-      const responseData = await addInsPack(addData)
+      const responseData = await addInsPack(localStorage.getItem("token"), addData)
 
-      const allGBH = await getGoiBHAPI()
-      const lengthOfAllGBH = allGBH.length;
+
 
       //Thực hiện gọi API thêm bệnh cho từng bệnh mới được chọn
       for (const benh of listMaBenh) {
-        await addBenhForGBH(lengthOfAllGBH, benh);
+        await addBenhForGBH(localStorage.getItem("token"), lengthOfAllGBH+1, benh);
       }
 
-      // // Thực hiện gọi API xóa bệnh cho từng bệnh không còn được chọn
-      // for (const removedBenh of removedBenhsValues) {
-      //   await deleteBenhFromBGH(params.id, removedBenh);
-      // }
       //thông báo thành công
       setSnackbarMessage(responseData);
       setSnackbarOpen(true);
@@ -183,6 +170,7 @@ const AddInsPack = () => {
     Ten: '',
     Mota: '',
     Gia: '',
+    DoTuoi: '',
     TiLeHoanTien: '',
     ThoiHanBaoVe: ''
     // ... other fields
@@ -192,6 +180,7 @@ const AddInsPack = () => {
     Ten: 'Tên',
     Mota: 'Mô Tả',
     Gia: 'Giá',
+    DoTuoi: 'Độ Tuổi',
     TiLeHoanTien: 'Tỉ Lệ Hoàn Tiền',
     ThoiHanBaoVe: 'Thời Hạn Bảo Vệ',
 
@@ -288,6 +277,13 @@ const AddInsPack = () => {
     const benh = allBenh.find((item) => item.tenBenh === tenBenh);
     return benh ? benh.maBenh : null;
   };
+  const [age, setAge] = useState([18, 80]);
+
+  const handleSliderChange = (event, newValue) => {
+    setAge(newValue);
+  };
+
+  
 
   return (
     <Container component="main" maxWidth="md">
@@ -322,19 +318,34 @@ const AddInsPack = () => {
                           {fieldNames[fieldName]}
                         </StyledTableCell>
                         <StyledTableCell align="right">
-                          <TextField
-                            variant="outlined"
-                            fullWidth
-                            name={fieldName}
-                            value={value}
-                            onChange={(e) => handleInputChange(e, fieldName)}
-                            error={getError(fieldName)}
-                            helperText={getError(fieldName) && getErrorMessage(fieldName)}
-                          />
+                          {fieldName === 'DoTuoi' ? (
+                            <div style={{ width: '80%' }}>
+                              <Slider
+                                value={age}
+                                onChange={handleSliderChange}
+                                valueLabelDisplay="auto"
+                                valueLabelFormat={(value) => `Độ Tuổi: ${value}`}
+                                aria-labelledby="range-slider"
+                                min={18}
+                                max={80}
+                              />
+                            </div>
+                          ) : (
+                            <TextField
+                              variant="outlined"
+                              fullWidth
+                              name={fieldName}
+                              value={value}
+                              onChange={(e) => handleInputChange(e, fieldName)}
+                              error={getError(fieldName)}
+                              helperText={getError(fieldName) && getErrorMessage(fieldName)}
+                            />
+                          )}
                         </StyledTableCell>
                       </StyledTableRow>
                     ))}
                   </TableBody>
+
                 </Table>
               </TableContainer>
               <div style={{ marginTop: '20px' }}>

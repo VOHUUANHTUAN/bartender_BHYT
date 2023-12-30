@@ -15,10 +15,12 @@ namespace BaoHiemYTe.Controllers
     {
         // GET: api/<GoiBaoHiemController>
         private readonly UserDbContext userDbContext;
+        private readonly TokenService tokenService;
 
-        public ChinhSachController(UserDbContext userDbContext)
+        public ChinhSachController(UserDbContext userDbContext, TokenService tokenService)
         {
             this.userDbContext = userDbContext;
+            this.tokenService = tokenService;
         }
         [HttpGet]
         public IActionResult GetAll()
@@ -55,6 +57,17 @@ namespace BaoHiemYTe.Controllers
         {
             try
             {
+                var tokenService = new TokenService();
+                var username = tokenService.GetUsernameFromToken(HttpContext.Request);
+                if (string.IsNullOrEmpty(username))
+                {
+                    return Unauthorized("Unauthorized: Token is missing or invalid");
+                }
+                var role = tokenService.GetRoleFromToken(HttpContext.Request);
+                if (role != "Nhân viên")
+                {
+                    return Unauthorized("Unauthorized: role is missing or invalid");
+                }
                 var chinhSach = new ChinhSach
                 {
                     MaGoiBH = chinhSachDTO.MaGoiBH,
@@ -79,6 +92,17 @@ namespace BaoHiemYTe.Controllers
         {
             try
             {
+                var tokenService = new TokenService();
+                var username = tokenService.GetUsernameFromToken(HttpContext.Request);
+                if (string.IsNullOrEmpty(username))
+                {
+                    return Unauthorized("Unauthorized: Token is missing or invalid");
+                }
+                var role = tokenService.GetRoleFromToken(HttpContext.Request);
+                if (role != "Nhân viên")
+                {
+                    return Unauthorized("Unauthorized: role is missing or invalid");
+                }
                 var chinhSach = userDbContext.ChinhSach
                 .FirstOrDefault(cs => cs.MaBenh == maBenh && cs.MaGoiBH == maGoiBH) ?? throw new ArgumentException($"ChinhSach with MaBenh {maBenh} and MaGoiBH {maGoiBH} not found");
                 userDbContext.ChinhSach.Remove(chinhSach);

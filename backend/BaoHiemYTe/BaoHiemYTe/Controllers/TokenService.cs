@@ -33,7 +33,7 @@ namespace BaoHiemYTe.Controllers
         public string GetUsernameFromToken(HttpRequest request)
         {
             var authorizationHeader = request.Headers["Authorization"].FirstOrDefault();
-
+            Console.WriteLine("ab" + authorizationHeader);
             if (string.IsNullOrEmpty(authorizationHeader) || !authorizationHeader.StartsWith("Bearer "))
             {
                 return null;
@@ -59,7 +59,14 @@ namespace BaoHiemYTe.Controllers
                 if (principal != null && principal.Identity != null && principal.Identity.IsAuthenticated)
                 {
                     // Lấy username từ thông tin xác thực
-                    return principal.Identity.Name;
+                    //return principal.Identity.Name;
+                    var usernameClaim = principal.FindFirst(ClaimTypes.Name);
+                    // Check if the "role" claim exists
+                    if (usernameClaim != null)
+                    {
+                        // Return the value of the "role" claim
+                        return usernameClaim.Value;
+                    }
                 }
             }
             catch (Exception ex)
