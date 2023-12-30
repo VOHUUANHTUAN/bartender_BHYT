@@ -97,7 +97,7 @@ export const changePasswordAPI = async (username, changePasswordData) => {
         return response;
     } catch (error) {
         //console.error('Error:', error);
-        throw (error);
+        throw error;
     }
 };
 
@@ -217,12 +217,18 @@ export const addBenhForGBH = async (token, MaGoiBH, MaBenh) => {
 export const deleteBenhFromBGH = async (token, maGoiBH, maBenh) => {
     try {
         // Gọi API xóa bệnh khỏi Gói Bảo hiểm
+<<<<<<< Updated upstream
         const response = await axiosClient.delete(`${END_POINT.CHINHSACH}/${maGoiBH}/${maBenh}/delete`,{
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json', // Thêm header Content-Type nếu cần
             },
         });
+=======
+        const response = await axiosClient.delete(
+            `${END_POINT.CHINHSACH}/${maGoiBH}/${maBenh}/delete`
+        );
+>>>>>>> Stashed changes
         return response;
     } catch (error) {
         // Xử lý lỗi nếu cần

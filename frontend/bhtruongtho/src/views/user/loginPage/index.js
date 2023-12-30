@@ -85,21 +85,24 @@ const Login = () => {
 
                 console.log("Login successful.");
 
-                if (localStorage.getItem("firstLogin") == "true") {
+                if (res.firstLogin == "true") {
                     navigate("/PersonalInfo");
                     return;
                 }
-                openSnackbar("Đăng nhập thành công");
+                openSnackbar("Đăng nhập thành công", "success");
                 navigate("/");
             }
         } catch (error) {
+            // openSnackbar("đmm", "error");
             // console.log(error.response.data);
+            // console.log("đmm");
             try {
-                openSnackbar(error.response.data);
+                openSnackbar(error.response.data, "error");
             } catch {
                 openSnackbar("Có lỗi xảy ra khi kết nối với máy chủ");
             }
         }
+        // openSnackbar("đmm", "error");
     };
 
     return (
