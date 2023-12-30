@@ -39,64 +39,7 @@ const AuthGuard = ({ component: Component, loginRequired }) => {
     //Nếu loginRequired=true và Không_Có_Koken
     if (loginRequired && !localStorage.getItem("token")) {
         return <Navigate to={`/${ROUTERS.USER.LOGIN}`} />;
-    } else if (user && user.firstLogin) {
-        console.log(user);
-        // return <Navigate to={`/${ROUTERS.USER.PERSONALINFO}`} />;
     }
-
-    console.log("ủa");
-    // Render the component if login is not required or the user is authenticated
-    // async function kiemTraCacThongTinDangNhap(token) {
-    //     try {
-    //         const response = await getUserInfoByToken(token);
-
-    //         if (response) {
-    //             //Nếu token sử dụng được
-    //             logout();
-    //             login({
-    //                 username: response.username,
-    //                 token: token,
-    //                 firstLogin: response.firstLogin,
-    //                 role: response.role,
-    //             });
-
-    //             if (response.firstLogin == true) {
-    //                 // navigate("/PersonalInfo");
-    //                 openSnackbar("Vui lòng điền thông tin cá nhân", "warning");
-    //                 console.log("trước khi return 0");
-
-    //                 // return "đăng nhập lần đầu";
-    //                 return <Navigate to={`/${ROUTERS.USER.PERSONALINFO}`} />;
-    //             }
-    //             // return true;//
-    //             else {
-    //                 return null;
-    //             }
-    //             return null;
-    //         } else {
-    //             //Nếu token không sử dụng được
-    //             localStorage.clear();
-    //             logout();
-    //             console.log("Login fail1");
-    //             // navigate("/Login");
-    //             // return "token không sử dụng được";
-    //             return <Navigate to={`/${ROUTERS.USER.LOGIN}`} />;
-    //             // return false;
-    //         }
-    //     } catch (error) {
-    //         //Nếu bị lỗi gì đó
-
-    //         console.log("catch");
-    //         console.log(error);
-    //         // logout();
-    //         // localStorage.clear();
-    //         console.log("Login fail2");
-    //         // navigate("/");
-    //         // return "lỗi tùm lum";
-    //         return <Navigate to={`/${ROUTERS.USER.LOGIN}`} />;
-    //         // return false;
-    //     }
-    // }
 
     return Component;
 };
