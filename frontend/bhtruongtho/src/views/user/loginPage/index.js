@@ -85,10 +85,6 @@ const Login = () => {
 
                 console.log("Login successful.");
 
-                if (res.firstLogin == "true") {
-                    navigate("/PersonalInfo");
-                    return;
-                }
                 openSnackbar("Đăng nhập thành công", "success");
                 navigate("/");
             }

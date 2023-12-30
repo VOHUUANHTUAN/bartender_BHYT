@@ -1,4 +1,5 @@
 ﻿using BaoHiemYTe.Data;
+using BaoHiemYTe.Domain;
 using BaoHiemYTe.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -367,9 +368,6 @@ namespace BaoHiemYTe.Controllers
                 return StatusCode(500, $"Lỗi: {ex.Message}");
             }
         }
-
-
-
 
 
 

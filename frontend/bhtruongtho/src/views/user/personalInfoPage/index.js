@@ -12,7 +12,8 @@ import {
     TextField,
     Button,
     Paper,
-    Snackbar,
+    Select,
+    MenuItem,
     Grid,
     FormControl,
     InputLabel,
@@ -28,7 +29,7 @@ import { useSnackbar } from "../../../context/SnackbarContext";
 
 const ChangeInformation = () => {
     const { user, login, setUser } = useUser(); // Assuming this provides the user data
-
+    const { openSnackbar } = useSnackbar();
     // Initialize SoDu and username from user data
     const [soDu, setSoDu] = useState(0);
     const [username, setUsername] = useState("");
@@ -39,24 +40,17 @@ const ChangeInformation = () => {
     const [ngaySinh, setNgaySinh] = useState("");
     const [soDienThoai, setSoDienThoai] = useState("");
     const [email, setEmail] = useState("");
-    const [snackbarOpen, setSnackbarOpen] = useState(false);
-    const [snackbarMessage, setSnackbarMessage] = useState("");
 
-    const callAsyncFunction = async (khachHangData) => {
+    const goiAPICapNhatDuLieu = async (khachHangData) => {
         try {
             const token = localStorage.getItem("token");
             var response = await updateKhachHangInformation(
                 token,
                 khachHangData
             );
-            // console.log("khachhang");
-            // console.log(khachHangData);
-            setSnackbarMessage(response);
-            setSnackbarOpen(true);
-            setUsername(response.username);
+            openSnackbar(response, "success");
         } catch (error) {
-            setSnackbarMessage(error.response.data);
-            setSnackbarOpen(true);
+            openSnackbar(error.response.data, "error");
         }
     };
 
@@ -64,24 +58,23 @@ const ChangeInformation = () => {
         fetchData();
     }, []); // Empty dependency array ensures the effect runs only once on mount
 
+    //Load dữ liệu và gán vào các ô
     const fetchData = async () => {
         try {
             const token = localStorage.getItem("token");
             const khachHangData = await getKhachHangInformation(token);
-            console.log(khachHangData);
 
+            // console.log(khachHangData);
             // Initialize state variables from the fetched data
             if (khachHangData) {
                 setHoTen(khachHangData.hoTen || "");
                 setDiaChi(khachHangData.diaChi || "");
                 setSoDienThoai(khachHangData.sdt || "");
                 setEmail(khachHangData.email || "");
-                setSoDu(khachHangData.soDu + " VND" || "");
-                setUsername(khachHangData.username || "");
+                setSoDu(formatCurrency(khachHangData.soDu) || "");
                 setCCCD(khachHangData.cccd || "");
                 setGioiTinh(khachHangData.gioiTinh || "");
                 setNgaySinh(dayjs(khachHangData.ngaySinh) || "");
-                // Do not update SoDu and username as they should remain constant
             }
             const res = await getUserInfoByToken(token);
             if (res) {
@@ -92,17 +85,27 @@ const ChangeInformation = () => {
                     auth: true,
                     role: res.role,
                 });
+                setUsername(res.username);
             }
         } catch (error) {
             console.error("Error fetching user information", error);
         }
     };
+    const formatCurrency = (amount) => {
+        const formattedAmount = new Intl.NumberFormat("vi-VN", {
+            style: "currency",
+            currency: "VND",
+        }).format(amount);
+
+        return formattedAmount;
+    };
     const handleSaveInformation = () => {
         // Kiểm tra định dạng
         try {
-            if (!validateFormat()) {
+            var mes = validateFormat();
+            if (mes) {
                 // Hiển thị thông báo nếu có lỗi định dạng
-                setSnackbarOpen(true);
+                openSnackbar(mes, "warning");
                 return;
             }
             // Tạo đối tượng chứa thông tin để gửi xuống API
@@ -111,51 +114,54 @@ const ChangeInformation = () => {
                 diaChi: diaChi,
                 SDT: soDienThoai,
                 email: email,
-                soDu: soDu, // Include SoDu from the state
-                username: username, // Include username from the state
                 cccd: CCCD,
                 gioiTinh: gioiTinh,
                 ngaySinh: dayjs(ngaySinh).format("YYYY-MM-DDTHH:mm:ss.SSS[Z]"),
                 // Do not
             };
+
             console.log(informationData);
-            // console.log(informationData);
-            callAsyncFunction(informationData);
-            fetchData();
+            goiAPICapNhatDuLieu(informationData);
+            console.log("Đã cập nhật");
+            // fetchData();
+            // console.log("Đã fetch");
         } catch {
             console.log("lỗi r");
         }
     };
-
+    const gioiTinhHandleChange = (e) => {
+        setGioiTinh(e.target.value);
+    };
     const validateFormat = () => {
         // Kiểm tra định dạng email
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
             // Hiển thị thông báo hoặc thực hiện xử lý khi định dạng không đúng
-            setSnackbarMessage("Định dạng email không đúng");
-            return false;
+            return "Định dạng email không đúng";
         }
 
         // Kiểm tra định dạng số điện thoại
         const phoneRegex = /^[0-9]{10}$/;
         if (!phoneRegex.test(soDienThoai)) {
             // Hiển thị thông báo hoặc thực hiện xử lý khi định dạng không đúng
-            setSnackbarMessage("Định dạng số điện thoại không đúng");
+            return "Định dạng số điện thoại không đúng";
+            return false;
+        } // Kiểm tra định dạng số điện thoại
+        const CCCDRegex = /^[0-9]{12}$/;
+        if (!CCCDRegex.test(CCCD)) {
+            // Hiển thị thông báo hoặc thực hiện xử lý khi định dạng không đúng
+            return "Định dạng CCCD không đúng";
             return false;
         }
 
         // Kiểm tra tên không được trống
         if (!hoTen) {
-            setSnackbarMessage("Tên không được để trống");
+            return "Tên không được để trống";
             return false;
         }
 
         // Nếu tất cả định dạng đều đúng, trả về true
-        return true;
-    };
-
-    const handleSnackbarClose = () => {
-        setSnackbarOpen(false);
+        return null;
     };
 
     return (
@@ -203,15 +209,27 @@ const ChangeInformation = () => {
                     </Grid>
                     <Grid container spacing={2}>
                         <Grid item xs={6}>
-                            <TextField
-                                label="Giới tính"
+                            <FormControl
+                                fullWidth
                                 variant="outlined"
                                 margin="normal"
-                                fullWidth
                                 required
-                                value={gioiTinh}
-                                onChange={(e) => setGioiTinh(e.target.value)}
-                            />
+                            >
+                                <InputLabel id="gioiTinh-label">
+                                    Giới tính
+                                </InputLabel>
+                                <Select
+                                    labelId="gioiTinh-label"
+                                    id="gioiTinh"
+                                    value={gioiTinh}
+                                    label="Giới tính"
+                                    onChange={gioiTinhHandleChange}
+                                >
+                                    <MenuItem value="Nam">Nam</MenuItem>
+                                    <MenuItem value="Nữ">Nữ</MenuItem>
+                                    {/* Add more options as needed */}
+                                </Select>
+                            </FormControl>
                         </Grid>
                         <Grid item xs={6} dateAdapter={AdapterDayjs}>
                             <FormControl
@@ -293,13 +311,6 @@ const ChangeInformation = () => {
                     </Button>
                 </form>
             </Paper>
-            <Snackbar
-                open={snackbarOpen}
-                autoHideDuration={2000}
-                onClose={handleSnackbarClose}
-                message={snackbarMessage}
-                anchorOrigin={{ vertical: "top", horizontal: "right" }}
-            />
         </Container>
     );
 };

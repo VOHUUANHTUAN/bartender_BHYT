@@ -142,7 +142,7 @@ namespace BaoHiemYTe.Controllers
                         _dbContext.TinhTrangBenh.Add(tinhTrangBenh);
                     }
 
-                   
+
 
                     await _dbContext.SaveChangesAsync();
                     transaction.Commit();

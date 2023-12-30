@@ -33,7 +33,10 @@ const Header = () => {
 
     useEffect(() => {
         // Kiểm tra xem có thông tin người dùng trong local storage không
-        getUserInfo(localStorage.getItem("token"));
+        // getUserInfo(localStorage.getItem("token"));
+        if (user && user.firstLogin) {
+            navigate("/PersonalInfo");
+        }
     }, []);
 
     const getUserInfo = async (token) => {
@@ -65,6 +68,7 @@ const Header = () => {
             console.log(error.message);
         }
     };
+
     const [menus, setMenus] = useState([
         {
             name: "Trang chủ",

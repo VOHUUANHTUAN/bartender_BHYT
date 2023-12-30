@@ -46,8 +46,6 @@ namespace BaoHiemYTe.Controllers
                     {
                         MaKH = existingKhachHang.MaKH,
                         HoTen = existingKhachHang.HoTen,
-                        NgaySinh = existingKhachHang.NgaySinh,
-                        GioiTinh = existingKhachHang.GioiTinh,
                         CCCD = existingKhachHang.CCCD,
                         DiaChi = existingKhachHang.DiaChi,
                         SDT = existingKhachHang.SDT,
@@ -55,7 +53,6 @@ namespace BaoHiemYTe.Controllers
                         SoDu = existingKhachHang.SoDu,
                         NgaySinh = existingKhachHang.NgaySinh,
                         GioiTinh = existingKhachHang.GioiTinh,
-                        CCCD = existingKhachHang.CCCD,
                         username = username_
                     };
 

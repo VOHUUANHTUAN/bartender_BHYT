@@ -28,19 +28,94 @@ import YeuCauHoanTraDetail from "./views/user/CapNhatYeuCauHoanTra/detailycht.js
 import Invoice from "./views/user/invoicePage";
 import { useEffect } from "react";
 import { dayCalendarSkeletonClasses } from "@mui/x-date-pickers";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { getUserInfoByToken } from "./api/connect";
+import { useSnackbar } from "./context/SnackbarContext";
 
 const AuthGuard = ({ component: Component, loginRequired }) => {
+    const { user, login, logout } = useUser();
+    const { openSnackbar } = useSnackbar();
+
+    //Nếu loginRequired=true và Không_Có_Koken
     if (loginRequired && !localStorage.getItem("token")) {
-        // Redirect to login if login is required and the user is not authenticated
         return <Navigate to={`/${ROUTERS.USER.LOGIN}`} />;
+    } else if (user && user.firstLogin) {
+        console.log(user);
+        // return <Navigate to={`/${ROUTERS.USER.PERSONALINFO}`} />;
     }
 
+    console.log("ủa");
     // Render the component if login is not required or the user is authenticated
+    // async function kiemTraCacThongTinDangNhap(token) {
+    //     try {
+    //         const response = await getUserInfoByToken(token);
+
+    //         if (response) {
+    //             //Nếu token sử dụng được
+    //             logout();
+    //             login({
+    //                 username: response.username,
+    //                 token: token,
+    //                 firstLogin: response.firstLogin,
+    //                 role: response.role,
+    //             });
+
+    //             if (response.firstLogin == true) {
+    //                 // navigate("/PersonalInfo");
+    //                 openSnackbar("Vui lòng điền thông tin cá nhân", "warning");
+    //                 console.log("trước khi return 0");
+
+    //                 // return "đăng nhập lần đầu";
+    //                 return <Navigate to={`/${ROUTERS.USER.PERSONALINFO}`} />;
+    //             }
+    //             // return true;//
+    //             else {
+    //                 return null;
+    //             }
+    //             return null;
+    //         } else {
+    //             //Nếu token không sử dụng được
+    //             localStorage.clear();
+    //             logout();
+    //             console.log("Login fail1");
+    //             // navigate("/Login");
+    //             // return "token không sử dụng được";
+    //             return <Navigate to={`/${ROUTERS.USER.LOGIN}`} />;
+    //             // return false;
+    //         }
+    //     } catch (error) {
+    //         //Nếu bị lỗi gì đó
+
+    //         console.log("catch");
+    //         console.log(error);
+    //         // logout();
+    //         // localStorage.clear();
+    //         console.log("Login fail2");
+    //         // navigate("/");
+    //         // return "lỗi tùm lum";
+    //         return <Navigate to={`/${ROUTERS.USER.LOGIN}`} />;
+    //         // return false;
+    //     }
+    // }
+
     return Component;
 };
+
 const RouterCustom = () => {
+    const location = useLocation();
+    const { user } = useUser();
+    const navigate = useNavigate();
+
+    //Mỗi khi có đường dẫn thay đổi thì kiểm tra
+    useEffect(() => {
+        // Hành động mà bạn muốn thực hiện khi đường dẫn thay đổi
+        console.log("Đường dẫn đã thay đổi:", location.pathname);
+        if (user && user.firstLogin) {
+            navigate("/PersonalInfo");
+        }
+        // kiemTraCacThongTinDangNhap(localStorage.getItem("token"));
+    }, [location.pathname]);
+
     const userRouters = [
         {
             path: ROUTERS.USER.HOME,
@@ -71,7 +146,6 @@ const RouterCustom = () => {
         },
         {
             path: ROUTERS.USER.CHANGEPASSWORD,
-
             component: <ChangePassword />,
             loginRequired: true,
         },
@@ -94,10 +168,12 @@ const RouterCustom = () => {
         {
             path: ROUTERS.USER.PERSONALINFO,
             component: <PersonalInfo />,
+            loginRequired: true,
         },
         {
             path: ROUTERS.USER.INSURANCEREGISTRATION,
             component: <InsuranceRegistration />,
+            loginRequired: true,
         },
         {
             path: ROUTERS.USER.DONDANGKY,
@@ -121,47 +197,6 @@ const RouterCustom = () => {
             component: <Invoice />,
         },
     ];
-    const location = useLocation();
-    const { user, login, logout } = useUser();
-
-    const getUserInfo = async (token) => {
-        try {
-            const response = await getUserInfoByToken(token);
-            if (response) {
-                logout();
-                login({
-                    username: response.username,
-                    token: token,
-                    firstLogin: response.firstLogin,
-                    role: response.role,
-                });
-                localStorage.clear();
-                localStorage.setItem("token", token);
-                console.log("Login successful");
-            } else {
-                localStorage.clear();
-                <Navigate to={`/${ROUTERS.USER.LOGIN}`} />;
-                console.log("Login fail");
-
-                logout();
-            }
-        } catch (error) {
-            localStorage.clear();
-            console.log("Login fail");
-            logout();
-            <Navigate to={`/${ROUTERS.USER.LOGIN}`} />;
-            console.log(error.message);
-        }
-    };
-
-    useEffect(() => {
-        // Hành động mà bạn muốn thực hiện khi đường dẫn thay đổi
-        // getUserInfo(localStorage.getItem("token"));
-        console.log("Đường dẫn đã thay đổi:", location.pathname);
-        // console.log("loginRequired:", userRouters.loginRequired);
-
-        // Thêm các hành động cần thực hiện ở đây...
-    }, [location.pathname]);
 
     return (
         <MasterLayout>
@@ -170,8 +205,14 @@ const RouterCustom = () => {
                     <Route
                         key={key}
                         path={item.path}
-                        element={item.component}
+                        // element={item.component}
                         // element={<AuthGuard item.component item.loginRequired  />}
+                        element={
+                            <AuthGuard
+                                component={item.component}
+                                loginRequired={item.loginRequired}
+                            />
+                        }
                     />
                 ))}
                 <Route
