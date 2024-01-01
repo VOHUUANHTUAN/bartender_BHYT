@@ -19,6 +19,7 @@ import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
 import { getUserInfoByToken } from "../../../../api/connect";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
+import ReceiptIcon from "@mui/icons-material/Receipt";
 const Header = () => {
     const navigate = useNavigate();
 
@@ -74,17 +75,7 @@ const Header = () => {
         {
             name: "Sản phẩm",
             path: ROUTERS.USER.PRODUCT,
-            // isShowSubMenu: false,
-            // child: [
-            //     {
-            //         name: "Bảo hiểm sức khỏe",
-            //         path: ROUTERS.USER.HOME,
-            //     },
-            //     {
-            //         name: "Bảo hiểm nhân thọ",
-            //         path: ROUTERS.USER.HOME,
-            //     },
-            // ],
+
         },
         {
             name: "Tin tức",
@@ -259,6 +250,14 @@ const Header = () => {
                                                 </Link>
                                             </MenuItem>
                                             <Divider />
+                                            <MenuItem onClick={handleClose}>
+                                                <ListItemIcon>
+                                                    <ReceiptIcon  fontSize="small" />
+                                                </ListItemIcon>
+                                                <Link to="/pay">
+                                                    Hóa đơn đăng ký
+                                                </Link>
+                                            </MenuItem>
                                             <MenuItem onClick={handleClose}>
                                                 <ListItemIcon>
                                                     <LockIcon fontSize="small" />

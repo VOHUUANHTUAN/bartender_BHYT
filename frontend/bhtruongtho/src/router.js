@@ -18,7 +18,8 @@ import Profile from "./views/user/profilePage/index.js";
 import Pay from "./views/user/payPage/index.js";
 import PaidDetail from "./views/user/payPage/paidDetail.js";
 import UnPaidDetail from "./views/user/payPage/unpaidDetail.js";
-
+import InfoCustomer from "./views/user/infoCustomer";
+import FinancialReport from "./views/user/financialReport";
 import InsurancePack from "./views/staff/insurancePackManagement/index.js";
 import InsPackDetailPage from "./views/staff/insurancePackManagement/insPackMDetail.js";
 import AddInsPack from "./views/staff/insurancePackManagement/addInsPack.js";
@@ -88,57 +89,69 @@ const RouterCustom = () => {
         },
         {
             path: ROUTERS.USER.CHANGEPASSWORD,
-            component: <ChangePassword />,
-            loginRequired: true,
-        },
-        {
-            path: ROUTERS.USER.PAY,
-            component: <Pay />,
-            loginRequired: true,
-        },
-        {
-            path: ROUTERS.USER.STAFF,
-            component: <HomePageStaff />,
-            loginRequired: false,
-        },
-        {
-            path: ROUTERS.USER.REQUESTINVOICE,
-            component: <RequestInvoicePage />,
-            loginRequired: true,
-        },
-        {
-            path: ROUTERS.USER.PROFILE,
-            component: <Profile />,
-            loginRequired: true,
-        },
-        {
-            path: `${ROUTERS.USER.INSURANCEREGISTRATION}/:id`,
-            component: <InsuranceRegistration />,
-            loginRequired: true,
-        },
-        {
-            path: ROUTERS.USER.DONDANGKY,
-            component: <ListDonDangKy />,
-        },
-        {
-            path: ROUTERS.USER.INSURANCEPACKM,
-            component: <InsurancePack />,
-        },
-        {
-            path: ROUTERS.USER.ADDINSPACK,
-            component: <AddInsPack />,
-        },
-        {
-            path: ROUTERS.USER.YEUCAUHOANTRA,
-            component: <ListYeuCauHoanTra />,
-        },
+
+
+			component: <ChangePassword />,
+			loginRequired: true,
+		},
+		{
+			path: ROUTERS.USER.PAY,
+
+			component: <Pay />,
+			loginRequired: true,
+		},
+		{
+			path: ROUTERS.USER.STAFF,
+			component: <HomePageStaff />,
+			loginRequired: false,
+		},
+		{
+			path: ROUTERS.USER.REQUESTINVOICE,
+			component: <RequestInvoicePage />,
+			loginRequired: true,
+		},
+		{
+			path: ROUTERS.USER.PERSONALINFO,
+			component: <PersonalInfo />,
+		},
+		{
+			path: ROUTERS.USER.INSURANCEREGISTRATION,
+			component: <InsuranceRegistration />,
+		},
+		{
+			path: ROUTERS.USER.DONDANGKY,
+			component: <ListDonDangKy />,
+		},
+		{
+			path: ROUTERS.USER.INSURANCEPACKM,
+			component: <InsurancePack />,
+		},
+		{
+			path: ROUTERS.USER.ADDINSPACK,
+			component: <AddInsPack />,
+		},
+		{
+			path: ROUTERS.USER.YEUCAUHOANTRA,
+			component: <ListYeuCauHoanTra />,
+		},
 
         {
             path: ROUTERS.USER.TRANSACTION,
             component: <Transactions />,
             loginRequired: true,
         },
+        {
+			path: ROUTERS.USER.INFOCUSTOMER,
+			component: <InfoCustomer />,
+			loginRequired: true,
+		},
+        {
+			path: ROUTERS.USER.FINANCIALREPORT,
+			component: <FinancialReport />,
+			loginRequired: true,
+		},
     ];
+
 
     return (
         <MasterLayout>

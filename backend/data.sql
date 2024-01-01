@@ -41,7 +41,7 @@ VALUES
     (N'Gói Bảo Hiểm Premium', N'Lựa chọn cho sự đảm bảo tối đa và lợi ích cao cấp. Bảo vệ tốt nhất cho bạn và gia đình.', N'Từ 18-60', 3000000, 40, 1, N'Đang cung cấp'),
     (N'Gói Bảo Hiểm Platinum', N'Đẳng cấp và sự sang trọng. Bảo vệ với các lợi ích cao cấp và đặc quyền riêng biệt.', N'Từ 18-60', 4500000, 50, 1, N'Đang cung cấp'),
     (N'Gói Bảo Hiểm Học Sinh - Sinh Viên', N'Tự do học tập mà không lo lắng. Bảo vệ toàn diện cho học sinh và sinh viên với chi phí hợp lý.', N'Từ 18-22', 1200000, 40, 1, N'Đang cung cấp'),
-    (N'Gói Bảo Hiểm Doanh Nhân', N'Đối tác chiến lược cho sự phát triển kinh doanh. Bảo hiểm cho doanh nhân thông thái.', N'Từ 18-60', 1800000, 40, 3, N'Đang cung cấp'),
+    (N'Gói Bảo Hiểm Doanh Nhân', N'Đối tác chiến lược cho sự phát triển kinh doanh. Bảo hiểm cho doanh nhân thông thái.', N'Từ 18-60', 1800000, 40, 1, N'Đang cung cấp'),
     (N'Gói Bảo Hiểm Gia Đình Nhỏ', N'Bảo vệ toàn diện cho mọi thành viên trong gia đình. Phù hợp cho gia đình 3 thành viên. Người đăng ký sẽ là người đại diện mua cho cả gia đình.', N'Từ 18-60', 5100000, 40, 1, N'Đang cung cấp'),
     (N'Gói Bảo Hiểm Cá Nhân', N'Lựa chọn linh hoạt cho nhu cầu cá nhân. An tâm với sự bảo vệ phù hợp với bạn.', N'Từ 18-60', 2700000, 35, 1, N'Đang cung cấp'),
     (N'Gói Bảo Mạo Hiểm', N'Tối ưu hóa bảo vệ với phí cao cấp. Lựa chọn dành cho những người thích khám phá thế giới, thích những thử thách, hay tham gia các trò chơi mạo hiểm.', N'Từ 18-60', 3300000, 60, 1, N'Đang cung cấp'),
@@ -182,7 +182,11 @@ VALUES
 	(4500000, '2024-01-06 09:00:00',  '1/2', N'Chưa thanh toán', 0, NULL, 4500000, NULL, 9),
 	(1500000, '2024-01-17 15:11:00', '1/1', N'Chưa thanh toán', 0, NULL, 1500000, NULL, 10),
 	(1800000, '2024-01-02 13:17:00', '1/1', N'Chưa thanh toán', 0, NULL, 1800000, NULL, 11);
-	
+--	select* from HoaDonThanhToanDK
+--	update HoaDonThanhToanDK set TienPhat=0 where MaHD=15
+--delete from HoaDonThanhToanDK where MaHD=14
+INSERT INTO HoaDonThanhToanDK (SoTien, ThoiGianHetHan, HanKy, TinhTrangThanhToan,TienPhat,LiDoPhat,TongTien, ThoiGianThanhToan, MaDonDK)
+VALUES   (1800000, '2023-12-27 16:11:00', '1/1', N'Chưa thanh toán', 0, NULL, 1800000, NULL, 7);
 
 Insert into TinhTrangBenh (MaDonDK,MaBenh,TinhTrang) values
 (12,2,N'Không'),
@@ -281,3 +285,7 @@ VALUES
 (30000,'2023-10-04 08:30:00',2),
 (30000,'2023-11-08 08:30:00',3),
 (30000,'2023-11-08 09:30:00',4);
+
+INSERT INTO HoaDonHoanTra (SoTien,ThoiGianTao,MaYC)
+VALUES 
+(600000,'2024-01-01 09:30:00',4);

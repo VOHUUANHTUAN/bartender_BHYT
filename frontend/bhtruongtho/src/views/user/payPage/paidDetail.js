@@ -17,6 +17,7 @@ const PaidDetail = () => {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
 	const [showDetails, setShowDetails] = useState(false);
+	const [showReason, setShowReason] = useState(false);
 	//hàm format định dạng thời gian Output: 04/10/2023 08:30
 	function formatDateTime(dateTimeString) {
 		const options = { year: "numeric", month: "2-digit", day: "2-digit" };
@@ -53,7 +54,9 @@ const PaidDetail = () => {
 	const handleToggleDetails = () => {
 		setShowDetails(!showDetails);
 	};
-
+	const handleToggleReason = () => {
+		setShowReason(!showReason);
+	};
 	return (
 		<Container component="main" maxWidth="md">
 			<Paper
@@ -109,7 +112,7 @@ const PaidDetail = () => {
 								<Grid container spacing={2}>
 									<Grid item xs={4}>
 										<TextField
-											label="Tổng giá"
+											label="Giá gói"
 											value={`${detail.gia} VND`}
 											fullWidth
 											InputProps={{
@@ -188,24 +191,41 @@ const PaidDetail = () => {
 										/>
 									</Grid>
 								</Grid>
-								<TextField
-									label="Lựa chọn thanh toán"
-									value={detail.luaChonThanhToan}
-									fullWidth
-									InputProps={{
-										readOnly: true,
-									}}
-									style={{ marginTop: "20px" }}
-								/>
-								<TextField
-									label="Tình trạng gói bảo hiểm"
-									value={detail.tinhTrang}
-									fullWidth
-									InputProps={{
-										readOnly: true,
-									}}
-									style={{ marginTop: "20px" }}
-								/>
+								<Grid container spacing={2}>
+									<Grid item xs={4}>
+										<TextField
+											label="Số kỳ hạn thanh toán/năm"
+											value={detail.soKyHanThanhToan}
+											fullWidth
+											InputProps={{
+												readOnly: true,
+											}}
+											style={{ marginTop: "20px" }}
+										/>
+									</Grid>
+									<Grid item xs={4}>
+										<TextField
+											label="Tổng giá đơn"
+											value={detail.tongGia}
+											fullWidth
+											InputProps={{
+												readOnly: true,
+											}}
+											style={{ marginTop: "20px" }}
+										/>
+									</Grid>
+									<Grid item xs={4}>
+										<TextField
+											label="Tình trạng gói bảo hiểm"
+											value={detail.tinhTrang}
+											fullWidth
+											InputProps={{
+												readOnly: true,
+											}}
+											style={{ marginTop: "20px" }}
+										/>
+									</Grid>
+								</Grid>
 								{/* Đường kẻ giữa phần xổ ra và phần hiện sẵn */}
 
 								{/* Đường kẻ giữa phần xổ ra và phần hiện sẵn */}
@@ -227,6 +247,9 @@ const PaidDetail = () => {
 							fullWidth
 							InputProps={{
 								readOnly: true,
+								style: {
+									color: "green",
+								},
 							}}
 							style={{ marginTop: "20px" }}
 						/>
@@ -248,6 +271,74 @@ const PaidDetail = () => {
 							}}
 							style={{ marginTop: "20px" }}
 						/>
+						{/* Thêm điều kiện để hiển thị "Lí do phạt" khi bấm vào "Tiền phạt" */}
+						<TextField
+							label="Tiền phạt"
+							value={`${detail.tienPhat || 0} VND`}
+							fullWidth
+							InputProps={{
+								readOnly: true,
+								style: {
+									color:
+										detail.tienPhat !== 0
+											? "red"
+											: "inherit",
+									cursor:
+										detail.tienPhat !== 0
+											? "pointer"
+											: "auto",
+								},
+								onClick:
+									detail.tienPhat !== 0
+										? handleToggleReason
+										: undefined,
+								endAdornment: (
+									<InputAdornment position="end">
+										<ExpandMoreIcon
+											color="primary" // Thêm màu cho icon
+											style={{ cursor: "pointer" }} // Tùy chỉnh kiểu cursor
+											onClick={handleToggleReason}
+										/>
+									</InputAdornment>
+								),
+							}}
+							style={{ marginTop: "20px" }}
+						/>
+
+						{showReason && (
+							<div
+								style={{
+									marginTop: "20px",
+									padding: "10px",
+									border: "2px solid #2196F3",
+								}}
+							>
+								<TextField
+									label="Lí do phạt"
+									value={detail.liDoPhat || "Không có"}
+									fullWidth
+									InputProps={{
+										readOnly: true,
+									}}
+									style={{ marginTop: "20px" }}
+								/>
+							</div>
+						)}
+
+						{/* Điều kiện màu xanh lá cho "Tổng tiền" */}
+						<TextField
+							label="Tổng tiền"
+							value={`${detail.tongTien || 0} VND`}
+							fullWidth
+							InputProps={{
+								readOnly: true,
+								style: {
+									color: "green",
+								},
+							}}
+							style={{ marginTop: "20px" }}
+						/>
+
 						<Button
 							variant="contained"
 							color="primary"
