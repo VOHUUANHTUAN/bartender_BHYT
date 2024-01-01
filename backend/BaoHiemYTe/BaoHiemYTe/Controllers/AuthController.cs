@@ -51,7 +51,7 @@ namespace BaoHiemYTe.Controllers
 
                 var response = new
                 {
-                    Token = tokenService.GenerateJwtToken(model.Username),
+                    Token = tokenService.GenerateJwtToken(model.Username, user.role),
                     FirstLogin = user.FirstLogin,
                     role = user.role,
                     username = model.Username,

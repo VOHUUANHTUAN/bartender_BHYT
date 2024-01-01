@@ -26,6 +26,7 @@ namespace BaoHiemYTe.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<DonDangKyDTO>>> GetAll()
         {
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -34,6 +35,15 @@ namespace BaoHiemYTe.Controllers
             // Check for the presence and validity of the token
             var tokenService = new TokenService();
             var username = tokenService.GetUsernameFromToken(HttpContext.Request);
+            if (string.IsNullOrEmpty(username))
+            {
+                return Unauthorized("Unauthorized: Token is missing or invalid");
+            }
+            var role = tokenService.GetRoleFromToken(HttpContext.Request);
+            if (role != "Nhân viên")
+            {
+                return Unauthorized("Unauthorized: role is missing or invalid");
+            }
             if (string.IsNullOrEmpty(username))
             {
                 return Unauthorized("Unauthorized: Token is missing or invalid");
@@ -58,7 +68,10 @@ namespace BaoHiemYTe.Controllers
                 MaNV = d.MaNV,
                 KhachHang = d.KhachHang,
                 GoiBaoHiem = d.GoiBaoHiem,
-                NhanVien = d.NhanVien
+                NhanVien = d.NhanVien,
+                LiDoTuChoi = d.LiDoTuChoi,
+                ThoiGianDuyet = d.ThoiGianDuyet ?? default(DateTime),
+
             });
 
             return Ok(donDangKyDTOs);
@@ -80,6 +93,11 @@ namespace BaoHiemYTe.Controllers
             {
                 return Unauthorized("Unauthorized: Token is missing or invalid");
             }
+            var role = tokenService.GetRoleFromToken(HttpContext.Request);
+            if (role != "Nhân viên")
+            {
+                return Unauthorized("Unauthorized: role is missing or invalid");
+            }
             var donDangKy = await _dbContext.DonDangKy
                 .Include(d => d.KhachHang)
                 .Include(d => d.GoiBaoHiem)
@@ -100,6 +118,7 @@ namespace BaoHiemYTe.Controllers
                 ThoiGianHetHan = donDangKy.ThoiGianHetHan,
                 TinhTrang = donDangKy.TinhTrang,
                 SoKyHanThanhToan = donDangKy.SoKyHanThanhToan,
+                ThoiGianDuyet = donDangKy.ThoiGianDuyet ?? default(DateTime),
                 TongGia = donDangKy.TongGia,
                 MaKH = donDangKy.MaKH,
                 MaNV = donDangKy.MaNV,
@@ -217,7 +236,11 @@ namespace BaoHiemYTe.Controllers
             {
                 return Unauthorized("Unauthorized: Token is missing or invalid");
             }
-
+            var role = tokenService.GetRoleFromToken(HttpContext.Request);
+            if (role != "Nhân viên")
+            {
+                return Unauthorized("Unauthorized: role is missing or invalid");
+            }
             var donDangKy = await _dbContext.DonDangKy
                 .Include(d => d.NhanVien)
                 .FirstOrDefaultAsync(d => d.MaDonDK == id);
@@ -231,8 +254,8 @@ namespace BaoHiemYTe.Controllers
             // Update DonDangKy properties
             donDangKy.TinhTrang = updateDto.TinhTrang;
             donDangKy.MaNV = updateDto.MaNV;
-            donDangKy.ThoiGianBD = updateDto.ThoiGianBD;
-            donDangKy.ThoiGianHetHan = updateDto.ThoiGianHetHan;
+            donDangKy.LiDoTuChoi = updateDto.LiDoTuChoi;
+            donDangKy.ThoiGianDuyet = updateDto.ThoiGianDuyet;
 
             // Update NhanVien properties if NhanVien is not null
             if (donDangKy.NhanVien != null)

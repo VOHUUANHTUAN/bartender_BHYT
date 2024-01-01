@@ -1,21 +1,23 @@
 import React, { memo, useState, useEffect } from 'react';
-import { getDonDangKyList } from '../../../api/connect';
 import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
 import { Link } from 'react-router-dom';
 import Button from '@mui/material/Button';
+import dayjs from 'dayjs';
 
+import { getDonDangKyList } from '../../../api/connect';
 
-import "./style.scss"
+import './style.scss';
 
 const ListDonDangKy = () => {
   const [loading, setLoading] = useState(true);
   const [donDangKyList, setDonDangKyList] = useState([]);
   const [selectedIds, setSelectedIds] = useState([]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await getDonDangKyList(localStorage.getItem("token"));
+        const data = await getDonDangKyList(localStorage.getItem('token'));
         setDonDangKyList(data);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -27,43 +29,41 @@ const ListDonDangKy = () => {
     fetchData();
   }, []);
 
-
-  const handleProceedApproval = () => {
-    if (selectedIds.length > 0) {
-      const selectedId = selectedIds[0];
-      console.log(selectedId);
-    }
-  };
+  const formatDate = (date) => dayjs(date).format('YYYY/MM/DD');
 
   const rows = donDangKyList.map((item, index) => ({
     id: index + 1,
     maDonDK: item.maDonDK,
     maGoiBH: item.maGoiBH,
-    thoiGianDK: item.thoiGianDK,
-    thoiGianBD: item.thoiGianBD,
-    thoiGianHetHan: item.thoiGianHetHan,
+    thoiGianDK: formatDate(item.thoiGianDK),
+    thoiGianBD: formatDate(item.thoiGianBD),
+    thoiGianHetHan: formatDate(item.thoiGianHetHan),
+    thoiGianDuyet: item.thoiGianDuyet ? formatDate(item.thoiGianDuyet) : '',
     tinhTrang: item.tinhTrang,
-    luaChonThanhToan: item.luaChonThanhToan,
+    soKyHanThanhToan: item.soKyHanThanhToan,
     tongGia: item.tongGia,
     maKH: item.maKH,
     maNV: item.maNV,
+    liDoTuChoi: item.liDoTuChoi,
   }));
 
   const columns = [
-    { field: 'id', headerName: 'ID', width: 80 },
-    { field: 'maDonDK', headerName: 'Mã Đơn ĐK', width: 90 },
+    { field: 'id', headerName: 'ID', width: 70 },
+    { field: 'maDonDK', headerName: 'Mã Đơn ', width: 70 },
     { field: 'maGoiBH', headerName: 'Mã Gói BH', width: 80 },
-    { field: 'thoiGianDK', headerName: 'Thời Gian ĐK', width: 180 },
-    { field: 'thoiGianBD', headerName: 'Thời Gian Bắt Đầu', width: 180 },
-    { field: 'thoiGianHetHan', headerName: 'Thời Gian Hết Hạn', width: 180 },
-    { field: 'luaChonThanhToan', headerName: 'Lựa Chọn Thanh Toán', width: 180 },
+    { field: 'thoiGianDK', headerName: 'Thời Gian Đăng Kí', width: 130 },
+    { field: 'thoiGianBD', headerName: 'Thời Gian Bắt Đầu', width: 130 },
+    { field: 'thoiGianHetHan', headerName: 'Thời Gian Hết Hạn', width: 130 },
+    { field: 'thoiGianDuyet', headerName: 'Thời Gian Duyệt', width: 120 },
+    { field: 'soKyHanThanhToan', headerName: 'Số kỳ hạn', width: 160 },
     { field: 'tongGia', headerName: 'Tổng Giá' },
     { field: 'maKH', headerName: 'Mã KH', width: 80 },
     { field: 'maNV', headerName: 'Mã NV', width: 80 },
+    { field: 'liDoTuChoi', headerName: 'Lí do từ chối', width: 100 },
     {
       field: 'tinhTrang',
       headerName: 'Tình Trạng',
-      width: 180,
+      width: 160,
       cellClassName: (params) => `status-cell ${params.value.replace(/\s/g, '').toLowerCase()}`,
       renderCell: (params) => (
         <div className={`bordered-cell ${params.value.replace(/\s/g, '').toLowerCase()}`}>
@@ -71,11 +71,10 @@ const ListDonDangKy = () => {
         </div>
       ),
     },
-
   ];
 
   return (
-    <Box sx={{ padding: "100px", height: 800, width: '100%' }}>
+    <Box sx={{ padding: '100px', height: 800, width: '100%' }}>
       <DataGrid
         rows={rows}
         columns={columns}
@@ -90,7 +89,8 @@ const ListDonDangKy = () => {
         {selectedIds.length > 0 && (
           <Button component={Link} to={`detail/${selectedIds[0]}`} variant="contained" color="primary">
             Xem
-          </Button>)}
+          </Button>
+        )}
       </div>
     </Box>
   );
