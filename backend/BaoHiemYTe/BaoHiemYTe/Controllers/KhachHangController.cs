@@ -140,26 +140,48 @@ namespace BaoHiemYTe.Controllers
         {
             try
             {
-                var khachHangList = userDbContext.KhachHang
-                    .Select(kh => new KhachHangDTO
-                    {
-                        MaKH = kh.MaKH,
-                        HoTen = kh.HoTen,
-                        DiaChi = kh.DiaChi,
-                        SDT = kh.SDT,
-                        Email = kh.Email,
-                        SoDu = kh.SoDu,
-                        username = kh.username
-                    })
-                    .ToList();
+                var tokenService = new TokenService();
+                var username = tokenService.GetUsernameFromToken(HttpContext.Request);
 
-                if (khachHangList != null && khachHangList.Any())
+                if (string.IsNullOrEmpty(username))
                 {
-                    return Ok(khachHangList);
+                    return Unauthorized("Unauthorized: Token is missing or invalid");
+                }
+                //var username = "admin";
+
+                // Kiểm tra xem người dùng có role "Nhân viên" hay không
+                var isNhanVien = userDbContext.Users.Any(u => u.username == username && u.role == "Nhân viên");
+
+                if (isNhanVien)
+                {
+                    var khachHangList = userDbContext.KhachHang
+                        .Select(kh => new KhachHangDTO
+                        {
+                            MaKH = kh.MaKH,
+                            HoTen = kh.HoTen,
+                            NgaySinh= kh.NgaySinh,
+                            GioiTinh= kh.GioiTinh,
+                            CCCD= kh.CCCD,
+                            DiaChi = kh.DiaChi,
+                            SDT = kh.SDT,
+                            Email = kh.Email,
+                            SoDu = kh.SoDu,
+                            username = kh.username
+                        })
+                        .ToList();
+
+                    if (khachHangList != null && khachHangList.Any())
+                    {
+                        return Ok(khachHangList);
+                    }
+                    else
+                    {
+                        return NotFound("Không có khách hàng nào trong hệ thống.");
+                    }
                 }
                 else
                 {
-                    return NotFound("Không có khách hàng nào trong hệ thống.");
+                    return BadRequest("Không có quyền truy cập danh sách khách hàng");
                 }
             }
             catch (Exception ex)
@@ -167,6 +189,7 @@ namespace BaoHiemYTe.Controllers
                 return StatusCode(500, $"Lỗi trong quá trình xử lý: {ex.Message}");
             }
         }
+
 
     }
 }

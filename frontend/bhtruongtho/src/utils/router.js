@@ -18,5 +18,7 @@ export const ROUTERS = {
         REQUESTINVOICE: "requestinvoice",
         PAY: "pay",
         HOADON: "invoice",
+        INFOCUSTOMER:"infoCustomer",
+        FINANCIALREPORT:"financialReport",
     },
 };

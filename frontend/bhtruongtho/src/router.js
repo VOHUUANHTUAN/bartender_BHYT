@@ -18,7 +18,8 @@ import PersonalInfo from "./views/user/personalInfoPage/index.js";
 import Pay from "./views/user/payPage/index.js";
 import PaidDetail from "./views/user/payPage/paidDetail.js";
 import UnPaidDetail from "./views/user/payPage/unpaidDetail.js";
-
+import InfoCustomer from "./views/user/infoCustomer";
+import FinancialReport from "./views/user/financialReport";
 import InsurancePack from "./views/staff/insurancePackManagement/index.js";
 import InsPackDetailPage from "./views/staff/insurancePackManagement/insPackMDetail.js";
 import AddInsPack from "./views/staff/insurancePackManagement/addInsPack.js";
@@ -120,6 +121,16 @@ const RouterCustom = () => {
             path: ROUTERS.USER.HOADON,
             component: <Invoice />,
         },
+        {
+			path: ROUTERS.USER.INFOCUSTOMER,
+			component: <InfoCustomer />,
+			loginRequired: true,
+		},
+        {
+			path: ROUTERS.USER.FINANCIALREPORT,
+			component: <FinancialReport />,
+			loginRequired: true,
+		},
     ];
     const location = useLocation();
     const { user, login, logout } = useUser();
