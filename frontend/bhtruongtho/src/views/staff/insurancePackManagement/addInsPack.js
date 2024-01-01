@@ -59,7 +59,7 @@ const AddInsPack = () => {
     }));
     //regex cho ten
     if (e.target.name === "Ten") {
-      const tenRegex = /^[a-zA-Z0-9\s&.'-]{3,50}$/;
+      const tenRegex = /^[a-zA-Z0-9\s&.'-]{3,255}$/;
       setTenError(!tenRegex.test(e.target.value));
     }
     //regex cho mo ta goi bao hiem
