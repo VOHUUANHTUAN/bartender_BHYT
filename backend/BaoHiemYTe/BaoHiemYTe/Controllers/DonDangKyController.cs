@@ -26,6 +26,28 @@ namespace BaoHiemYTe.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<DonDangKyDTO>>> GetAll()
         {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            // Check for the presence and validity of the token
+            var tokenService = new TokenService();
+            var username = tokenService.GetUsernameFromToken(HttpContext.Request);
+            if (string.IsNullOrEmpty(username))
+            {
+                return Unauthorized("Unauthorized: Token is missing or invalid");
+            }
+            var role = tokenService.GetRoleFromToken(HttpContext.Request);
+            if (role != "Nhân viên")
+            {
+                return Unauthorized("Unauthorized: role is missing or invalid");
+            }
+            if (string.IsNullOrEmpty(username))
+            {
+                return Unauthorized("Unauthorized: Token is missing or invalid");
+            }
             var donDangKys = await _dbContext.DonDangKy
                 .Include(d => d.KhachHang)
                 .Include(d => d.GoiBaoHiem)
@@ -46,7 +68,10 @@ namespace BaoHiemYTe.Controllers
                 MaNV = d.MaNV,
                 KhachHang = d.KhachHang,
                 GoiBaoHiem = d.GoiBaoHiem,
-                NhanVien = d.NhanVien
+                NhanVien = d.NhanVien,
+                LiDoTuChoi = d.LiDoTuChoi,
+                ThoiGianDuyet = d.ThoiGianDuyet ?? default(DateTime),
+
             });
 
             return Ok(donDangKyDTOs);
@@ -56,6 +81,23 @@ namespace BaoHiemYTe.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<DonDangKyDTO>> GetDonDangKyById(int id)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            // Check for the presence and validity of the token
+            var tokenService = new TokenService();
+            var username = tokenService.GetUsernameFromToken(HttpContext.Request);
+            if (string.IsNullOrEmpty(username))
+            {
+                return Unauthorized("Unauthorized: Token is missing or invalid");
+            }
+            var role = tokenService.GetRoleFromToken(HttpContext.Request);
+            if (role != "Nhân viên")
+            {
+                return Unauthorized("Unauthorized: role is missing or invalid");
+            }
             var donDangKy = await _dbContext.DonDangKy
                 .Include(d => d.KhachHang)
                 .Include(d => d.GoiBaoHiem)
@@ -76,6 +118,7 @@ namespace BaoHiemYTe.Controllers
                 ThoiGianHetHan = donDangKy.ThoiGianHetHan,
                 TinhTrang = donDangKy.TinhTrang,
                 SoKyHanThanhToan = donDangKy.SoKyHanThanhToan,
+                ThoiGianDuyet = donDangKy.ThoiGianDuyet ?? default(DateTime),
                 TongGia = donDangKy.TongGia,
                 MaKH = donDangKy.MaKH,
                 MaNV = donDangKy.MaNV,
@@ -94,14 +137,14 @@ namespace BaoHiemYTe.Controllers
             {
                 try
                 {
-                    //if (!ModelState.IsValid)
-                    //{
-                    //    return BadRequest(ModelState);
-                    //}
+                    if (!ModelState.IsValid)
+                    {
+                        return BadRequest(ModelState);
+                    }
 
-                    //var tokenService = new TokenService();
-                    //var username_ = tokenService.GetUsernameFromToken(HttpContext.Request);
-                    var username_ = "quyetvang";
+                    var tokenService = new TokenService();
+                    var username_ = tokenService.GetUsernameFromToken(HttpContext.Request);
+                    //var username_ = "quyetvang";
                     if (string.IsNullOrEmpty(username_))
                     {
                         return Unauthorized("Unauthorized: Token is missing or invalid");
@@ -181,11 +224,23 @@ namespace BaoHiemYTe.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateDonDangKyStatus(int id, [FromBody] DonDangKyUpdateDto updateDto)
         {
-            if (updateDto == null)
+            if (!ModelState.IsValid)
             {
-                return BadRequest("Invalid data");
+                return BadRequest(ModelState);
             }
 
+            // Check for the presence and validity of the token
+            var tokenService = new TokenService();
+            var username = tokenService.GetUsernameFromToken(HttpContext.Request);
+            if (string.IsNullOrEmpty(username))
+            {
+                return Unauthorized("Unauthorized: Token is missing or invalid");
+            }
+            var role = tokenService.GetRoleFromToken(HttpContext.Request);
+            if (role != "Nhân viên")
+            {
+                return Unauthorized("Unauthorized: role is missing or invalid");
+            }
             var donDangKy = await _dbContext.DonDangKy
                 .Include(d => d.NhanVien)
                 .FirstOrDefaultAsync(d => d.MaDonDK == id);
@@ -195,11 +250,13 @@ namespace BaoHiemYTe.Controllers
                 return NotFound();
             }
 
+
             // Update DonDangKy properties
             donDangKy.TinhTrang = updateDto.TinhTrang;
             donDangKy.MaNV = updateDto.MaNV;
-            donDangKy.ThoiGianBD = updateDto.ThoiGianBD;
-            donDangKy.ThoiGianHetHan= updateDto.ThoiGianHetHan;
+            donDangKy.LiDoTuChoi = updateDto.LiDoTuChoi;
+            donDangKy.ThoiGianDuyet = updateDto.ThoiGianDuyet;
+
             // Update NhanVien properties if NhanVien is not null
             if (donDangKy.NhanVien != null)
             {
@@ -228,14 +285,20 @@ namespace BaoHiemYTe.Controllers
                     else
                     {
                         // Log or handle the exception as needed
-                        transaction.Rollback();
                         throw;
                     }
+                }
+                catch (Exception)
+                {
+                    // Log or handle the exception as needed
+                    transaction.Rollback();
+                    throw;
                 }
             }
 
             return NoContent();
         }
+
 
         private bool DonDangKyExists(int id)
         {

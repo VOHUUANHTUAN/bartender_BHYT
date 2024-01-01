@@ -93,7 +93,6 @@ const Login = () => {
                 navigate("/");
             }
         } catch (error) {
-            console.log(error.response.data);
             try {
                 openSnackbar(error.response.data);
             } catch {
