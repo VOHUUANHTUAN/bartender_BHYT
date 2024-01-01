@@ -5,7 +5,7 @@ import { Container, Paper, Typography, Button } from "@mui/material";
 import Box from "@mui/material/Box";
 // import { DataGrid } from "@mui/x-data-grid";
 import dayjs from "dayjs";
-import { Link, Navigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSnackbar } from "../../../context/SnackbarContext";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 const BillList = () => {
@@ -14,6 +14,7 @@ const BillList = () => {
     const [loading, setLoading] = useState(false);
     const [billList, setBillList] = useState([]);
 
+    const navigate = useNavigate();
     useEffect(() => {
         const fetchBillList = async () => {
             try {
@@ -64,7 +65,7 @@ const BillList = () => {
 
     const columns = [
         { field: "id", headerName: "STT", flex: 1 },
-        { field: "maHD", headerName: "Mã Hóa Đơn" },
+
         {
             field: "soTien",
             headerName: "Số Tiền",
@@ -83,7 +84,6 @@ const BillList = () => {
             minWidth: 200,
             flex: 2,
         },
-        { field: "maDon", headerName: "Mã Đơn ", minWidth: 70, flex: 1 },
         {
             field: "loaiHoaDon",
             headerName: "Loại hoá đơn ",
@@ -112,8 +112,12 @@ const BillList = () => {
     const handleViewDetail = (maHD, loaiHoaDon) => {
         if (loaiHoaDon === "Thanh toán") {
             console.log("chuyển đến chi tiết hoá đơn thanh toán ", maHD);
+            // Thực hiện logic chuyển hướng cho chi tiết thanh toán
+            navigate(`/pay/detailUnpaid/${maHD}`);
         } else if (loaiHoaDon === "Hoàn trả") {
             console.log("chuyển đến chi tiết hoá đơn Hoàn trả ", maHD);
+            // Thực hiện logic chuyển hướng cho chi tiết hoàn trả
+            // navigate(`/requestrefund/detail/${maHD}`);
         }
     };
 

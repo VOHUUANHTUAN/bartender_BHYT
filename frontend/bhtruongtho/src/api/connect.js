@@ -27,7 +27,7 @@ const END_POINT = {
     KH_LICHSUGD: "HoaDonThanhToanDK/KH_GetLichSuGiaoDich",
     INFOALLCUSTOMER: "KhachHang/GetAllKhachHang",
     PUNISH: "HoaDonThanhToanDK/capNhatHoaDon",
-    REPORT:"HoaDonThanhToanDK/GetTongHopHoaDon"
+    REPORT: "HoaDonThanhToanDK/GetTongHopHoaDon",
 
     HOADONKHAMBENH: "HoaDonKhamBenh",
     GETSOTIENKHAM: "GetSoTienKham",
@@ -89,15 +89,20 @@ export const getBenhByMaGBH = (MaGBH) => {
     return axiosClient.get(`${END_POINT.BENH}/${MaGBH}`);
 };
 
-export const changePasswordAPI = async (username, changePasswordData, token) => {
+export const changePasswordAPI = async (
+    username,
+    changePasswordData,
+    token
+) => {
     try {
         const response = await axiosClient.put(
             `${END_POINT.TaiKhoan}/${username}/${END_POINT.CHANGEPASSWORD}`,
-            changePasswordData, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        }
+            changePasswordData,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
         );
 
         return response;
@@ -206,7 +211,7 @@ export const putYeuCauHoanTraByID = async (ID, Data, token) => {
         );
         return response.data;
     } catch (error) {
-        console.error('Error:', error);
+        console.error("Error:", error);
         throw new Error(`Error change YCHT: ${error.message}`);
     }
 };
@@ -270,11 +275,14 @@ export const addInsPack = async (token, goiBHData) => {
 };
 
 export const getAllYeuCauHoanTra = (token) => {
-    return axiosClient.get(`${END_POINT.YEUCAUHOANTRA}/${END_POINT.GETALLYEUCAUHOANTRA}`, {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    });
+    return axiosClient.get(
+        `${END_POINT.YEUCAUHOANTRA}/${END_POINT.GETALLYEUCAUHOANTRA}`,
+        {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        }
+    );
 };
 
 export const getAllYeuCauHoanTraBYID = (ID, token) => {
@@ -282,8 +290,8 @@ export const getAllYeuCauHoanTraBYID = (ID, token) => {
         headers: {
             Authorization: `Bearer ${token}`,
         },
-    })
-}
+    });
+};
 //Hàm đăng ký gói bảo hiểm mới cho khách
 export const KH_post_DonDangKy = (token, data) => {
     return axiosClient.post(`${END_POINT.DONDANGKY}`, data, {
@@ -356,13 +364,9 @@ export const getSoTienKhamByCus = (token, MaHDKhamBenh, MaBV) => {
 };
 
 export const getGoiBHByNV = (token) => {
-
-    return axiosClient.get(
-        `${END_POINT.GOIBAOHIEM}/${END_POINT.NHANVIEN}`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },       
-        }
-    );
-
+    return axiosClient.get(`${END_POINT.GOIBAOHIEM}/${END_POINT.NHANVIEN}`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
 };
