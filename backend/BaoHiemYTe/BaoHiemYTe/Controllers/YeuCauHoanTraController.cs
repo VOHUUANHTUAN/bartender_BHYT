@@ -26,6 +26,23 @@ namespace BaoHiemYTe.Controllers
         [HttpGet("GetAllYeuCauHoanTra")]
         public IActionResult GetAllYeuCauHoanTra()
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            // Check for the presence and validity of the token
+            var tokenService = new TokenService();
+            var username = tokenService.GetUsernameFromToken(HttpContext.Request);
+            if (string.IsNullOrEmpty(username))
+            {
+                return Unauthorized("Unauthorized: Token is missing or invalid");
+            }
+            var role = tokenService.GetRoleFromToken(HttpContext.Request);
+            if (role != "Nhân viên")
+            {
+                return Unauthorized("Unauthorized: role is missing or invalid");
+            }
             try
             {
                 var tokenService = new TokenService();
@@ -76,6 +93,23 @@ namespace BaoHiemYTe.Controllers
         [HttpGet("{maYC}")]
         public IActionResult GetYeuCauHoanTraById(int maYC)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            // Check for the presence and validity of the token
+            var tokenService = new TokenService();
+            var username = tokenService.GetUsernameFromToken(HttpContext.Request);
+            if (string.IsNullOrEmpty(username))
+            {
+                return Unauthorized("Unauthorized: Token is missing or invalid");
+            }
+            var role = tokenService.GetRoleFromToken(HttpContext.Request);
+            if (role != "Nhân viên")
+            {
+                return Unauthorized("Unauthorized: role is missing or invalid");
+            }
             try
             {
                 var tokenService = new TokenService();
@@ -249,6 +283,24 @@ namespace BaoHiemYTe.Controllers
         [HttpPut("CapNhat/{id}")]
         public IActionResult CapNhatTinhTrangThoiGianDuyet(int id, [FromBody] CapNhatYeuCauHoanTraDTO capNhatDTO)
         {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            // Check for the presence and validity of the token
+            var tokenService = new TokenService();
+            var username = tokenService.GetUsernameFromToken(HttpContext.Request);
+            if (string.IsNullOrEmpty(username))
+            {
+                return Unauthorized("Unauthorized: Token is missing or invalid");
+            }
+            var role = tokenService.GetRoleFromToken(HttpContext.Request);
+            if (role != "Nhân viên")
+            {
+                return Unauthorized("Unauthorized: role is missing or invalid");
+            }
             try
             {
                 // Lấy thông tin YeuCauHoanTra từ ID

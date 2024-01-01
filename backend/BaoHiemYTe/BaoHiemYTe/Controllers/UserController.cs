@@ -140,6 +140,18 @@ namespace BaoHiemYTe.Controllers
         {
             try
             {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                // Check for the presence and validity of the token
+                var tokenService = new TokenService();
+                var username_ = tokenService.GetUsernameFromToken(HttpContext.Request);
+                if (string.IsNullOrEmpty(username_))
+                {
+                    return Unauthorized("Unauthorized: Token is missing or invalid");
+                }
                 var user = userDbContext.Users.FirstOrDefault(u => u.username == username);
 
                 if (user == null)

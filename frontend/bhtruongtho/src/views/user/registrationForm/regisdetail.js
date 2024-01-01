@@ -1,18 +1,18 @@
 import React, { memo, useState, useEffect } from 'react';
-import { getDonDangKyByID, getNhanVienByID, putDonDangKyByID } from '../../../api/connect';
+import { getDonDangKyByID, getNhanVienByID, putDonDangKyByID, getUserInfoByToken } from '../../../api/connect';
 import { useParams } from 'react-router-dom';
-import { useUser } from "../../../context/UserContext";
-import { Grid, Paper, Typography, Select, MenuItem, Button } from '@mui/material';
+import { Grid, Paper, Typography, Button, Input, FormLabel } from '@mui/material';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+import dayjs from "dayjs";
+
 
 const DetailPage = () => {
     const [loading, setLoading] = useState(true);
     const [donDangKy, setDonDangKy] = useState([]);
     const [nhanVien, setNhanVien] = useState([]);
     const [maNV, setmaNV] = useState('');
-    const [thoiGianBD, setThoiGianBD] = useState('');
-    const [thoiGianHetHan, setThoiGianHetHan] = useState('')
+    const [thoiGianDuyet, setThoiGianDuyet] = useState('');
     const [diaChi, setDiaChi] = useState('');
     const [hoTen, setHoTen] = useState('')
     const [email, setEmail] = useState('')
@@ -21,17 +21,31 @@ const DetailPage = () => {
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [snackbarSeverity, setSnackbarSeverity] = useState('error'); // 'error', 'success', 'warning', 'info'
+    const [reasonForDenial, setReasonForDenial] = useState('');
+    const [showDenialReasonInput, setShowDenialReasonInput] = useState(false);
 
     const params = useParams();
-    const { user } = useUser();
+    const [currentuser, setCurrentuser] = useState({})
+    useEffect(() => {
+        const fetchUserData = async () => {
+            try {
+                const data = await getUserInfoByToken(localStorage.getItem("token"));
+                setCurrentuser(data.username)
+            } catch (error) {
+                console.error('Error fetching Nhan Vien data:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
 
+        fetchUserData();
+    })
     useEffect(() => {
         const fetchData = async () => {
             try {
                 if (params.id) {
-                    const data = await getDonDangKyByID(params.id);
+                    const data = await getDonDangKyByID(localStorage.getItem("token"), params.id);
                     setDonDangKy(data);
-
                 } else {
                     console.error('No selected ID found.');
                 }
@@ -43,23 +57,20 @@ const DetailPage = () => {
         };
 
         fetchData();
-    }, [params.id]);
+    }, [params.id, snackbarOpen]); // Thêm snackbarOpen vào dependencies
 
     useEffect(() => {
         const fetchUserData = async () => {
             try {
-                if (user.username) {
-                    const data = await getNhanVienByID(user.username);
+                if (currentuser) {
+                    const data = await getNhanVienByID(currentuser, localStorage.getItem("token"));
                     setNhanVien(data);
                     setmaNV(data.maNV);
-                    setThoiGianBD(today);
-                    const oneYearLater = new Date(today);
-                    oneYearLater.setFullYear(today.getFullYear() + 1);
-                    setThoiGianHetHan(oneYearLater);
+                    setThoiGianDuyet(today);
                     setDiaChi(data.diaChi);
                     setEmail(data.email);
                     setHoTen(data.hoTen);
-                    setSdt(data.sdt)
+                    setSdt(data.sdt);
                 } else {
                     console.error('No username found.');
                 }
@@ -71,9 +82,9 @@ const DetailPage = () => {
         };
 
         fetchUserData();
-    }, [user]);
 
-    const updateStatus = async () => {
+    }, [snackbarOpen]); // Thêm snackbarOpen vào dependencies
+    const updateStatus_accept = async () => {
         console.log('donDangKy.tinhTrang:', donDangKy.tinhTrang);
 
         try {
@@ -81,26 +92,64 @@ const DetailPage = () => {
                 await putDonDangKyByID(params.id, {
                     tinhTrang: 'Đã kích hoạt',
                     maNV,
-                    thoiGianBD,
                     diaChi,
+                    thoiGianDuyet,
                     email,
                     hoTen,
                     sdt,
-                    thoiGianHetHan,
-
-                });
+                    liDoTuChoi: ''
+                }, localStorage.getItem("token"));
                 openSnackbar('Cập nhật thành công!', 'success');
-            }
-            else {
+            } else {
                 openSnackbar('Trạng thái này không thể kích hoạt', 'warning');
-
             }
         } catch (error) {
             console.error('Error updating status:', error);
             openSnackbar('Có lỗi xảy ra khi cập nhật!', 'error');
-
         }
     };
+    const toggleDenialReasonInput = () => {
+        setShowDenialReasonInput(!showDenialReasonInput);
+    };
+
+    const updateStatus_denied = async () => {
+        console.log('donDangKy.tinhTrang:', donDangKy.tinhTrang);
+
+        try {
+            if (donDangKy.tinhTrang === 'Chờ duyệt') {
+                if (showDenialReasonInput) {
+                    // Kiểm tra xem lí do từ chối đã được nhập hay chưa
+                    if (reasonForDenial.trim() === '') {
+                        openSnackbar('Vui lòng nhập lí do từ chối!', 'warning');
+                        return;
+                    }
+
+                    await putDonDangKyByID(params.id, {
+                        tinhTrang: 'Bị từ chối',
+                        maNV,
+                        diaChi,
+                        email,
+                        hoTen,
+                        sdt,
+                        thoiGianDuyet,
+                        liDoTuChoi: reasonForDenial, // Thêm lí do từ chối vào dữ liệu cập nhật
+                    }, localStorage.getItem("token"));
+
+                    openSnackbar('Cập nhật thành công!', 'success');
+                } else {
+                    // Mở phần nhập lí do từ chối
+                    toggleDenialReasonInput();
+                }
+            } else {
+                openSnackbar('Trạng thái này không thể kích hoạt', 'warning');
+            }
+        } catch (error) {
+            console.error('Error updating status:', error);
+            openSnackbar('Có lỗi xảy ra khi cập nhật!', 'error');
+        }
+    };
+
+
     const openSnackbar = (message, severity) => {
         setSnackbarMessage(message);
         setSnackbarSeverity(severity);
@@ -167,7 +216,7 @@ const DetailPage = () => {
                             </div>
 
                             <div style={{ marginBottom: '10px', backgroundColor: '#f0f0f0', padding: '8px', borderRadius: '4px' }}>
-                                <Typography variant="body1">Lựa chọn thanh toán: {donDangKy.luaChonThanhToan}</Typography>
+                                <Typography variant="body1">Số kỳ hạn: {donDangKy.soKyHanThanhToan}</Typography>
                             </div>
 
                             <div style={{ marginBottom: '10px', backgroundColor: '#f0f0f0', padding: '8px', borderRadius: '4px' }}>
@@ -177,13 +226,38 @@ const DetailPage = () => {
                             <div style={{ backgroundColor: '#f0f0f0', padding: '8px', borderRadius: '4px' }}>
                                 <Typography variant="body1">Tình trạng hiện tại: {donDangKy.tinhTrang}</Typography>
                             </div>
+                            <Typography variant="body1">
+                                {showDenialReasonInput && (
+                                    <div style={{ backgroundColor: '#f0f0f0', padding: '8px', borderRadius: '4px', marginTop: '10px', display: 'flex', flexDirection: 'column' }}>
+                                        <FormLabel htmlFor="denialReason" style={{ marginBottom: '4px' }}>Lí do từ chối:</FormLabel>
+                                        <Input
+                                            type="text"
+                                            id="denialReason"
+                                            value={reasonForDenial}
+                                            onChange={(e) => setReasonForDenial(e.target.value)}
+                                            style={{
+                                                width: '100%',
+                                                padding: '8px',
+                                                boxSizing: 'border-box',
+                                                borderRadius: '4px',
+                                                border: '1px solid #ccc',
+                                            }}
+                                        />
+                                    </div>
+
+                                )}
+                            </Typography>
+
                         </Paper>
 
                     </Grid>
-
-
-                    <Grid item xs={12} justifyContent="flex-end">
-                        <Button variant="contained" style={{ marginBottom: "10px", backgroundColor: 'rgb(25, 118, 210)' }} onClick={updateStatus}>Duyệt đơn</Button>
+                    <Grid container spacing={2} style={{ padding: 16 }}>
+                        <Grid item xs={6}>
+                            <Button variant="contained" style={{ marginBottom: "10px", backgroundColor: 'rgb(25, 118, 210)' }} onClick={updateStatus_accept}>Duyệt đơn</Button>
+                        </Grid>
+                        <Grid item xs={6} style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                            <Button variant="contained" style={{ marginBottom: "10px", backgroundColor: 'rgb(25, 118, 210)' }} onClick={updateStatus_denied}>Từ chối</Button>
+                        </Grid>
                     </Grid>
                     <Snackbar
                         open={snackbarOpen}

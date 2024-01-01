@@ -73,17 +73,7 @@ const Header = () => {
         {
             name: "Sản phẩm",
             path: ROUTERS.USER.PRODUCT,
-            // isShowSubMenu: false,
-            // child: [
-            //     {
-            //         name: "Bảo hiểm sức khỏe",
-            //         path: ROUTERS.USER.HOME,
-            //     },
-            //     {
-            //         name: "Bảo hiểm nhân thọ",
-            //         path: ROUTERS.USER.HOME,
-            //     },
-            // ],
+
         },
         {
             name: "Tin tức",

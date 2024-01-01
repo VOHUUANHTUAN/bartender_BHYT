@@ -1,5 +1,6 @@
 ﻿using BaoHiemYTe.Data;
 using BaoHiemYTe.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,8 +16,26 @@ namespace BaoHiemYTe.Controllers
             this.userDbContext = userDbContext;
         }
         [HttpGet("{username}")]
-        public IActionResult GetByUsername(string username)
+        public IActionResult GetByUsername()
         {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            // Check for the presence and validity of the token
+            var tokenService = new TokenService();
+            var username = tokenService.GetUsernameFromToken(HttpContext.Request);
+            if (string.IsNullOrEmpty(username))
+            {
+                return Unauthorized("Unauthorized: Token is missing or invalid");
+            }
+            var role = tokenService.GetRoleFromToken(HttpContext.Request);
+            if (role != "Nhân viên")
+            {
+                return Unauthorized("Unauthorized: role is missing or invalid");
+            }
             try
             {
                 var user = userDbContext.NhanVien.FirstOrDefault(u => u.username == username);

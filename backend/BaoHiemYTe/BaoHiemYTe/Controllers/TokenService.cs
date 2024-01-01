@@ -1,4 +1,3 @@
-﻿// Trong TokenService.cs
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -24,6 +23,7 @@ namespace BaoHiemYTe.Controllers
 
             var token = new JwtSecurityToken(
                 claims: new[] { new Claim(ClaimTypes.Name, username),new Claim(ClaimTypes.Role, role) },
+
                 expires: DateTime.UtcNow.AddHours(1),
                 signingCredentials: creds
             );
