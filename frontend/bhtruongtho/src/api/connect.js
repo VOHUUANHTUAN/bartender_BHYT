@@ -10,8 +10,8 @@ const END_POINT = {
     CHANGEPASSWORD: "ChangePassword",
     YEUCAUHOANTRA: "YeuCauHoanTra",
     TAOYEUCAU: "TaoYeuCauHoanTra",
-    GOIBHBYUS: "GetGoiBHByUs",
-    YCHTBYUS: "GetYCHTByUs",
+    GOIBHBYCUS: "GetGoiBHByCus",
+    YCHTBYCUS: "GetYCHTByCus",
     BENHVIEN: "BenhVien",
     DONDANGKY: "DONDANGKY",
     NHANVIEN: "NhanVien",
@@ -20,6 +20,7 @@ const END_POINT = {
     UPDATEHOADON: "HoaDonThanhToanDK/updateKhiThanhToan",
     CHINHSACH: "chinhsach",
     ADD: "add",
+    UPDATE: "update",
     CAPNHATYEUCAU: "CapNhat",
     GETALLYEUCAUHOANTRA: "GetAllYeuCauHoanTra",
     HOADONTHANHTOANDK: "HoaDonThanhToanDK",
@@ -27,6 +28,9 @@ const END_POINT = {
     INFOALLCUSTOMER: "KhachHang/GetAllKhachHang",
     PUNISH: "HoaDonThanhToanDK/capNhatHoaDon",
     REPORT:"HoaDonThanhToanDK/GetTongHopHoaDon"
+
+    HOADONKHAMBENH: "HoaDonKhamBenh",
+    GETSOTIENKHAM: "GetSoTienKham",
 };
 
 export const getGoiBHAPI = () => {
@@ -55,8 +59,9 @@ export const getUserInfoByToken = (token) => {
     return axiosClient.get(`${END_POINT.info}`, {
         headers: {
             Authorization: `Bearer ${token}`,
-        },
+        },       
     });
+    
 };
 
 // Hàm lấy thông tin cá nhân khách hàng
@@ -85,12 +90,15 @@ export const getBenhByMaGBH = (MaGBH) => {
     return axiosClient.get(`${END_POINT.BENH}/${MaGBH}`);
 };
 
-export const changePasswordAPI = async (username, changePasswordData) => {
+export const changePasswordAPI = async (username, changePasswordData, token) => {
     try {
         const response = await axiosClient.put(
             `${END_POINT.TaiKhoan}/${username}/${END_POINT.CHANGEPASSWORD}`,
-            changePasswordData,
-            { headers: { "Content-Type": "application/json" } }
+            changePasswordData, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        }
         );
 
         return response;
@@ -112,15 +120,23 @@ export const getAllBenh = () => {
     return axiosClient.get(`${END_POINT.BENH}`);
 };
 
-export const getGoiBHByUsername = (username) => {
+export const getGoiBHByCus = (token) => {
     return axiosClient.get(
-        `${END_POINT.GOIBAOHIEM}/${END_POINT.GOIBHBYUS}/${username}`
+        `${END_POINT.GOIBAOHIEM}/${END_POINT.GOIBHBYCUS}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },       
+        }
     );
 };
 
-export const getYCHTByUsername = (username) => {
+export const getYCHTByCus = (token) => {
     const res = axiosClient.get(
-        `${END_POINT.YEUCAUHOANTRA}/${END_POINT.YCHTBYUS}/${username}`
+        `${END_POINT.YEUCAUHOANTRA}/${END_POINT.YCHTBYCUS}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },       
+        }
     );
     return res;
 };
@@ -128,24 +144,40 @@ export const getYCHTByUsername = (username) => {
 export const getBenhVienAPI = () => {
     return axiosClient.get(`${END_POINT.BENHVIEN}`);
 };
-export const getDonDangKyList = () => {
-    return axiosClient.get(`${END_POINT.DONDANGKY}`);
+export const getDonDangKyList = (token) => {
+    return axiosClient.get(`${END_POINT.DONDANGKY}`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
 };
 
-export const getDonDangKyByID = (ID) => {
-    return axiosClient.get(`${END_POINT.DONDANGKY}/${ID}`);
+export const getDonDangKyByID = (token, ID) => {
+    return axiosClient.get(`${END_POINT.DONDANGKY}/${ID}`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
 };
 
-export const getNhanVienByID = (ID) => {
-    return axiosClient.get(`${END_POINT.NHANVIEN}/${ID}`);
+export const getNhanVienByID = (ID, token) => {
+    return axiosClient.get(`${END_POINT.NHANVIEN}/${ID}`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
 };
 
-export const putDonDangKyByID = async (ID, Data) => {
+export const putDonDangKyByID = async (ID, Data, token) => {
     try {
         const response = await axiosClient.put(
             `${END_POINT.DONDANGKY}/${ID}`,
             Data,
-            { headers: { "Content-Type": "application/json" } }
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
         );
         return response.data;
     } catch (error) {
@@ -162,40 +194,63 @@ export const getHoaDonDKbyTinhTrang = (token, tinhTrang) => {
     });
 };
 
-export const putYeuCauHoanTraByID = async (ID, Data) => {
+export const putYeuCauHoanTraByID = async (ID, Data, token) => {
     try {
         const response = await axiosClient.put(
             `${END_POINT.YEUCAUHOANTRA}/${END_POINT.CAPNHATYEUCAU}/${ID}`,
             Data,
-            { headers: { "Content-Type": "application/json" } }
+
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
         );
         return response.data;
     } catch (error) {
-        console.error("Error:", error);
-        throw new Error(`Error chang DDK: ${error.message}`);
+        console.error('Error:', error);
+        throw new Error(`Error change YCHT: ${error.message}`);
     }
 };
 
-export const updateInsPack = async (maGoiBH, goiBHData) => {
+export const updateInsPack = async (token, maGoiBH) => {
     const response = await axiosClient.put(
         `${END_POINT.GOIBAOHIEM}/${maGoiBH}/${END_POINT.UPDATE}`,
-        goiBHData
+        null, // Bạn có thể truyền body request ở đây nếu cần
+        {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json', // Thêm header Content-Type nếu cần
+            },
+        }
     );
+
     return response;
 };
 
-export const addBenhForGBH = async (MaGoiBH, MaBenh) => {
+export const addBenhForGBH = async (token, MaGoiBH, MaBenh) => {
     const response = await axiosClient.post(
         `${END_POINT.CHINHSACH}/${END_POINT.ADD}`,
-        { MaGoiBH, MaBenh }
+        { MaGoiBH, MaBenh },
+        {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json', // Thêm header Content-Type nếu cần
+            },
+        }
     );
     return response;
 };
 
-export const deleteBenhFromBGH = async (maGoiBH, maBenh) => {
+export const deleteBenhFromBGH = async (token, maGoiBH, maBenh) => {
     try {
         // Gọi API xóa bệnh khỏi Gói Bảo hiểm
-        const response = await axiosClient.delete(`${END_POINT.CHINHSACH}/${maGoiBH}/${maBenh}/delete`);
+        const response = await axiosClient.delete(`${END_POINT.CHINHSACH}/${maGoiBH}/${maBenh}/delete`,{
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json', // Thêm header Content-Type nếu cần
+            },
+        });
         return response;
     } catch (error) {
         // Xử lý lỗi nếu cần
@@ -204,22 +259,36 @@ export const deleteBenhFromBGH = async (maGoiBH, maBenh) => {
     }
 };
 
-export const addInsPack = async (goiBHData) => {
+export const addInsPack = async (token, goiBHData) => {
     const response = await axiosClient.post(
         `${END_POINT.GOIBAOHIEM}/${END_POINT.ADD}`,
-        goiBHData
+        goiBHData, // Bạn có thể truyền body request ở đây nếu cần
+        {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json', // Thêm header Content-Type nếu cần
+            },
+        }
     );
+
     return response;
 };
-export const getAllYeuCauHoanTra = () => {
-    return axiosClient.get(
-        `${END_POINT.YEUCAUHOANTRA}/${END_POINT.GETALLYEUCAUHOANTRA}`
-    );
+
+export const getAllYeuCauHoanTra = (token) => {
+    return axiosClient.get(`${END_POINT.YEUCAUHOANTRA}/${END_POINT.GETALLYEUCAUHOANTRA}`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
 };
 
-export const getAllYeuCauHoanTraBYID = (ID) => {
-    return axiosClient.get(`${END_POINT.YEUCAUHOANTRA}/${ID}`);
-};
+export const getAllYeuCauHoanTraBYID = (ID, token) => {
+    return axiosClient.get(`${END_POINT.YEUCAUHOANTRA}/${ID}`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    })
+}
 //Hàm đăng ký gói bảo hiểm mới cho khách
 export const KH_post_DonDangKy = (token, data) => {
     return axiosClient.post(`${END_POINT.DONDANGKY}`, data, {
@@ -254,6 +323,7 @@ export const KH_getBillList = (token) => {
         },
     });
 };
+
 //Hàm Nhân viên lấy thông tin khách hàng
 export const NV_getInfoCustomer = (token) => {
     return axiosClient.get(`${END_POINT.INFOALLCUSTOMER}`, {
@@ -277,4 +347,25 @@ export const NV_getTongHopHoaDon = (token) => {
             Authorization: `Bearer ${token}`,
         },
     });
+};
+
+export const getSoTienKhamByCus = (token, MaHDKhamBenh, MaBV) => {
+    return axiosClient.get(
+        `${END_POINT.HOADONKHAMBENH}/${END_POINT.GETSOTIENKHAM}/${MaHDKhamBenh}/${MaBV}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },       
+        }
+    );
+};
+
+export const getGoiBHByNV = (token) => {
+    return axiosClient.get(
+        `${END_POINT.GOIBAOHIEM}/${END_POINT.NHANVIEN}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },       
+        }
+    );
+
 };

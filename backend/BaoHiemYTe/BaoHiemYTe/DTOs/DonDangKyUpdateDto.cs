@@ -4,8 +4,10 @@
     {
         public string TinhTrang { get; set; }
         public int MaNV { get; set; }
-        public DateTime ThoiGianBD { get; set; }
-        public DateTime ThoiGianHetHan {  get; set; }
+        public string LiDoTuChoi { get; set; }
+
+        public DateTime ThoiGianDuyet { get; set; }
+
 
         // Properties for updating NhanVien
         public string DiaChi { get; set; }

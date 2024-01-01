@@ -4,10 +4,14 @@ import "./style.scss"
 import { Link } from 'react-router-dom';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
+
+const importAll = (r) => r.keys().map(r);
+const images = importAll(require.context('../../../images/goibaohiem', false, /\.(png|jpe?g|svg)$/));
+  
 const ProductPage = () => {
     const [goiBHs, setgoiBHs] = useState([]);
     const fetchData = async () => {
-        setgoiBHs(await getGoiBHAPI());
+        setgoiBHs(await getGoiBHAPI(localStorage.getItem("token")));
     }
     useEffect(() => {
         fetchData();
@@ -34,7 +38,7 @@ const ProductPage = () => {
                         {displayedGoiBHs.map((goiBH, goiBHKey) => (
                             <li key={startIndex + goiBHKey} className={`card__container ${goiBHKey === 0 ? "active" : ""}`}>
                                 <div className="img-container">
-                                    <img src="" alt=""></img>
+                                    <img src={images[(startIndex + goiBHKey) % images.length]} alt={`Gói Bảo Hiểm ${startIndex + goiBHKey + 1}`}></img>
                                 </div>
                                 <div className="card__content">
                                     <div className="card__title">
@@ -62,7 +66,7 @@ const ProductPage = () => {
                         page={currentPage}
                         onChange={handlePageChange}
                         variant="outlined"
-                        color="success"
+                        color="primary"
                     />
                 </Stack>
             </div>

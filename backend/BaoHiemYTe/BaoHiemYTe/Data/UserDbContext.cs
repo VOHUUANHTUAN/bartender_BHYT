@@ -10,7 +10,7 @@ namespace BaoHiemYTe.Data
 
         }
         public DbSet<Users> Users { get; set; }
-        public DbSet<KhachHang>  KhachHang{ get; set; }
+        public DbSet<KhachHang> KhachHang { get; set; }
         public DbSet<NhanVien> NhanVien { get; set; }
         public DbSet<GoiBaoHiem> GoiBaoHiem { get; set; }
         public DbSet<Benh> Benh { get; set; }
@@ -65,7 +65,7 @@ namespace BaoHiemYTe.Data
                 .WithMany()
                 .HasForeignKey(d => d.MaKH)
                 .OnDelete(DeleteBehavior.Restrict);
-           
+
             modelBuilder.Entity<DonDangKy>()
               .Property(y => y.ThoiGianDuyet)
               .IsRequired(false);
@@ -130,6 +130,6 @@ namespace BaoHiemYTe.Data
         public DbSet<YeuCauHoanTra> YeuCauHoanTra { get; set; }
         public DbSet<HoaDonHoanTra> HoaDonHoanTra { get; set; }
 
-       
+
     }
 }

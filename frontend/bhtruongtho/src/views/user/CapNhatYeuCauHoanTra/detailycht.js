@@ -1,10 +1,11 @@
 import React, { memo, useState, useEffect } from 'react';
-import { putYeuCauHoanTraByID, getNhanVienByID, getAllYeuCauHoanTraBYID } from '../../../api/connect';
+import { putYeuCauHoanTraByID, getNhanVienByID, getAllYeuCauHoanTraBYID, getUserInfoByToken } from '../../../api/connect';
 import { useParams } from 'react-router-dom';
 import { useUser } from "../../../context/UserContext";
 import { Grid, Paper, Typography, Select, MenuItem, Button, TableContainer, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+import dayjs from 'dayjs';
 const DetailPage = () => {
     const [loading, setLoading] = useState(true);
     const [yeuCauHoanTra, setYeuCauHoanTra] = useState({});
@@ -20,12 +21,27 @@ const DetailPage = () => {
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [snackbarSeverity, setSnackbarSeverity] = useState('error');
 
-
+    const [currentuser, setCurrentuser] = useState({})
+    const formatDate = (date) => dayjs(date).format('YYYY/MM/DD');
     useEffect(() => {
         const fetchUserData = async () => {
             try {
-                if (user.username) {
-                    const data = await getNhanVienByID(user.username);
+                const data = await getUserInfoByToken(localStorage.getItem("token"));
+                setCurrentuser(data.username)
+            } catch (error) {
+                console.error('Error fetching Nhan Vien data:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchUserData();
+    })
+    useEffect(() => {
+        const fetchUserData = async () => {
+            try {
+                if (currentuser) {
+                    const data = await getNhanVienByID(currentuser, localStorage.getItem("token"));
                     setNhanVien(data);
                     setMaNV(data.maNV);
                     setThoiGianDuyet(today);
@@ -40,7 +56,7 @@ const DetailPage = () => {
         };
 
         fetchUserData();
-    }, [user]);
+    },);
 
     const updateStatus = async () => {
         try {
@@ -50,7 +66,7 @@ const DetailPage = () => {
                     tinhTrang: "Đã hoàn tiền",
                     maNV,
                     thoiGianDuyet,
-                });
+                }, localStorage.getItem("token"));
                 openSnackbar('Cập nhật thành công!', 'success');
             }
             else {
@@ -67,7 +83,7 @@ const DetailPage = () => {
             try {
                 if (params.id) {
                     // Fetch updated data after updating the status
-                    const updatedData = await getAllYeuCauHoanTraBYID(params.id);
+                    const updatedData = await getAllYeuCauHoanTraBYID(params.id, localStorage.getItem("token"));
                     setYeuCauHoanTra(updatedData);
                     console.log("ok")
                 } else {
@@ -129,10 +145,11 @@ const DetailPage = () => {
                                 <TableBody>
                                     {Object.entries(yeuCauHoanTra).map(([key, value]) => (
                                         <TableRow key={key} >
-                                            <TableCell >{allrows[key]}</TableCell>
-                                            <TableCell>{value}</TableCell>
+                                            <TableCell>{allrows[key]}</TableCell>
+                                            <TableCell>{key === 'thoiGianDuyet' || key === 'thoiGianTao' ? formatDate(value) : value}</TableCell>
                                         </TableRow>
                                     ))}
+
                                     <TableRow>
                                         <TableCell style={{ textAlign: 'left' }}>
                                             <Button variant="contained" color="primary" onClick={updateStatus}>
