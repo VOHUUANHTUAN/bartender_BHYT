@@ -55,11 +55,11 @@ const ChangeInformation = () => {
     };
 
     useEffect(() => {
-        fetchData();
+        FetchThongTinKhachHang();
     }, []); // Empty dependency array ensures the effect runs only once on mount
 
     //Load dữ liệu và gán vào các ô
-    const fetchData = async () => {
+    const FetchThongTinKhachHang = async () => {
         try {
             const token = localStorage.getItem("token");
             const khachHangData = await getKhachHangInformation(token);
@@ -74,7 +74,7 @@ const ChangeInformation = () => {
                 setSoDu(formatCurrency(khachHangData.soDu) || "");
                 setCCCD(khachHangData.cccd || "");
                 setGioiTinh(khachHangData.gioiTinh || "");
-                setNgaySinh(dayjs(khachHangData.ngaySinh) || "");
+                setNgaySinh(dayjs(khachHangData.ngaySinh) || null);
             }
             const res = await getUserInfoByToken(token);
             if (res) {
@@ -91,6 +91,7 @@ const ChangeInformation = () => {
             console.error("Error fetching user information", error);
         }
     };
+
     const formatCurrency = (amount) => {
         const formattedAmount = new Intl.NumberFormat("vi-VN", {
             style: "currency",
@@ -145,19 +146,22 @@ const ChangeInformation = () => {
         if (!phoneRegex.test(soDienThoai)) {
             // Hiển thị thông báo hoặc thực hiện xử lý khi định dạng không đúng
             return "Định dạng số điện thoại không đúng";
-            return false;
         } // Kiểm tra định dạng số điện thoại
         const CCCDRegex = /^[0-9]{12}$/;
         if (!CCCDRegex.test(CCCD)) {
             // Hiển thị thông báo hoặc thực hiện xử lý khi định dạng không đúng
             return "Định dạng CCCD không đúng";
-            return false;
         }
 
         // Kiểm tra tên không được trống
         if (!hoTen) {
             return "Tên không được để trống";
-            return false;
+        } // Kiểm tra tên không được trống
+        if (!gioiTinh) {
+            return "Giới tính không được để trống";
+        }
+        if (!ngaySinh) {
+            return "Ngày sinh không được để trống";
         }
 
         // Nếu tất cả định dạng đều đúng, trả về true

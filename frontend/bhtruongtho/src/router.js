@@ -14,7 +14,7 @@ import { useUser } from "../src/context/UserContext.js";
 import InsuranceRegistration from "./views/user/InsuranceRegistration";
 import ListDonDangKy from "./views/user/registrationForm/index.js";
 import DonDangKyDetail from "./views/user/registrationForm/regisdetail.js";
-import PersonalInfo from "./views/user/personalInfoPage/index.js";
+import Profile from "./views/user/profilePage/index.js";
 import Pay from "./views/user/payPage/index.js";
 import PaidDetail from "./views/user/payPage/paidDetail.js";
 import UnPaidDetail from "./views/user/payPage/unpaidDetail.js";
@@ -25,7 +25,7 @@ import AddInsPack from "./views/staff/insurancePackManagement/addInsPack.js";
 
 import ListYeuCauHoanTra from "./views/user/CapNhatYeuCauHoanTra/index.js";
 import YeuCauHoanTraDetail from "./views/user/CapNhatYeuCauHoanTra/detailycht.js";
-import Invoice from "./views/user/invoicePage";
+import Transactions from "./views/user/transactionsPage";
 import { useEffect } from "react";
 import { dayCalendarSkeletonClasses } from "@mui/x-date-pickers";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -34,7 +34,6 @@ import { useSnackbar } from "./context/SnackbarContext";
 
 const AuthGuard = ({ component: Component, loginRequired }) => {
     const { user, login, logout } = useUser();
-    const { openSnackbar } = useSnackbar();
 
     //Nếu loginRequired=true và Không_Có_Koken
     if (loginRequired && !localStorage.getItem("token")) {
@@ -94,7 +93,6 @@ const RouterCustom = () => {
         },
         {
             path: ROUTERS.USER.PAY,
-
             component: <Pay />,
             loginRequired: true,
         },
@@ -109,12 +107,12 @@ const RouterCustom = () => {
             loginRequired: true,
         },
         {
-            path: ROUTERS.USER.PERSONALINFO,
-            component: <PersonalInfo />,
+            path: ROUTERS.USER.PROFILE,
+            component: <Profile />,
             loginRequired: true,
         },
         {
-            path: ROUTERS.USER.INSURANCEREGISTRATION,
+            path: `${ROUTERS.USER.INSURANCEREGISTRATION}/:id`,
             component: <InsuranceRegistration />,
             loginRequired: true,
         },
@@ -136,8 +134,9 @@ const RouterCustom = () => {
         },
 
         {
-            path: ROUTERS.USER.HOADON,
-            component: <Invoice />,
+            path: ROUTERS.USER.TRANSACTION,
+            component: <Transactions />,
+            loginRequired: true,
         },
     ];
 

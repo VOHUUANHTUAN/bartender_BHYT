@@ -1,16 +1,10 @@
 import React, { useState } from "react";
-import {
-    Container,
-    Paper,
-    TextField,
-    Button,
-    Typography,
-    Snackbar,
-} from "@mui/material";
+import { Container, Paper, TextField, Button, Typography } from "@mui/material";
 import { KhachHang_DangKyTaiKhoan } from "../../../api/connect";
-import { useNavigate, Link } from "react-router-dom";
-import { TRUE } from "sass";
+// import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { useSnackbar } from "../../../context/SnackbarContext";
+import bcrypt from "bcryptjs";
 
 const Register = () => {
     const { openSnackbar } = useSnackbar();
@@ -44,6 +38,9 @@ const Register = () => {
             setConfirmPasswordError(!usernameRegex.test(e.target.value));
         }
         // Check if passwords match when typing in the confirmation field
+        if (e.target.name === "password") {
+            setPasswordError(e.target.value !== formData.confirmPassword);
+        } // Check if passwords match when typing in the confirmation field
         if (e.target.name === "confirmPassword") {
             setConfirmPasswordError(e.target.value !== formData.password);
         }
@@ -59,6 +56,7 @@ const Register = () => {
 
     const fetchData = async () => {
         try {
+            // const hashedPassword = await bcrypt.hash(formData.password, 10);
             const userData = {
                 username: formData.username,
                 password: formData.password,
@@ -69,7 +67,7 @@ const Register = () => {
             console.log(res);
             openSnackbar(res, "success");
         } catch (error) {
-            console.log(error.response.data);
+            // console.log(error.response.data);
             openSnackbar(error.response.data, "error");
         }
     };

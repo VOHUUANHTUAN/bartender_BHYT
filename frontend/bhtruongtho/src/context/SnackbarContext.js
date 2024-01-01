@@ -7,7 +7,8 @@ const SnackbarContext = createContext();
 const SnackbarProvider = ({ children }) => {
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState("");
-    const [snackbarSeverity, setSnackbarSeverity] = useState(""); // 'error', 'success', 'warning', 'info'
+    const [snackbarSeverity, setSnackbarSeverity] = useState("");
+    // 'error', 'success', 'warning', 'info'
 
     const openSnackbar = (message, severity = "info") => {
         setSnackbarMessage(message);

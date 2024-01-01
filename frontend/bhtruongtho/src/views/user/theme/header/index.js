@@ -33,7 +33,7 @@ const Header = () => {
 
     useEffect(() => {
         // Kiểm tra xem có thông tin người dùng trong local storage không
-        // getUserInfo(localStorage.getItem("token"));
+        getUserInfo(localStorage.getItem("token"));
         if (user && user.firstLogin) {
             navigate("/PersonalInfo");
         }
@@ -52,9 +52,6 @@ const Header = () => {
                 });
                 localStorage.setItem("token", token);
                 localStorage.setItem("username", response.username);
-                localStorage.setItem("firstLogin", response.firstLogin);
-                localStorage.setItem("role", response.role);
-                localStorage.setItem("auth", true);
                 console.log("Login successful");
             } else {
                 localStorage.clear();
@@ -156,7 +153,7 @@ const Header = () => {
                         <div className="col-xl-3 header_top_right">
                             {/* <span>Đăng ký tư vấn</span> */}
                             <ul>
-                                {user ? (
+                                {localStorage.getItem("token") ? (
                                     <>
                                         <Box
                                             sx={{
@@ -166,7 +163,15 @@ const Header = () => {
                                             }}
                                         >
                                             <Typography sx={{ minWidth: 100 }}>
-                                                Xin chào, {user.username}!
+                                                {localStorage.getItem(
+                                                    "username"
+                                                )
+                                                    ? "Xin chào " +
+                                                      localStorage.getItem(
+                                                          "username"
+                                                      ) +
+                                                      "!"
+                                                    : ""}
                                             </Typography>
                                             <Tooltip title="Account">
                                                 <IconButton
@@ -239,7 +244,9 @@ const Header = () => {
                                                 <ListItemIcon>
                                                     <AccountCircleIcon fontSize="small" />
                                                 </ListItemIcon>
-                                                <Link to="/PersonalInfo">
+                                                <Link
+                                                    to={`/${ROUTERS.USER.PROFILE}`}
+                                                >
                                                     Thông tin cá nhân
                                                 </Link>
                                             </MenuItem>
@@ -256,7 +263,9 @@ const Header = () => {
                                                 <ListItemIcon>
                                                     <LockIcon fontSize="small" />
                                                 </ListItemIcon>
-                                                <Link to="/invoice">
+                                                <Link
+                                                    to={`/${ROUTERS.USER.TRANSACTION}`}
+                                                >
                                                     Lịch sử giao dịch
                                                 </Link>
                                             </MenuItem>
