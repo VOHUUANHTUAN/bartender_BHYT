@@ -59,9 +59,8 @@ export const getUserInfoByToken = (token) => {
     return axiosClient.get(`${END_POINT.info}`, {
         headers: {
             Authorization: `Bearer ${token}`,
-        },       
+        },
     });
-    
 };
 
 // Hàm lấy thông tin cá nhân khách hàng
@@ -104,7 +103,7 @@ export const changePasswordAPI = async (username, changePasswordData, token) => 
         return response;
     } catch (error) {
         //console.error('Error:', error);
-        throw (error);
+        throw error;
     }
 };
 
@@ -121,21 +120,20 @@ export const getAllBenh = () => {
 };
 
 export const getGoiBHByCus = (token) => {
-    return axiosClient.get(
-        `${END_POINT.GOIBAOHIEM}/${END_POINT.GOIBHBYCUS}`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },       
-        }
-    );
+    return axiosClient.get(`${END_POINT.GOIBAOHIEM}/${END_POINT.GOIBHBYCUS}`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
 };
 
 export const getYCHTByCus = (token) => {
     const res = axiosClient.get(
-        `${END_POINT.YEUCAUHOANTRA}/${END_POINT.YCHTBYCUS}`, {
+        `${END_POINT.YEUCAUHOANTRA}/${END_POINT.YCHTBYCUS}`,
+        {
             headers: {
                 Authorization: `Bearer ${token}`,
-            },       
+            },
         }
     );
     return res;
@@ -219,8 +217,8 @@ export const updateInsPack = async (token, maGoiBH) => {
         null, // Bạn có thể truyền body request ở đây nếu cần
         {
             headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json', // Thêm header Content-Type nếu cần
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json", // Thêm header Content-Type nếu cần
             },
         }
     );
@@ -234,8 +232,8 @@ export const addBenhForGBH = async (token, MaGoiBH, MaBenh) => {
         { MaGoiBH, MaBenh },
         {
             headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json', // Thêm header Content-Type nếu cần
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json", // Thêm header Content-Type nếu cần
             },
         }
     );
@@ -245,12 +243,9 @@ export const addBenhForGBH = async (token, MaGoiBH, MaBenh) => {
 export const deleteBenhFromBGH = async (token, maGoiBH, maBenh) => {
     try {
         // Gọi API xóa bệnh khỏi Gói Bảo hiểm
-        const response = await axiosClient.delete(`${END_POINT.CHINHSACH}/${maGoiBH}/${maBenh}/delete`,{
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json', // Thêm header Content-Type nếu cần
-            },
-        });
+        const response = await axiosClient.delete(
+            `${END_POINT.CHINHSACH}/${maGoiBH}/${maBenh}/delete`
+        );
         return response;
     } catch (error) {
         // Xử lý lỗi nếu cần
@@ -265,8 +260,8 @@ export const addInsPack = async (token, goiBHData) => {
         goiBHData, // Bạn có thể truyền body request ở đây nếu cần
         {
             headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json', // Thêm header Content-Type nếu cần
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json", // Thêm header Content-Type nếu cần
             },
         }
     );
@@ -351,15 +346,17 @@ export const NV_getTongHopHoaDon = (token) => {
 
 export const getSoTienKhamByCus = (token, MaHDKhamBenh, MaBV) => {
     return axiosClient.get(
-        `${END_POINT.HOADONKHAMBENH}/${END_POINT.GETSOTIENKHAM}/${MaHDKhamBenh}/${MaBV}`, {
+        `${END_POINT.HOADONKHAMBENH}/${END_POINT.GETSOTIENKHAM}/${MaHDKhamBenh}/${MaBV}`,
+        {
             headers: {
                 Authorization: `Bearer ${token}`,
-            },       
+            },
         }
     );
 };
 
 export const getGoiBHByNV = (token) => {
+
     return axiosClient.get(
         `${END_POINT.GOIBAOHIEM}/${END_POINT.NHANVIEN}`, {
             headers: {

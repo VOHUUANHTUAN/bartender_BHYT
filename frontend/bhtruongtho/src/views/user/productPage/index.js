@@ -1,18 +1,14 @@
-import { memo, useEffect, useState } from "react"
+import { memo, useEffect, useState } from "react";
 import { getGoiBHAPI } from "../../../api/connect";
-import "./style.scss"
-import { Link } from 'react-router-dom';
-import Pagination from '@mui/material/Pagination';
-import Stack from '@mui/material/Stack';
-
-const importAll = (r) => r.keys().map(r);
-const images = importAll(require.context('../../../images/goibaohiem', false, /\.(png|jpe?g|svg)$/));
-  
+import "./style.scss";
+import { Link } from "react-router-dom";
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
 const ProductPage = () => {
     const [goiBHs, setgoiBHs] = useState([]);
     const fetchData = async () => {
-        setgoiBHs(await getGoiBHAPI(localStorage.getItem("token")));
-    }
+        setgoiBHs(await getGoiBHAPI());
+    };
     useEffect(() => {
         fetchData();
     }, []);
@@ -30,48 +26,62 @@ const ProductPage = () => {
         setCurrentPage(newPage);
     };
 
-    return <>
-        <div className="container__body">
-            <div className="productPage">
-                <ul>
-                    <div className="cards__container">
-                        {displayedGoiBHs.map((goiBH, goiBHKey) => (
-                            <li key={startIndex + goiBHKey} className={`card__container ${goiBHKey === 0 ? "active" : ""}`}>
-                                <div className="img-container">
-                                    <img src={images[(startIndex + goiBHKey) % images.length]} alt={`Gói Bảo Hiểm ${startIndex + goiBHKey + 1}`}></img>
-                                </div>
-                                <div className="card__content">
-                                    <div className="card__title">
-                                        <h3> {goiBH.tenGoiBH}</h3>
+    return (
+        <>
+            <div className="container__body">
+                <div className="productPage">
+                    <ul>
+                        <div className="cards__container">
+                            {displayedGoiBHs.map((goiBH, goiBHKey) => (
+                                <li
+                                    key={startIndex + goiBHKey}
+                                    className={`card__container ${
+                                        goiBHKey === 0 ? "active" : ""
+                                    }`}
+                                >
+                                    <div className="img-container">
+                                        <img src="" alt=""></img>
                                     </div>
-                                    <div className="card__body">
-                                        <p>{goiBH.motaGoiBH}</p>
-                                        <p>Giá: {goiBH.gia} VND</p>
-                                        <p>Tỉ lệ hoàn tiền: {goiBH.tiLeHoanTien}%</p>
+                                    <div className="card__content">
+                                        <div className="card__title">
+                                            <h3> {goiBH.tenGoiBH}</h3>
+                                        </div>
+                                        <div className="card__body">
+                                            <p>{goiBH.motaGoiBH}</p>
+                                            <p>Giá: {goiBH.gia} VND</p>
+                                            <p>
+                                                Tỉ lệ hoàn tiền:{" "}
+                                                {goiBH.tiLeHoanTien}%
+                                            </p>
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="card__btn">
-                                    <Link to={`detail/${goiBH.maGoiBH}`}>
-                                        <p>Xem thêm</p>
-                                    </Link>
-                                </div>
-                            </li>
-                        ))}
-                    </div>
-                </ul>
-                <Stack spacing={2} justifyContent="center"
-                    alignItems="center" style={{ margin: '20px' }}>
-                    <Pagination
-                        count={totalPages}
-                        page={currentPage}
-                        onChange={handlePageChange}
-                        variant="outlined"
-                        color="primary"
-                    />
-                </Stack>
+                                    <div className="card__btn">
+                                        <Link to={`detail/${goiBH.maGoiBH}`}>
+                                            <p>Xem thêm</p>
+                                        </Link>
+                                    </div>
+                                </li>
+                            ))}
+                        </div>
+                    </ul>
+                    <Stack
+                        spacing={2}
+                        justifyContent="center"
+                        alignItems="center"
+                        style={{ margin: "20px" }}
+                    >
+                        <Pagination
+                            count={totalPages}
+                            page={currentPage}
+                            onChange={handlePageChange}
+                            variant="outlined"
+                            color="success"
+                        />
+                    </Stack>
+                </div>
             </div>
-        </div>
-    </>
+        </>
+    );
 };
 
 export default memo(ProductPage);
