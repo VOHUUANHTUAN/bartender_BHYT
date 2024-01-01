@@ -82,6 +82,7 @@ const DetailPage = () => {
         };
 
         fetchUserData();
+
     }, [snackbarOpen]); // Thêm snackbarOpen vào dependencies
     const updateStatus_accept = async () => {
         console.log('donDangKy.tinhTrang:', donDangKy.tinhTrang);

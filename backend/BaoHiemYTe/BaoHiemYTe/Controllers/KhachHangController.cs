@@ -29,10 +29,13 @@ namespace BaoHiemYTe.Controllers
             {
                 var tokenService = new TokenService();
                 var username_ = tokenService.GetUsernameFromToken(HttpContext.Request);
+
                 if (string.IsNullOrEmpty(username_))
                 {
                     return Unauthorized("Unauthorized: Token is missing or invalid");
                 }
+
+
                 //Kiểm tra xem username có tồn tại trong bảng KhachHang hay không
                 var existingKhachHang = userDbContext.KhachHang.FirstOrDefault(kh => kh.username == username_);
 
@@ -43,6 +46,9 @@ namespace BaoHiemYTe.Controllers
                     {
                         MaKH = existingKhachHang.MaKH,
                         HoTen = existingKhachHang.HoTen,
+                        NgaySinh = existingKhachHang.NgaySinh,
+                        GioiTinh = existingKhachHang.GioiTinh,
+                        CCCD = existingKhachHang.CCCD,
                         DiaChi = existingKhachHang.DiaChi,
                         SDT = existingKhachHang.SDT,
                         Email = existingKhachHang.Email   ,
