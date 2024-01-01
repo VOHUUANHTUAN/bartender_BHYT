@@ -40,7 +40,6 @@ const AuthGuard = ({ component: Component, loginRequired }) => {
     if (loginRequired && !localStorage.getItem("token")) {
         return <Navigate to={`/${ROUTERS.USER.LOGIN}`} />;
     }
-
     return Component;
 };
 
@@ -54,11 +53,10 @@ const RouterCustom = () => {
         // Hành động mà bạn muốn thực hiện khi đường dẫn thay đổi
         console.log("Đường dẫn đã thay đổi:", location.pathname);
         if (user && user.firstLogin) {
-            navigate("/PersonalInfo");
+            navigate("/Profile");
         }
         // kiemTraCacThongTinDangNhap(localStorage.getItem("token"));
     }, [location.pathname]);
-
     const userRouters = [
         {
             path: ROUTERS.USER.HOME,
@@ -90,50 +88,51 @@ const RouterCustom = () => {
         {
             path: ROUTERS.USER.CHANGEPASSWORD,
 
+            component: <ChangePassword />,
+            loginRequired: true,
+        },
+        {
+            path: ROUTERS.USER.PAY,
 
-			component: <ChangePassword />,
-			loginRequired: true,
-		},
-		{
-			path: ROUTERS.USER.PAY,
-
-			component: <Pay />,
-			loginRequired: true,
-		},
-		{
-			path: ROUTERS.USER.STAFF,
-			component: <HomePageStaff />,
-			loginRequired: false,
-		},
-		{
-			path: ROUTERS.USER.REQUESTINVOICE,
-			component: <RequestInvoicePage />,
-			loginRequired: true,
-		},
-		{
-			path: ROUTERS.USER.PERSONALINFO,
-			component: <PersonalInfo />,
-		},
-		{
-			path: ROUTERS.USER.INSURANCEREGISTRATION,
-			component: <InsuranceRegistration />,
-		},
-		{
-			path: ROUTERS.USER.DONDANGKY,
-			component: <ListDonDangKy />,
-		},
-		{
-			path: ROUTERS.USER.INSURANCEPACKM,
-			component: <InsurancePack />,
-		},
-		{
-			path: ROUTERS.USER.ADDINSPACK,
-			component: <AddInsPack />,
-		},
-		{
-			path: ROUTERS.USER.YEUCAUHOANTRA,
-			component: <ListYeuCauHoanTra />,
-		},
+            component: <Pay />,
+            loginRequired: true,
+        },
+        {
+            path: ROUTERS.USER.STAFF,
+            component: <HomePageStaff />,
+            loginRequired: false,
+        },
+        {
+            path: ROUTERS.USER.REQUESTINVOICE,
+            component: <RequestInvoicePage />,
+            loginRequired: true,
+        },
+        {
+            path: ROUTERS.USER.PROFILE,
+            component: <Profile />,
+            loginRequired: true,
+        },
+        {
+            path: `${ROUTERS.USER.INSURANCEREGISTRATION}/:id`,
+            component: <InsuranceRegistration />,
+            loginRequired: true,
+        },
+        {
+            path: ROUTERS.USER.DONDANGKY,
+            component: <ListDonDangKy />,
+        },
+        {
+            path: ROUTERS.USER.INSURANCEPACKM,
+            component: <InsurancePack />,
+        },
+        {
+            path: ROUTERS.USER.ADDINSPACK,
+            component: <AddInsPack />,
+        },
+        {
+            path: ROUTERS.USER.YEUCAUHOANTRA,
+            component: <ListYeuCauHoanTra />,
+        },
 
         {
             path: ROUTERS.USER.TRANSACTION,
@@ -141,17 +140,16 @@ const RouterCustom = () => {
             loginRequired: true,
         },
         {
-			path: ROUTERS.USER.INFOCUSTOMER,
-			component: <InfoCustomer />,
-			loginRequired: true,
-		},
+            path: ROUTERS.USER.INFOCUSTOMER,
+            component: <InfoCustomer />,
+            loginRequired: true,
+        },
         {
-			path: ROUTERS.USER.FINANCIALREPORT,
-			component: <FinancialReport />,
-			loginRequired: true,
-		},
+            path: ROUTERS.USER.FINANCIALREPORT,
+            component: <FinancialReport />,
+            loginRequired: true,
+        },
     ];
-
 
     return (
         <MasterLayout>
@@ -169,7 +167,7 @@ const RouterCustom = () => {
                             />
                         }
                     />
-                ))}
+                ))}{" "}
                 <Route
                     path="product/detail/:id"
                     element={<ProductDetailPage />}

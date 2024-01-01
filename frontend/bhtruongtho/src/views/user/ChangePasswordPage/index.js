@@ -32,11 +32,15 @@ const ChangePasswordForm = () => {
         setLoading(true);
 
         try {
-            const response = await changePasswordAPI(user.username, {
-                currentPassword,
-                newPassword,
-                confirmPassword,
-            });
+            const response = await changePasswordAPI(
+                user.username,
+                {
+                    currentPassword,
+                    newPassword,
+                    confirmPassword,
+                },
+                localStorage.getItem("token")
+            );
             if (response)
                 openSnackbar("Thay đổi password thành công", "success");
         } catch (error) {
