@@ -25,6 +25,10 @@ const END_POINT = {
     GETALLYEUCAUHOANTRA: "GetAllYeuCauHoanTra",
     HOADONTHANHTOANDK: "HoaDonThanhToanDK",
     KH_LICHSUGD: "HoaDonThanhToanDK/KH_GetLichSuGiaoDich",
+    INFOALLCUSTOMER: "KhachHang/GetAllKhachHang",
+    PUNISH: "HoaDonThanhToanDK/capNhatHoaDon",
+    REPORT:"HoaDonThanhToanDK/GetTongHopHoaDon"
+
     HOADONKHAMBENH: "HoaDonKhamBenh",
     GETSOTIENKHAM: "GetSoTienKham",
 };
@@ -320,6 +324,31 @@ export const KH_getBillList = (token) => {
     });
 };
 
+//Hàm Nhân viên lấy thông tin khách hàng
+export const NV_getInfoCustomer = (token) => {
+    return axiosClient.get(`${END_POINT.INFOALLCUSTOMER}`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+};
+//Khi khách hàng vừa Login thì hệ thống sẽ kiểm tra khách hàng có hóa đơn trễ hạn hay k?
+
+export const phatThanhToanTreHan = (token) => {
+    return axiosClient.post(END_POINT.PUNISH, null, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+};
+export const NV_getTongHopHoaDon = (token) => {
+    return axiosClient.get(`${END_POINT.REPORT}`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+};
+
 export const getSoTienKhamByCus = (token, MaHDKhamBenh, MaBV) => {
     return axiosClient.get(
         `${END_POINT.HOADONKHAMBENH}/${END_POINT.GETSOTIENKHAM}/${MaHDKhamBenh}/${MaBV}`, {
@@ -338,4 +367,5 @@ export const getGoiBHByNV = (token) => {
             },       
         }
     );
+
 };

@@ -1,5 +1,8 @@
 import React, { memo, useState, useEffect } from "react";
-import { getHoaDonDKbyTinhTrang } from "../../../api/connect";
+import {
+	getHoaDonDKbyTinhTrang,
+	phatThanhToanTreHan,
+} from "../../../api/connect";
 import { useUser } from "../../../context/UserContext";
 import {
 	Container,
@@ -57,7 +60,14 @@ const Pay = () => {
 		const fetchChuaThanhToan = async () => {
 			try {
 				setLoading(true);
-
+				// Gọi API phatThanhToanTreHan trước
+				// const phatThanhToanTreHanResult = await phatThanhToanTreHan(
+				// 	localStorage.getItem("token")
+				// );
+				// console.log(
+				// 	"Phat thanh toan tre han API called successfully:",
+				// 	phatThanhToanTreHanResult
+				// );
 				const hoadonChuaTT = await getHoaDonDKbyTinhTrang(
 					localStorage.getItem("token"),
 					"Chưa thanh toán"
@@ -71,6 +81,8 @@ const Pay = () => {
 						thoiGianHetHan: formatDateTime(row.thoiGianHetHan),
 						tinhTrangThanhToan: row.tinhTrangThanhToan,
 						soTien: row.soTien,
+						tienPhat: row.tienPhat,
+						tongTien: row.tongTien,
 						maHD: row.maHD,
 					}))
 				);
@@ -114,6 +126,8 @@ const Pay = () => {
 						),
 						tinhTrangThanhToan: row.tinhTrangThanhToan,
 						soTien: row.soTien,
+						tienPhat: row.tienPhat,
+						tongTien: row.tongTien,
 						maHD: row.maHD,
 					}))
 				);
@@ -172,6 +186,8 @@ const Pay = () => {
 			hide: true,
 		},
 		{ field: "soTien", headerName: "Số tiền (VND)", width: 120 },
+		{ field: "tienPhat", headerName: "Tiền phạt (VND)", width: 120 },
+		{ field: "tongTien", headerName: "Tổng tiền (VND)", width: 120 },
 		{
 			field: "thanhToan",
 			headerName: "Thanh toán",
@@ -228,6 +244,8 @@ const Pay = () => {
 			},
 		},
 		{ field: "soTien", headerName: "Số tiền (VND)", width: 120 },
+		{ field: "tienPhat", headerName: "Tiền phạt (VND)", width: 120 },
+		{ field: "tongTien", headerName: "Tổng tiền (VND)", width: 120 },
 		{
 			field: "maHD",
 			headerName: "Mã hóa đơn",

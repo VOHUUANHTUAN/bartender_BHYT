@@ -21,11 +21,15 @@ namespace BaoHiemYTe.DTOs
         public DateTime? ThoiGianHetHan { get; set; }
         public string TinhTrang { get; set; }
         public int SoKyHanThanhToan { get; set; }
+        public int TongGia { get; set; }
 
         //Hóa đơn thanh toán
         public int MaHD { get; set; }
 
         public int SoTien { get; set; }
+        public int TienPhat { get; set; }
+        public string? LiDoPhat { get; set; }
+        public int TongTien { get; set; }
 
         public string HanKy { get; set; }
 

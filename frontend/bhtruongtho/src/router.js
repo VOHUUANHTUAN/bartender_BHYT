@@ -18,7 +18,8 @@ import PersonalInfo from "./views/user/personalInfoPage/index.js";
 import Pay from "./views/user/payPage/index.js";
 import PaidDetail from "./views/user/payPage/paidDetail.js";
 import UnPaidDetail from "./views/user/payPage/unpaidDetail.js";
-
+import InfoCustomer from "./views/user/infoCustomer";
+import FinancialReport from "./views/user/financialReport";
 import InsurancePack from "./views/staff/insurancePackManagement/index.js";
 import InsPackDetailPage from "./views/staff/insurancePackManagement/insPackMDetail.js";
 import AddInsPack from "./views/staff/insurancePackManagement/addInsPack.js";
@@ -72,87 +73,97 @@ const RouterCustom = () => {
         {
             path: ROUTERS.USER.CHANGEPASSWORD,
 
-            component: <ChangePassword />,
-            loginRequired: true,
-        },
-        {
-            path: ROUTERS.USER.PAY,
+			component: <ChangePassword />,
+			loginRequired: true,
+		},
+		{
+			path: ROUTERS.USER.PAY,
 
-            component: <Pay />,
-            loginRequired: true,
-        },
-        {
-            path: ROUTERS.USER.STAFF,
-            component: <HomePageStaff />,
-            loginRequired: false,
-        },
-        {
-            path: ROUTERS.USER.REQUESTINVOICE,
-            component: <RequestInvoicePage />,
-            loginRequired: true,
-        },
-        {
-            path: ROUTERS.USER.PERSONALINFO,
-            component: <PersonalInfo />,
-        },
-        {
-            path: ROUTERS.USER.INSURANCEREGISTRATION,
-            component: <InsuranceRegistration />,
-        },
-        {
-            path: ROUTERS.USER.DONDANGKY,
-            component: <ListDonDangKy />,
-        },
-        {
-            path: ROUTERS.USER.INSURANCEPACKM,
-            component: <InsurancePack />,
-        },
-        {
-            path: ROUTERS.USER.ADDINSPACK,
-            component: <AddInsPack />,
-        },
-        {
-            path: ROUTERS.USER.YEUCAUHOANTRA,
-            component: <ListYeuCauHoanTra />,
-        },
+			component: <Pay />,
+			loginRequired: true,
+		},
+		{
+			path: ROUTERS.USER.STAFF,
+			component: <HomePageStaff />,
+			loginRequired: false,
+		},
+		{
+			path: ROUTERS.USER.REQUESTINVOICE,
+			component: <RequestInvoicePage />,
+			loginRequired: true,
+		},
+		{
+			path: ROUTERS.USER.PERSONALINFO,
+			component: <PersonalInfo />,
+		},
+		{
+			path: ROUTERS.USER.INSURANCEREGISTRATION,
+			component: <InsuranceRegistration />,
+		},
+		{
+			path: ROUTERS.USER.DONDANGKY,
+			component: <ListDonDangKy />,
+		},
+		{
+			path: ROUTERS.USER.INSURANCEPACKM,
+			component: <InsurancePack />,
+		},
+		{
+			path: ROUTERS.USER.ADDINSPACK,
+			component: <AddInsPack />,
+		},
+		{
+			path: ROUTERS.USER.YEUCAUHOANTRA,
+			component: <ListYeuCauHoanTra />,
+		},
 
         {
             path: ROUTERS.USER.HOADON,
             component: <Invoice />,
         },
+        {
+			path: ROUTERS.USER.INFOCUSTOMER,
+			component: <InfoCustomer />,
+			loginRequired: true,
+		},
+        {
+			path: ROUTERS.USER.FINANCIALREPORT,
+			component: <FinancialReport />,
+			loginRequired: true,
+		},
     ];
     const location = useLocation();
     const { user, login, logout } = useUser();
 
-    const getUserInfo = async (token) => {
-        try {
-            const response = await getUserInfoByToken(token);
-            if (response) {
-                logout();
-                login({
-                    username: response.username,
-                    token: token,
-                    firstLogin: response.firstLogin,
-                    role: response.role,
-                });
-                localStorage.clear();
-                localStorage.setItem("token", token);
-                console.log("Login successful");
-            } else {
-                localStorage.clear();
-                <Navigate to={`/${ROUTERS.USER.LOGIN}`} />;
-                console.log("Login fail");
+	const getUserInfo = async (token) => {
+		try {
+			const response = await getUserInfoByToken(token);
+			if (response) {
+				logout();
+				login({
+					username: response.username,
+					token: token,
+					firstLogin: response.firstLogin,
+					role: response.role,
+				});
+				localStorage.clear();
+				localStorage.setItem("token", token);
+				console.log("Login successful");
+			} else {
+				localStorage.clear();
+				<Navigate to={`/${ROUTERS.USER.LOGIN}`} />;
+				console.log("Login fail");
 
-                logout();
-            }
-        } catch (error) {
-            localStorage.clear();
-            console.log("Login fail");
-            logout();
-            <Navigate to={`/${ROUTERS.USER.LOGIN}`} />;
-            console.log(error.message);
-        }
-    };
+				logout();
+			}
+		} catch (error) {
+			localStorage.clear();
+			console.log("Login fail");
+			logout();
+			<Navigate to={`/${ROUTERS.USER.LOGIN}`} />;
+			console.log(error.message);
+		}
+	};
 
     useEffect(() => {
         // Hành động mà bạn muốn thực hiện khi đường dẫn thay đổi
@@ -160,8 +171,8 @@ const RouterCustom = () => {
         console.log("Đường dẫn đã thay đổi:", location.pathname);
         // console.log("loginRequired:", userRouters.loginRequired);
 
-        // Thêm các hành động cần thực hiện ở đây...
-    }, [location.pathname]);
+		// Thêm các hành động cần thực hiện ở đây...
+	}, [location.pathname]);
 
     return (
         <MasterLayout>
