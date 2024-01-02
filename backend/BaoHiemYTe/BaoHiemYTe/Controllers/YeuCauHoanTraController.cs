@@ -16,10 +16,11 @@ namespace BaoHiemYTe.Controllers
     {
         // GET: api/<GoiBaoHiemController>
         private readonly UserDbContext userDbContext;
-
-        public YeuCauHoanTraController(UserDbContext userDbContext)
+        private readonly TokenService tokenService;
+        public YeuCauHoanTraController(UserDbContext userDbContext, TokenService tokenService)
         {
             this.userDbContext = userDbContext;
+            this.tokenService = tokenService;
         }
 
         [HttpGet("GetAllYeuCauHoanTra")]
@@ -31,19 +32,20 @@ namespace BaoHiemYTe.Controllers
             }
 
             // Check for the presence and validity of the token
-            var tokenService = new TokenService();
-            var username = tokenService.GetUsernameFromToken(HttpContext.Request);
-            if (string.IsNullOrEmpty(username))
-            {
-                return Unauthorized("Unauthorized: Token is missing or invalid");
-            }
-            var role = tokenService.GetRoleFromToken(HttpContext.Request);
-            if (role != "Nhân viên")
-            {
-                return Unauthorized("Unauthorized: role is missing or invalid");
-            }
+          
             try
             {
+                var tokenService = new TokenService();
+                var username = tokenService.GetUsernameFromToken(HttpContext.Request);
+                if (string.IsNullOrEmpty(username))
+                {
+                    return Unauthorized("Unauthorized: Token is missing or invalid");
+                }
+                var role = tokenService.GetRoleFromToken(HttpContext.Request);
+                if (role != "Nhân viên")
+                {
+                    return Unauthorized("Unauthorized: role is missing or invalid");
+                }
                 // Lấy tất cả các YeuCauHoanTra từ database
                 var yeuCauHoanTraList = userDbContext.YeuCauHoanTra.ToList();
 
@@ -86,20 +88,19 @@ namespace BaoHiemYTe.Controllers
                 return BadRequest(ModelState);
             }
 
-            // Check for the presence and validity of the token
-            var tokenService = new TokenService();
-            var username = tokenService.GetUsernameFromToken(HttpContext.Request);
-            if (string.IsNullOrEmpty(username))
-            {
-                return Unauthorized("Unauthorized: Token is missing or invalid");
-            }
-            var role = tokenService.GetRoleFromToken(HttpContext.Request);
-            if (role != "Nhân viên")
-            {
-                return Unauthorized("Unauthorized: role is missing or invalid");
-            }
             try
             {
+                var tokenService = new TokenService();
+                var username = tokenService.GetUsernameFromToken(HttpContext.Request);
+                if (string.IsNullOrEmpty(username))
+                {
+                    return Unauthorized("Unauthorized: Token is missing or invalid");
+                }
+                var role = tokenService.GetRoleFromToken(HttpContext.Request);
+                if (role != "Nhân viên")
+                {
+                    return Unauthorized("Unauthorized: role is missing or invalid");
+                }
                 // Tìm YeuCauHoanTra theo ID trong database
                 var yeuCauHoanTra = userDbContext.YeuCauHoanTra.FirstOrDefault(y => y.MaYC == maYC);
 
@@ -135,9 +136,15 @@ namespace BaoHiemYTe.Controllers
         }
 
 
-        [HttpGet("GetYCHTByUs/{username}")]
-        public IActionResult GetYCHTByUs(string username)
+        [HttpGet("GetYCHTByCus")]
+        public IActionResult GetYCHTByCus()
         {
+            var tokenService = new TokenService();
+            var username = tokenService.GetUsernameFromToken(HttpContext.Request);
+            if (string.IsNullOrEmpty(username))
+            {
+                return Unauthorized("Unauthorized: Token is missing or invalid");
+            }
             var maKH = userDbContext.KhachHang
             .Where(u => u.username == username)
             .Select(u => u.MaKH)
@@ -199,7 +206,6 @@ namespace BaoHiemYTe.Controllers
                 {
                     return NotFound($"Không tìm thấy thông tin khách hàng của người dùng {yeuCauDTO.username}");
                 }
-
                 // Tạo đối tượng YeuCauHoanTra từ DTO
                 var yeuCauHoanTra = new YeuCauHoanTra
                 {
@@ -219,7 +225,16 @@ namespace BaoHiemYTe.Controllers
                 // Thêm vào context và lưu vào database
                 userDbContext.YeuCauHoanTra.Add(yeuCauHoanTra);
                 userDbContext.SaveChanges();
+                // Cập nhật tình trạng của bảng hóa đơn thành 2
+                var hoaDon = userDbContext.HoaDonKhamBenh
+                    .Where(hd => hd.MaHDKhamBenh == yeuCauDTO.MaHDKhamBenh)
+                    .FirstOrDefault();
 
+                if (hoaDon != null)
+                {
+                    hoaDon.TinhTrang = 2;
+                    userDbContext.SaveChanges();
+                }
                 return Ok("Yêu cầu hoàn trả đã được tạo thành công");
             }
             catch (DbUpdateException ex)

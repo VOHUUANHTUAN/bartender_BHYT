@@ -13,15 +13,38 @@ namespace BaoHiemYTe.Controllers
     {
         // GET: api/<GoiBaoHiemController>
         private readonly UserDbContext userDbContext;
-
-        public GoiBaoHiemController(UserDbContext userDbContext)
+        private readonly TokenService _tokenService;
+        public GoiBaoHiemController(UserDbContext userDbContext, TokenService tokenService)
         {
             this.userDbContext = userDbContext;
+            _tokenService = tokenService;
         }
         [HttpGet]
         public IActionResult GetAll()
         {
-            var goiBH = userDbContext.GoiBaoHiem.ToList();
+            var goiBH = userDbContext.GoiBaoHiem
+                .Where(g => g.TinhTrang == "Đang cung cấp")
+                .ToList();
+            return Ok(goiBH);
+        }
+        [HttpGet]
+        [Route("NhanVien")]
+        public IActionResult GetAllNV()
+        {
+            //var tokenService = new TokenService();
+            var username = _tokenService.GetUsernameFromToken(HttpContext.Request);
+            Console.WriteLine("Username from token: " + username);
+            if (string.IsNullOrEmpty(username))
+            {
+                return Unauthorized("Unauthorized: Token is missing or invalid");
+            }
+            var role = _tokenService.GetRoleFromToken(HttpContext.Request);
+            if (role != "Nhân viên")
+            {
+                return Unauthorized("Unauthorized: role is missing or invalid");
+            }
+            var goiBH = userDbContext.GoiBaoHiem
+                .ToList();
             return Ok(goiBH);
         }
         [HttpGet]
@@ -37,15 +60,24 @@ namespace BaoHiemYTe.Controllers
             goiBHDTO.MaGoiBH = goiBH.MaGoiBH;
             goiBHDTO.TenGoiBH = goiBH.TenGoiBH;
             goiBHDTO.MotaGoiBH = goiBH.MotaGoiBH;
+            goiBHDTO.DoTuoi = goiBH.DoTuoi;
             goiBHDTO.Gia = goiBH.Gia;
             goiBHDTO.TiLeHoanTien = goiBH.TiLeHoanTien;
             goiBHDTO.ThoiHanBaoVe = goiBH.ThoiHanBaoVe;
+            goiBHDTO.TinhTrang = goiBH.TinhTrang;
             return Ok(goiBHDTO);
         }
         [HttpGet]
-        [Route("GetGoiBHByUs/{username}")]
-        public IActionResult GetGoiBHByUsername(string username)
+        [Route("GetGoiBHByCus")]
+        public IActionResult GetGoiBHByCus()
         {
+            // Check for the presence and validity of the token
+            //var tokenService = new TokenService();
+            var username = _tokenService.GetUsernameFromToken(HttpContext.Request);
+            if (string.IsNullOrEmpty(username))
+            {
+                return Unauthorized("Unauthorized: Token is missing or invalid");
+            }
             // Lấy thông tin MaKH từ bảng KhachHang
             var maKH = userDbContext.KhachHang
                 .Where(u => u.username == username)
@@ -84,6 +116,7 @@ namespace BaoHiemYTe.Controllers
                 TenGoiBH = h.TenGoiBH,
                 MotaGoiBH = h.MotaGoiBH,
                 Gia = h.Gia,
+                DoTuoi = h.DoTuoi,
                 TiLeHoanTien = h.TiLeHoanTien,
                 ThoiHanBaoVe = h.ThoiHanBaoVe
 
@@ -93,32 +126,32 @@ namespace BaoHiemYTe.Controllers
         }
 
         [HttpPut("{MaGoiBH}/update")]
-        public IActionResult ChangeGoiBaoHiem(int MaGoiBH, [FromBody] UpdateGoiBaoHiemDTO updateGoiBaoHiemDTO)
+        public IActionResult ChangeGBHStatus(int MaGoiBH)
         {
             try
             {
+                //var tokenService = new TokenService();
+                var username = _tokenService.GetUsernameFromToken(HttpContext.Request);
+                if (string.IsNullOrEmpty(username))
+                {
+                    return Unauthorized("Unauthorized: Tokennnnn is missing or invalid");
+                }
+                var role = _tokenService.GetRoleFromToken(HttpContext.Request);
+                if (role != "Nhân viên")
+                {
+                    return Unauthorized("Unauthorized: role is missing or invalid");
+                }
                 var goiBH = userDbContext.GoiBaoHiem.FirstOrDefault(u => u.MaGoiBH == MaGoiBH);
 
                 if (goiBH == null)
                 {
                     return NotFound("Không tìm thấy gói bảo hiểm");
                 }
-                
-                goiBH.TenGoiBH = updateGoiBaoHiemDTO.TenGoiBH;
-                goiBH.MotaGoiBH = updateGoiBaoHiemDTO.MotaGoiBH;
-                goiBH.Gia = updateGoiBaoHiemDTO.Gia;
-                goiBH.TiLeHoanTien = updateGoiBaoHiemDTO.TiLeHoanTien;
-                goiBH.ThoiHanBaoVe = updateGoiBaoHiemDTO.ThoiHanBaoVe;
+
+                // Cập nhật tình trạng
+                goiBH.TinhTrang = goiBH.TinhTrang == "Đang cung cấp" ? "Ngừng cung cấp" : "Đang cung cấp";
+
                 userDbContext.SaveChanges();
-                var update_GBH_dto = new GoiBaoHiemDTO
-                {
-                    MaGoiBH = goiBH.MaGoiBH,
-                    TenGoiBH = goiBH.TenGoiBH,
-                    MotaGoiBH = goiBH.MotaGoiBH,
-                    Gia = goiBH.Gia,
-                    TiLeHoanTien = goiBH.TiLeHoanTien,
-                    ThoiHanBaoVe = goiBH.ThoiHanBaoVe
-                };
 
                 return Ok("Đổi thông tin gói bảo hiểm thành công");
             }
@@ -133,13 +166,26 @@ namespace BaoHiemYTe.Controllers
         {
             try
             {
+                //var tokenService = new TokenService();
+                var username = _tokenService.GetUsernameFromToken(HttpContext.Request);             
+                if (string.IsNullOrEmpty(username))
+                {
+                    return Unauthorized("Unauthorized: Token is missing or invalid");
+                }
+                var role = _tokenService.GetRoleFromToken(HttpContext.Request);
+                if (role != "Nhân viên")
+                {
+                    return Unauthorized("Unauthorized: role is missing or invalid");
+                }
                 var goiBaoHiem = new GoiBaoHiem
                 {
                     TenGoiBH = goiBaoHiemDTO.TenGoiBH,
                     MotaGoiBH = goiBaoHiemDTO.MotaGoiBH,
                     Gia = goiBaoHiemDTO.Gia,
+                    DoTuoi = goiBaoHiemDTO.DoTuoi,
                     TiLeHoanTien = goiBaoHiemDTO.TiLeHoanTien,
-                    ThoiHanBaoVe = goiBaoHiemDTO.ThoiHanBaoVe
+                    ThoiHanBaoVe = goiBaoHiemDTO.ThoiHanBaoVe,
+                    TinhTrang = "Đang cung cấp"
                 };
 
                 // Thêm vào context và lưu vào database

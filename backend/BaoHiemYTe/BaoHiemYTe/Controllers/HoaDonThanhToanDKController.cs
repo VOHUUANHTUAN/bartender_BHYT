@@ -1,9 +1,11 @@
 ﻿using BaoHiemYTe.Data;
+using BaoHiemYTe.Domain;
 using BaoHiemYTe.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System.Linq;
 
 namespace BaoHiemYTe.Controllers
@@ -17,11 +19,13 @@ namespace BaoHiemYTe.Controllers
        
         private readonly UserDbContext userDbContext;
         private readonly TokenService tokenService;
+        private readonly ILogger<HoaDonThanhToanDKController> _logger;
 
-        public HoaDonThanhToanDKController(UserDbContext userDbContext, TokenService tokenService)
+        public HoaDonThanhToanDKController(UserDbContext userDbContext, TokenService tokenService, ILogger<HoaDonThanhToanDKController> logger)
         {
             this.userDbContext = userDbContext;
             this.tokenService = tokenService;
+            this._logger = logger;
         }
         public class CombinedHoaDon
         {
@@ -80,9 +84,13 @@ namespace BaoHiemYTe.Controllers
                     })
                     .ToList();
 
+                var maDonYCs = userDbContext.YeuCauHoanTra
+                    .Where(d => d.MaKH == maKH)
+                    .Select(d => d.MaYC)
+                    .ToList();
                 // Lấy thông tin Hóa Đơn Hoàn Trả từ bảng HoaDonHoanTra
                 var hoaDonHoanTraEntities = userDbContext.HoaDonHoanTra
-                    .Where(h => maDonDKs.Contains(h.MaYC))
+                    .Where(h => maDonYCs.Contains(h.MaYC))
                     .Select(h => new CombinedHoaDon
                     {
                         MaHD = h.MaHDHoanTra,
@@ -222,6 +230,9 @@ namespace BaoHiemYTe.Controllers
                     ThoiGianHetHan = h.ThoiGianHetHan,
                     HanKy = h.HanKy,
                     TinhTrangThanhToan = h.TinhTrangThanhToan,
+                    TienPhat= h.TienPhat,
+                    LiDoPhat= h.LiDoPhat,
+                    TongTien= h.TongTien,
                     ThoiGianThanhToan = h.ThoiGianThanhToan,
                     MaDonDK = h.MaDonDK,
                     // Thêm tên Gói Bảo Hiểm
@@ -263,9 +274,13 @@ namespace BaoHiemYTe.Controllers
                         ThoiGianHetHan = h.DonDangKy.ThoiGianHetHan,
                         TinhTrang = h.DonDangKy.TinhTrang,
                         SoKyHanThanhToan = h.DonDangKy.SoKyHanThanhToan,
+                        TongGia= h.DonDangKy.TongGia,
                         // Thông tin Hóa Đơn Thanh Toán
                         MaHD = h.MaHD,
                         SoTien = h.SoTien,
+                        TienPhat= h.TienPhat,
+                        LiDoPhat= h.LiDoPhat,
+                        TongTien= h.TongTien,
                         HanKy = h.HanKy,
                         TinhTrangThanhToan = h.TinhTrangThanhToan,
                         ThoiGianThanhToan = h.ThoiGianThanhToan,
@@ -287,10 +302,10 @@ namespace BaoHiemYTe.Controllers
             }
         }
         //Truyền vào maHD Từ token lấy username và từ user name lấy về SoDu trong table KhachHang,
-        //nếu SoDu lớn hơn hoặc bằng SoTien trong HoaDonThanhToanDK thì 
+        //nếu SoDu lớn hơn hoặc bằng TongTien trong HoaDonThanhToanDK thì 
         //Update tình trạng và thời gian thanh toán của hóa đơn khi bấm nút ThanhToan, nếu TinhTrang trong đơn đăng ký là "Chờ thanh toán" thì 
-        //cập nhập thành Đã kích hoạt, Sau đó update lại SoDu trong KhachHang =SoDu-SoTien
-        //nếu SoDu<SoTien thì báo SoDu k đủ
+        //cập nhập thành Đã kích hoạt, Sau đó update lại SoDu trong KhachHang =SoDu-TongTien
+        //nếu SoDu<TongTien thì báo SoDu k đủ
         [HttpPost("updateKhiThanhToan/{maHD}")]
         public async Task<IActionResult> UpdateKhiThanhToan(int maHD)
         {
@@ -331,7 +346,7 @@ namespace BaoHiemYTe.Controllers
                 }
 
                 // Kiểm tra nếu số dư không đủ
-                if (soDu < hoaDon.SoTien)
+                if (soDu < hoaDon.TongTien)
                 {
                     return BadRequest("Số dư không đủ để thanh toán hóa đơn");
                 }
@@ -355,7 +370,7 @@ namespace BaoHiemYTe.Controllers
                 // Cập nhật số dư trong bảng KhachHang
                 var khachHang = userDbContext.KhachHang
                     .FirstOrDefault(kh => kh.MaKH == maKH);
-                khachHang.SoDu -= hoaDon.SoTien;
+                khachHang.SoDu -= hoaDon.TongTien;
 
                 // Lưu thay đổi vào database
                 await userDbContext.SaveChangesAsync();
@@ -369,6 +384,149 @@ namespace BaoHiemYTe.Controllers
         }
 
 
+
+        //API xử lý vấn đề khách hàng thanh toán trễ hạn, nếu hóa đơn thanh toán trễ hạn thì sẽ bị phạt 2% soTien.
+        [HttpPost("capNhatHoaDon")]
+        public async Task<IActionResult> CapNhatHoaDon()
+        {
+            try
+            {
+                var username = "khachhang";
+
+                var maKH = userDbContext.KhachHang
+                    .Where(u => u.username == username)
+                    .Select(u => u.MaKH)
+                    .FirstOrDefault();
+
+                if (maKH == 0)
+                {
+                    return NotFound($"Không tìm thấy thông tin khách hàng của người dùng {username}");
+                }
+
+                using (var transaction = await userDbContext.Database.BeginTransactionAsync())
+                {
+                    try
+                    {
+                        var donDangKys = userDbContext.DonDangKy
+                            .Where(d => d.MaKH == maKH)
+                            .ToList();
+
+                        foreach (var donDangKy in donDangKys)
+                        {
+                            var hoaDons = userDbContext.HoaDonThanhToanDK
+                                .Where(hd => hd.MaDonDK == donDangKy.MaDonDK && hd.ThoiGianHetHan <= DateTime.Now && hd.TinhTrangThanhToan == "Chưa thanh toán")
+                                .ToList();
+
+                            foreach (var hoaDon in hoaDons)
+                            {
+                                var tienPhat = (int)(0.02 * hoaDon.SoTien);
+                                hoaDon.TienPhat = tienPhat;
+                                hoaDon.LiDoPhat = "Thanh toán trễ hạn";
+                                hoaDon.TongTien = hoaDon.SoTien + tienPhat;
+
+                                userDbContext.Update(hoaDon);
+                            }
+                        }
+
+                        await userDbContext.SaveChangesAsync();
+                        transaction.Commit();
+
+                        return Ok("Cập nhật hóa đơn thành công");
+                    }
+                    catch (DbUpdateException ex)
+                    {
+                        transaction.Rollback();
+                        var innerException = ex.InnerException;
+                        while (innerException != null)
+                        {
+                            Console.WriteLine(innerException.Message);
+                            innerException = innerException.InnerException;
+                        }
+                        _logger.LogError(ex, "Lỗi khi cập nhật hóa đơn");
+                        return StatusCode(500, "Lỗi khi lưu thay đổi vào cơ sở dữ liệu.");
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        _logger.LogError(ex, "Lỗi khi cập nhật hóa đơn");
+                        return StatusCode(500, $"Lỗi: {ex.Message}");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Lỗi khi xử lý API: {ex.Message}");
+                return StatusCode(500, $"Lỗi khi xử lý API: {ex.Message}");
+            }
+        }
+
+
+        [HttpGet("GetTongHopHoaDon")]
+        public IActionResult GetTongHopHoaDon()
+        {
+            try
+            {
+                var tokenService = new TokenService();
+                var username = tokenService.GetUsernameFromToken(HttpContext.Request);
+
+                if (string.IsNullOrEmpty(username))
+                {
+                    return Unauthorized("Unauthorized: Token is missing or invalid");
+                }
+
+                // Kiểm tra xem người dùng có role "Nhân viên" hay không
+                var isNhanVien = userDbContext.Users.Any(u => u.username == username && u.role == "Nhân viên");
+
+                if (!isNhanVien)
+                {
+                    return Forbid("Forbidden: Access denied. Only employees are allowed.");
+                }
+
+                var tongHopHoaDonDTOs = new List<TongHopHoaDonDTO>();
+
+                // Lấy các hóa đơn từ bảng HoaDonThanhToanDK
+                var hoaDonThanhToanEntities = userDbContext.HoaDonThanhToanDK
+                    .Where(h => h.TinhTrangThanhToan == "Đã thanh toán")
+                    .Select(h => new TongHopHoaDonDTO
+                    {
+                        MaHD = h.MaHD,
+                        SoTien = h.TongTien,
+                        ThoiGianGiaoDich = h.ThoiGianThanhToan,
+                        LoaiHoaDon = "Đơn đăng ký"
+                    })
+                    .ToList();
+
+                // Lấy các hóa đơn từ bảng HoaDonHoanTra
+                var hoaDonHoanTraEntities = userDbContext.HoaDonHoanTra
+                    .Select(h => new TongHopHoaDonDTO
+                    {
+                        MaHD = h.MaHDHoanTra,
+                        SoTien = h.SoTien,
+                        ThoiGianGiaoDich = h.ThoiGianTao,
+                        LoaiHoaDon = "Hoàn trả"
+                    })
+                    .ToList();
+
+                // Gộp danh sách hóa đơn từ cả hai bảng
+                tongHopHoaDonDTOs.AddRange(hoaDonThanhToanEntities);
+                tongHopHoaDonDTOs.AddRange(hoaDonHoanTraEntities);
+
+                // Sắp xếp danh sách theo thời gian giao dịch giảm dần
+                tongHopHoaDonDTOs = tongHopHoaDonDTOs.OrderByDescending(h => h.ThoiGianGiaoDich).ToList();
+
+                // Thêm thuộc tính STT vào danh sách
+                for (int i = 0; i < tongHopHoaDonDTOs.Count; i++)
+                {
+                    tongHopHoaDonDTOs[i].STT = i + 1;
+                }
+
+                return Ok(tongHopHoaDonDTOs);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Lỗi: {ex.Message}");
+            }
+        }
 
 
 

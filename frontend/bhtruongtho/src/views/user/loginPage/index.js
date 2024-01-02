@@ -1,19 +1,18 @@
 // Login.js
-import React, { memo, useEffect, useState } from "react";
-import { logingettoken, getUserInfoByToken } from "../../../api/connect";
-import { useNavigate, Link } from "react-router-dom";
-import { useUser } from "../../../context/UserContext";
 import {
+    Button,
     Container,
+    Grid,
     Paper,
     TextField,
-    Button,
-    Grid,
     Typography,
-    Snackbar,
 } from "@mui/material";
-
+import bcrypt from "bcryptjs";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { logingettoken } from "../../../api/connect";
 import { useSnackbar } from "../../../context/SnackbarContext";
+import { useUser } from "../../../context/UserContext";
 
 const Login = () => {
     const { openSnackbar } = useSnackbar();
@@ -65,40 +64,40 @@ const Login = () => {
 
                 return;
             }
+
+            // const hashedPassword = await bcrypt.hash(
+            //     formData.password,
+            //     formData.username
+            // );
             const res = await logingettoken(
                 formData.username,
                 formData.password
             );
-
-            // setSnackbarMessage("Đăng nhập thành công");
-            // setSnackbarOpen(true);
+            // const res = await logingettoken(formData.username, hashedPassword);
 
             if (res) {
                 login({
-                    username: formData.username,
+                    username: res.username,
                     token: res.token,
                     firstLogin: res.firstLogin,
-                    auth: true,
                     role: res.role,
                 });
                 localStorage.setItem("token", res.token);
+                localStorage.setItem("username", res.username);
 
                 console.log("Login successful.");
 
-                if (localStorage.getItem("firstLogin") == "true") {
-                    navigate("/PersonalInfo");
-                    return;
-                }
-                openSnackbar("Đăng nhập thành công");
+                openSnackbar("Đăng nhập thành công", "success");
                 navigate("/");
             }
         } catch (error) {
             try {
-                openSnackbar(error.response.data);
+                openSnackbar(error.response.data, "error");
             } catch {
-                openSnackbar("Có lỗi xảy ra khi kết nối với máy chủ");
+                openSnackbar("Có lỗi xảy ra khi kết nối với máy chủ", "error");
             }
         }
+        // openSnackbar("đmm", "error");
     };
 
     return (
