@@ -290,5 +290,131 @@ namespace BaoHiemYTe.Controllers
         {
             return _dbContext.DonDangKy.Any(e => e.MaDonDK == id);
         }
+
+        // GET: api/DonDangKy/KhachHang/TinhTrang
+        [HttpGet("LichSuDK/{tinhtrang}")]
+        public async Task<ActionResult<DonDangKyDTO>> GetDonDKUser(string tinhtrang)
+        {
+            try
+            {
+                var tokenService = new TokenService();
+                // Sử dụng TokenService để lấy username từ token
+                var username = tokenService.GetUsernameFromToken(HttpContext.Request);
+
+                if (string.IsNullOrEmpty(username))
+                {
+                    return Unauthorized("Unauthorized: Token is missing or invalid");
+                }
+                //var username = "khachhang";
+                // Lấy thông tin MaKH từ bảng KhachHang
+                var maKH = _dbContext.KhachHang
+                    .Where(u => u.username == username)
+                    .Select(u => u.MaKH)
+                    .FirstOrDefault();
+
+                if (maKH == 0)
+                {
+                    return NotFound($"Không tìm thấy thông tin khách hàng của người dùng {username}");
+                }
+
+                var donDangKys = await _dbContext.DonDangKy
+                    .Where(d => d.MaKH == maKH)
+                    .Where(d => d.TinhTrang == tinhtrang)
+                    .ToListAsync();
+
+                if (donDangKys == null)
+                {
+                    return NotFound();
+                }
+
+                var donDangKyDTOs = donDangKys.Select(d => new DonDangKyDTO
+                {
+                    MaDonDK = d.MaDonDK,
+                    MaGoiBH = d.MaGoiBH,
+                    // Thêm tên Gói Bảo Hiểm
+                    TenGoiBH = _dbContext.GoiBaoHiem
+                            .Where(g => g.MaGoiBH == d.MaGoiBH)
+                            .Select(g => g.TenGoiBH)
+                            .FirstOrDefault(),
+                    ThoiGianDK = d.ThoiGianDK,
+                    ThoiGianBD = d.ThoiGianBD,
+                    ThoiGianHetHan = d.ThoiGianHetHan,
+                    TinhTrang = d.TinhTrang,
+                    LiDoTuChoi = d.LiDoTuChoi,
+                    SoKyHanThanhToan = d.SoKyHanThanhToan,
+                    TongGia = d.TongGia,
+                    MaKH = d.MaKH,
+                    MaNV = d.MaNV
+                });
+
+                return Ok(donDangKyDTOs);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Lỗi: {ex.Message}");
+            }
+        }
+
+        // GET: api/DonDangKy/KhachHang
+        [HttpGet("LichSuDK")]
+        public async Task<ActionResult<DonDangKyDTO>> danhsachdondk()
+        {
+            try
+            {
+                var tokenService = new TokenService();
+                // Sử dụng TokenService để lấy username từ token
+                var username = tokenService.GetUsernameFromToken(HttpContext.Request);
+
+                if (string.IsNullOrEmpty(username))
+                {
+                    return Unauthorized("Unauthorized: Token is missing or invalid");
+                }
+                //var username = "khachhang";
+                // Lấy thông tin MaKH từ bảng KhachHang
+                var maKH = _dbContext.KhachHang
+                    .Where(u => u.username == username)
+                    .Select(u => u.MaKH)
+                    .FirstOrDefault();
+
+                if (maKH == 0)
+                {
+                    return NotFound($"Không tìm thấy thông tin khách hàng của người dùng {username}");
+                }
+
+                var donDangKys = await _dbContext.DonDangKy
+                    .Where(d => d.MaKH == maKH)
+                    .ToListAsync();
+
+                if (donDangKys == null)
+                {
+                    return NotFound();
+                }
+
+                var donDangKyDTOs = donDangKys.Select(d => new DonDangKyDTO
+                {
+                    MaDonDK = d.MaDonDK,
+                    MaGoiBH = d.MaGoiBH,
+                    TenGoiBH = _dbContext.GoiBaoHiem
+                            .Where(g => g.MaGoiBH == d.MaGoiBH)
+                            .Select(g => g.TenGoiBH)
+                            .FirstOrDefault(),
+                    ThoiGianDK = d.ThoiGianDK,
+                    ThoiGianBD = d.ThoiGianBD,
+                    ThoiGianHetHan = d.ThoiGianHetHan,
+                    TinhTrang = d.TinhTrang,
+                    LiDoTuChoi = d.LiDoTuChoi,
+                    SoKyHanThanhToan = d.SoKyHanThanhToan,
+                    TongGia = d.TongGia,
+                    MaKH = d.MaKH,
+                    MaNV = d.MaNV
+                });
+
+                return Ok(donDangKyDTOs);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Lỗi: {ex.Message}");
+            }
+        }
     }
 }

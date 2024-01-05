@@ -24,6 +24,7 @@ public class DonDangKyDTO
 
     public NhanVien? NhanVien { get; set; }
     public List<int> BenhIds { get; set; }  // Danh sách id bệnh
+    public string TenGoiBH { get; set; }
 }
 
 

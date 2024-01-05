@@ -199,6 +199,8 @@ namespace BaoHiemYTe.Controllers
                 return StatusCode(500, $"Lỗi: {ex.Message}");
             }
         }
+
+
         /*
         [HttpGet]
         public IEnumerable<string> Get()

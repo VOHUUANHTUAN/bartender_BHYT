@@ -13,9 +13,8 @@ const HomePageStaff = () => {
                     </li>
                     <li>Đơn thanh toán</li>
                     <li>Danh sách khách hàng</li>
-                    <li>Lịch sử thanh toán</li>
+                    <li> <Link to="/historyPay">Lịch sử thanh toán</Link></li>
                     <li> <Link to="/insurancePackManagement">Chính sách bảo hiểm</Link></li>
-                    <li>Lịch sử thanh toán</li>
                     <li>Báo cáo tài chính</li>
                     <li>Ưu đãi dành cho nhận viên</li>
                     <li>Các chương trình sắp tới của công ty</li>

@@ -270,6 +270,16 @@ const Header = () => {
                                             </MenuItem>
                                             <MenuItem onClick={handleClose}>
                                                 <ListItemIcon>
+                                                    <LockIcon fontSize="small" />
+                                                </ListItemIcon>
+                                                <Link
+                                                    to={`/${ROUTERS.USER.HISTORYREGISTER}`}
+                                                >
+                                                    Lịch sử đăng ký
+                                                </Link>
+                                            </MenuItem>
+                                            <MenuItem onClick={handleClose}>
+                                                <ListItemIcon>
                                                     <AddCircleIcon fontSize="small" />
                                                 </ListItemIcon>
                                                 <Link to="/requestinvoice">

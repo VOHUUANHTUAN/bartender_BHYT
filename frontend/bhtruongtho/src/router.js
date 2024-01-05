@@ -32,6 +32,9 @@ import { dayCalendarSkeletonClasses } from "@mui/x-date-pickers";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getUserInfoByToken } from "./api/connect";
 import { useSnackbar } from "./context/SnackbarContext";
+import HistoryRegister from "./views/user/historyRegister/index.js";
+import HistoryPay from "./views/user/historyPay/index.js";
+
 
 const AuthGuard = ({ component: Component, loginRequired }) => {
     const { user, login, logout } = useUser();
@@ -147,6 +150,16 @@ const RouterCustom = () => {
         {
             path: ROUTERS.USER.FINANCIALREPORT,
             component: <FinancialReport />,
+            loginRequired: true,
+        },
+        {
+            path: ROUTERS.USER.HISTORYREGISTER,
+            component: <HistoryRegister />,
+            loginRequired: true,
+        },
+        {
+            path: ROUTERS.USER.HISTORYPAY,
+            component: <HistoryPay />,
             loginRequired: true,
         },
     ];

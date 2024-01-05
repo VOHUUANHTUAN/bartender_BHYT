@@ -31,6 +31,10 @@ const END_POINT = {
 
     HOADONKHAMBENH: "HoaDonKhamBenh",
     GETSOTIENKHAM: "GetSoTienKham",
+    LICHSUDK: "LichSuDK",
+    DSDONDK: "DSDonDKByUser",
+    LICHSUDATHANHTOAN: "LichSuDaThanhToan",
+    TATCALICHSUDATHANHTOAN: "TatCaLichSuDaThanhToan",
 };
 
 export const getGoiBHAPI = () => {
@@ -370,3 +374,31 @@ export const getGoiBHByNV = (token) => {
         },
     });
 };
+
+export const getLichSuDK = (token, tinhtrang) => {
+    return axiosClient.get(`${END_POINT.DONDANGKY}/${END_POINT.LICHSUDK}/${tinhtrang}`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+};
+
+export const getDSDonDK = (token) => {
+    return axiosClient.get(`${END_POINT.DONDANGKY}/${END_POINT.LICHSUDK}`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+};
+
+export const getLichSuDaThanhToan = (user) => {
+    return axiosClient.get(
+        `${END_POINT.HOADONTHANHTOANDK}/${END_POINT.LICHSUDATHANHTOAN}/${user}`
+    );
+}
+
+export const getAllLichSuDaThanhToan = () => {
+    return axiosClient.get(
+        `${END_POINT.HOADONTHANHTOANDK}/${END_POINT.TATCALICHSUDATHANHTOAN}`
+    );
+}

@@ -184,6 +184,5 @@ namespace BaoHiemYTe.Controllers
                 return StatusCode(500, $"Lỗi trong quá trình đổi mật khẩu: {ex.Message}");
             }
         }
-
     }
 }
