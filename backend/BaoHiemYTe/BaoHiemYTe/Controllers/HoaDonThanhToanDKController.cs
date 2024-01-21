@@ -1,4 +1,5 @@
 ﻿using BaoHiemYTe.Data;
+using BaoHiemYTe.Domain;
 using BaoHiemYTe.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -83,9 +84,13 @@ namespace BaoHiemYTe.Controllers
                     })
                     .ToList();
 
+                var maDonYCs = userDbContext.YeuCauHoanTra
+                    .Where(d => d.MaKH == maKH)
+                    .Select(d => d.MaYC)
+                    .ToList();
                 // Lấy thông tin Hóa Đơn Hoàn Trả từ bảng HoaDonHoanTra
                 var hoaDonHoanTraEntities = userDbContext.HoaDonHoanTra
-                    .Where(h => maDonDKs.Contains(h.MaYC))
+                    .Where(h => maDonYCs.Contains(h.MaYC))
                     .Select(h => new CombinedHoaDon
                     {
                         MaHD = h.MaHDHoanTra,
@@ -522,11 +527,6 @@ namespace BaoHiemYTe.Controllers
                 return StatusCode(500, $"Lỗi: {ex.Message}");
             }
         }
-
-
-
-
-
 
 
 

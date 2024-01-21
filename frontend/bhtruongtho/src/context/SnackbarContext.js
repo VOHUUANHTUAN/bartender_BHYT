@@ -1,15 +1,18 @@
-// Trong file SnackbarContext.js
 import React, { createContext, useState, useContext } from "react";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 
 const SnackbarContext = createContext();
 
 const SnackbarProvider = ({ children }) => {
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState("");
-    const [snackbarSeverity, setSnackbarSeverity] = useState("error"); // 'error', 'success', 'warning', 'info'
+    const [snackbarSeverity, setSnackbarSeverity] = useState("");
+    // 'error', 'success', 'warning', 'info'
 
-    const openSnackbar = (message) => {
+    const openSnackbar = (message, severity = "info") => {
         setSnackbarMessage(message);
+        setSnackbarSeverity(severity);
         setSnackbarOpen(true);
     };
 
@@ -18,8 +21,27 @@ const SnackbarProvider = ({ children }) => {
     };
 
     return (
-        <SnackbarContext.Provider value={{ openSnackbar, closeSnackbar }}>
+        <SnackbarContext.Provider
+            value={{ openSnackbar, closeSnackbar, snackbarSeverity }}
+        >
             {children}
+            <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={4000}
+                onClose={closeSnackbar}
+                anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                sx={{ marginTop: "40px" }}
+            >
+                {/* Use Alert component for severity */}
+                <MuiAlert
+                    elevation={6}
+                    variant="filled"
+                    severity={snackbarSeverity}
+                    onClose={closeSnackbar}
+                >
+                    {snackbarMessage}
+                </MuiAlert>
+            </Snackbar>
         </SnackbarContext.Provider>
     );
 };

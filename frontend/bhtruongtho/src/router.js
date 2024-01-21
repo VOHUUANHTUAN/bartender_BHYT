@@ -14,7 +14,7 @@ import { useUser } from "../src/context/UserContext.js";
 import InsuranceRegistration from "./views/user/InsuranceRegistration";
 import ListDonDangKy from "./views/user/registrationForm/index.js";
 import DonDangKyDetail from "./views/user/registrationForm/regisdetail.js";
-import PersonalInfo from "./views/user/personalInfoPage/index.js";
+import Profile from "./views/user/profilePage/index.js";
 import Pay from "./views/user/payPage/index.js";
 import PaidDetail from "./views/user/payPage/paidDetail.js";
 import UnPaidDetail from "./views/user/payPage/unpaidDetail.js";
@@ -26,22 +26,37 @@ import AddInsPack from "./views/staff/insurancePackManagement/addInsPack.js";
 
 import ListYeuCauHoanTra from "./views/user/CapNhatYeuCauHoanTra/index.js";
 import YeuCauHoanTraDetail from "./views/user/CapNhatYeuCauHoanTra/detailycht.js";
-import Invoice from "./views/user/invoicePage";
+import Transactions from "./views/user/transactionsPage";
 import { useEffect } from "react";
 import { dayCalendarSkeletonClasses } from "@mui/x-date-pickers";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { getUserInfoByToken } from "./api/connect";
+import { useSnackbar } from "./context/SnackbarContext";
 
 const AuthGuard = ({ component: Component, loginRequired }) => {
+    const { user, login, logout } = useUser();
+
+    //Nếu loginRequired=true và Không_Có_Koken
     if (loginRequired && !localStorage.getItem("token")) {
-        // Redirect to login if login is required and the user is not authenticated
         return <Navigate to={`/${ROUTERS.USER.LOGIN}`} />;
     }
-
-    // Render the component if login is not required or the user is authenticated
     return Component;
 };
+
 const RouterCustom = () => {
+    const location = useLocation();
+    const { user } = useUser();
+    const navigate = useNavigate();
+
+    //Mỗi khi có đường dẫn thay đổi thì kiểm tra
+    useEffect(() => {
+        // Hành động mà bạn muốn thực hiện khi đường dẫn thay đổi
+        console.log("Đường dẫn đã thay đổi:", location.pathname);
+        if (user && user.firstLogin) {
+            navigate("/Profile");
+        }
+        // kiemTraCacThongTinDangNhap(localStorage.getItem("token"));
+    }, [location.pathname]);
     const userRouters = [
         {
             path: ROUTERS.USER.HOME,
@@ -73,106 +88,68 @@ const RouterCustom = () => {
         {
             path: ROUTERS.USER.CHANGEPASSWORD,
 
-			component: <ChangePassword />,
-			loginRequired: true,
-		},
-		{
-			path: ROUTERS.USER.PAY,
-
-			component: <Pay />,
-			loginRequired: true,
-		},
-		{
-			path: ROUTERS.USER.STAFF,
-			component: <HomePageStaff />,
-			loginRequired: false,
-		},
-		{
-			path: ROUTERS.USER.REQUESTINVOICE,
-			component: <RequestInvoicePage />,
-			loginRequired: true,
-		},
-		{
-			path: ROUTERS.USER.PERSONALINFO,
-			component: <PersonalInfo />,
-		},
-		{
-			path: ROUTERS.USER.INSURANCEREGISTRATION,
-			component: <InsuranceRegistration />,
-		},
-		{
-			path: ROUTERS.USER.DONDANGKY,
-			component: <ListDonDangKy />,
-		},
-		{
-			path: ROUTERS.USER.INSURANCEPACKM,
-			component: <InsurancePack />,
-		},
-		{
-			path: ROUTERS.USER.ADDINSPACK,
-			component: <AddInsPack />,
-		},
-		{
-			path: ROUTERS.USER.YEUCAUHOANTRA,
-			component: <ListYeuCauHoanTra />,
-		},
-
-        {
-            path: ROUTERS.USER.HOADON,
-            component: <Invoice />,
+            component: <ChangePassword />,
+            loginRequired: true,
         },
         {
-			path: ROUTERS.USER.INFOCUSTOMER,
-			component: <InfoCustomer />,
-			loginRequired: true,
-		},
+            path: ROUTERS.USER.PAY,
+
+            component: <Pay />,
+            loginRequired: true,
+        },
         {
-			path: ROUTERS.USER.FINANCIALREPORT,
-			component: <FinancialReport />,
-			loginRequired: true,
-		},
+            path: ROUTERS.USER.STAFF,
+            component: <HomePageStaff />,
+            loginRequired: false,
+        },
+        {
+            path: ROUTERS.USER.REQUESTINVOICE,
+            component: <RequestInvoicePage />,
+            loginRequired: true,
+        },
+        {
+            path: ROUTERS.USER.PROFILE,
+            component: <Profile />,
+            loginRequired: true,
+        },
+        {
+            path: `${ROUTERS.USER.INSURANCEREGISTRATION}/:id`,
+            component: <InsuranceRegistration />,
+            loginRequired: true,
+        },
+        {
+            path: ROUTERS.USER.DONDANGKY,
+            component: <ListDonDangKy />,
+        },
+        {
+            path: ROUTERS.USER.INSURANCEPACKM,
+            component: <InsurancePack />,
+        },
+        {
+            path: ROUTERS.USER.ADDINSPACK,
+            component: <AddInsPack />,
+        },
+        {
+            path: ROUTERS.USER.YEUCAUHOANTRA,
+            component: <ListYeuCauHoanTra />,
+        },
+
+        {
+            path: ROUTERS.USER.TRANSACTION,
+            component: <Transactions />,
+            loginRequired: true,
+        },
+        {
+            path: ROUTERS.USER.INFOCUSTOMER,
+            component: <InfoCustomer />,
+            loginRequired: true,
+        },
+        {
+            path: ROUTERS.USER.FINANCIALREPORT,
+            component: <FinancialReport />,
+            loginRequired: true,
+        },
     ];
-    const location = useLocation();
-    const { user, login, logout } = useUser();
-
-	const getUserInfo = async (token) => {
-		try {
-			const response = await getUserInfoByToken(token);
-			if (response) {
-				logout();
-				login({
-					username: response.username,
-					token: token,
-					firstLogin: response.firstLogin,
-					role: response.role,
-				});
-				localStorage.clear();
-				localStorage.setItem("token", token);
-				console.log("Login successful");
-			} else {
-				localStorage.clear();
-				<Navigate to={`/${ROUTERS.USER.LOGIN}`} />;
-				console.log("Login fail");
-
-				logout();
-			}
-		} catch (error) {
-			localStorage.clear();
-			console.log("Login fail");
-			logout();
-			<Navigate to={`/${ROUTERS.USER.LOGIN}`} />;
-			console.log(error.message);
-		}
-	};
-
-    useEffect(() => {
-        // Hành động mà bạn muốn thực hiện khi đường dẫn thay đổi
-        // getUserInfo(localStorage.getItem("token"));
-        console.log("Đường dẫn đã thay đổi:", location.pathname);
-        // console.log("loginRequired:", userRouters.loginRequired);
-
-		// Thêm các hành động cần thực hiện ở đây...
-	}, [location.pathname]);
 
     return (
         <MasterLayout>
@@ -181,10 +158,16 @@ const RouterCustom = () => {
                     <Route
                         key={key}
                         path={item.path}
-                        element={item.component}
+                        // element={item.component}
                         // element={<AuthGuard item.component item.loginRequired  />}
+                        element={
+                            <AuthGuard
+                                component={item.component}
+                                loginRequired={item.loginRequired}
+                            />
+                        }
                     />
-                ))}
+                ))}{" "}
                 <Route
                     path="product/detail/:id"
                     element={<ProductDetailPage />}

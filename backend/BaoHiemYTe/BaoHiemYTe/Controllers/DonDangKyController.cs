@@ -178,14 +178,14 @@ namespace BaoHiemYTe.Controllers
                         var tinhTrangBenh = new TinhTrangBenh
                         {
                             MaDonDK = donDangKy.MaDonDK,
-                            MaBenh = benhId,
-                            TinhTrang = "" // Thay bằng tình trạng thích hợp
+                            MaBenh = benhId.MaBenh,
+                            TinhTrang = benhId.TinhTrang // Thay bằng tình trạng thích hợp
                         };
 
                         _dbContext.TinhTrangBenh.Add(tinhTrangBenh);
                     }
 
-                   
+
 
                     await _dbContext.SaveChangesAsync();
                     transaction.Commit();

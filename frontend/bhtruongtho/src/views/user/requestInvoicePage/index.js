@@ -1,6 +1,5 @@
 import React, { memo, useState, useEffect } from "react";
 import {
-
     createRequest,
     getGoiBHByCus,
     getBenhByMaGBH,
@@ -24,10 +23,11 @@ import {
     Snackbar,
 } from "@mui/material";
 import Box from "@mui/material/Box";
+import { useSnackbar } from "../../../context/SnackbarContext";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 const RequestInvoice = () => {
-
     //user context
+    const { openSnackbar } = useSnackbar();
     const { user } = useUser();
     //error và loading
     const [error, setError] = useState(null);
@@ -44,12 +44,12 @@ const RequestInvoice = () => {
         useState("");
     const [requestList, setRequestList] = useState([]);
 
-	//Cấu hình cho tab
-	const [value, setValue] = useState(0);
+    //Cấu hình cho tab
+    const [value, setValue] = useState(0);
 
-	const handleChangeTab = (event, newValue) => {
-		setValue(newValue);
-	};
+    const handleChangeTab = (event, newValue) => {
+        setValue(newValue);
+    };
 
     //Dữ liệu nhập cần validate
     const [formData, setFormData] = useState({
@@ -58,16 +58,9 @@ const RequestInvoice = () => {
         // ... other fields
     });
 
-	//thông báo lỗi
-	const [invoiceCodeError, setInvoiceCodeError] = useState(false);
-	const [amountError, setAmountError] = useState(false);
-	const [snackbarOpen, setSnackbarOpen] = useState(false);
-	const [snackbarMessage, setSnackbarMessage] = useState("");
-
-	//handle tab thông báo
-	const handleSnackbarClose = () => {
-		setSnackbarOpen(false);
-	};
+    //thông báo lỗi
+    const [invoiceCodeError, setInvoiceCodeError] = useState(false);
+    const [amountError, setAmountError] = useState(false);
 
     //handle cho dữ liệu thay đổi
     const handleChangeData = (e) => {
@@ -112,16 +105,18 @@ const RequestInvoice = () => {
                 if (selectedHospitalName && formData.invoiceCode !== "") {
                     // Gọi API
                     try {
-                        const soTienKhamBenh = await getSoTienKhamByCus(localStorage.getItem("token"), formData.invoiceCode, selectedHospitalName);
+                        const soTienKhamBenh = await getSoTienKhamByCus(
+                            localStorage.getItem("token"),
+                            formData.invoiceCode,
+                            selectedHospitalName
+                        );
                         // Gọi API thành công, thiết lập giá trị cho amount
                         setAmount(soTienKhamBenh);
                     } catch (error) {
                         // Xử lý lỗi khi không thể gọi được API
-                        setSnackbarMessage(error.response.data);
-                        setSnackbarOpen(true);
+                        openSnackbar(error.response.data, "error");
                         setAmount("");
                     }
-
                 }
             } catch (error) {
                 setError(error);
@@ -138,7 +133,9 @@ const RequestInvoice = () => {
                 setLoading(true);
                 //API cho tab1
                 // Gọi API để lấy dữ liệu về gói Bảo hiểm
-                const goiBHByUs = await getGoiBHByCus(localStorage.getItem("token"));
+                const goiBHByUs = await getGoiBHByCus(
+                    localStorage.getItem("token")
+                );
                 setInsurancePackages(goiBHByUs);
                 //gọi api lấy dữ liệu tất cả bệnh viện
                 const benhVien = await getBenhVienAPI();
@@ -154,7 +151,9 @@ const RequestInvoice = () => {
                 }
                 //API cho tab2
                 //Gọi API để lấy yêu cầu hoàn trả theo username
-                const yCHTByUs = await getYCHTByCus(localStorage.getItem("token"));
+                const yCHTByUs = await getYCHTByCus(
+                    localStorage.getItem("token")
+                );
                 setRequestList(yCHTByUs);
             } catch (error) {
                 setError(error);
@@ -165,40 +164,39 @@ const RequestInvoice = () => {
         fetchData();
     }, [user, selectedInsurancePackage, value]); //những thuộc tính nếu thay đôi sẽ gọi lại useEffect
 
-	const handleInsurancePackageChange = (e) => {
-		setSelectedInsurancePackage(e.target.value);
-	};
-	// Hàm để lấy tên gói bảo hiểm dựa trên MaGoiBH
-	const getInsurancePackageName = (maGoiBHApDung) => {
-		const foundPackage = insurancePackages.find(
-			(packageItem) => packageItem.maGoiBH === maGoiBHApDung
-		);
-		return foundPackage ? foundPackage.tenGoiBH : "Unknown";
-	};
-	//hàm lấy tên bệnh dựa trên mã bệnh
-	const getDiseaseName = (maBenh) => {
-		const foundPackage = diseases.find(
-			(packageItem) => packageItem.maBenh === maBenh
-		);
-		return foundPackage.tenBenh;
-	};
-	//hàm lấy tên bệnh viện dựa trên mã bệnh viện
-	const getHospitalName = (maBenhVien) => {
-		const foundPackage = hospitalNameList.find(
-			(packageItem) => packageItem.maBV === maBenhVien
-		);
-		return foundPackage.tenBV;
-	};
+    const handleInsurancePackageChange = (e) => {
+        setSelectedInsurancePackage(e.target.value);
+    };
+    // Hàm để lấy tên gói bảo hiểm dựa trên MaGoiBH
+    const getInsurancePackageName = (maGoiBHApDung) => {
+        const foundPackage = insurancePackages.find(
+            (packageItem) => packageItem.maGoiBH === maGoiBHApDung
+        );
+        return foundPackage ? foundPackage.tenGoiBH : "Unknown";
+    };
+    //hàm lấy tên bệnh dựa trên mã bệnh
+    const getDiseaseName = (maBenh) => {
+        const foundPackage = diseases.find(
+            (packageItem) => packageItem.maBenh === maBenh
+        );
+        return foundPackage.tenBenh;
+    };
+    //hàm lấy tên bệnh viện dựa trên mã bệnh viện
+    const getHospitalName = (maBenhVien) => {
+        const foundPackage = hospitalNameList.find(
+            (packageItem) => packageItem.maBV === maBenhVien
+        );
+        return foundPackage.tenBV;
+    };
 
-	//Xử lý tính số tiền hoàn trả
-	//Dùng useEffect để bắt thay đổi ở bảo hiểm, tiền
-	useEffect(() => {
-		//lấy tỉ lệ hoàn tiền dựa trên mã bảo hiểm
-		const selectedGoiBH = insurancePackages.find(
-			(packageItem) => packageItem.maGoiBH === selectedInsurancePackage
-		);
-		const refundRate = selectedGoiBH ? selectedGoiBH.tiLeHoanTien : 0;
-
+    //Xử lý tính số tiền hoàn trả
+    //Dùng useEffect để bắt thay đổi ở bảo hiểm, tiền
+    useEffect(() => {
+        //lấy tỉ lệ hoàn tiền dựa trên mã bảo hiểm
+        const selectedGoiBH = insurancePackages.find(
+            (packageItem) => packageItem.maGoiBH === selectedInsurancePackage
+        );
+        const refundRate = selectedGoiBH ? selectedGoiBH.tiLeHoanTien : 0;
 
         // Convert the amount to a float, defaulting to 0 if NaN
         const amountFloat = parseFloat(amount) || 0;
@@ -226,8 +224,7 @@ const RequestInvoice = () => {
         //gọi hàm validate
         const validationError = validateForm();
         if (validationError) {
-            setSnackbarMessage(validationError);
-            setSnackbarOpen(true);
+            openSnackbar(validationError, "error");
             return;
         }
         // Handle form submission logic here
@@ -246,95 +243,92 @@ const RequestInvoice = () => {
             //gọi api post
             const responseData = await createRequest(yeuCauData);
             //thông báo thành công
-            setSnackbarMessage(responseData);
-            setSnackbarOpen(true);
+            openSnackbar(responseData, "success");
         } catch (error) {
             // Xử lý các lỗi khác (ví dụ: mất kết nối)
             //thông báo lỗi
-            setSnackbarMessage(error.response.data);
-            setSnackbarOpen(true);
+            openSnackbar(error.response.data, "error");
         } finally {
             setLoading(false);
         }
     };
 
-	//Số thứ tự cho đơn yêu cầu
-	let idCounter = 1; // Initialize a counter
-	// Function to generate unique ids
-	const generateUniqueId = () => {
-		return idCounter++;
-	};
-	//hàm format định dạng thời gian Output: 04/10/2023 08:30
-	function formatDateTime(dateTimeString) {
-		const options = { year: "numeric", month: "2-digit", day: "2-digit" };
-		const date = new Date(dateTimeString);
-		const formattedDate = date.toLocaleDateString("en-GB", options);
-		const hours = date.getHours().toString().padStart(2, "0");
-		const minutes = date.getMinutes().toString().padStart(2, "0");
-		const formattedTime = `${hours}:${minutes}`;
-		return `${formattedDate} ${formattedTime}`;
-	}
-	//đổ dữ liệu vào rows trong datagrid
-	const rows = requestList.map((row) => ({
-		id: generateUniqueId(),
-		maHDKhamBenh: row.maHDKhamBenh,
-		tenBenhVien: row.tenBenhVien,
-		soTienDaKham: row.soTienDaKham,
-		benh: row.benh,
-		thoiGianTao: formatDateTime(row.thoiGianTao),
-		tinhTrang: row.tinhTrang,
-		tenGoiBHApDung: getInsurancePackageName(row.maGoiBHApDung),
-		soTienHoanTra: row.soTienHoanTra,
-	}));
+    //Số thứ tự cho đơn yêu cầu
+    let idCounter = 1; // Initialize a counter
+    // Function to generate unique ids
+    const generateUniqueId = () => {
+        return idCounter++;
+    };
+    //hàm format định dạng thời gian Output: 04/10/2023 08:30
+    function formatDateTime(dateTimeString) {
+        const options = { year: "numeric", month: "2-digit", day: "2-digit" };
+        const date = new Date(dateTimeString);
+        const formattedDate = date.toLocaleDateString("en-GB", options);
+        const hours = date.getHours().toString().padStart(2, "0");
+        const minutes = date.getMinutes().toString().padStart(2, "0");
+        const formattedTime = `${hours}:${minutes}`;
+        return `${formattedDate} ${formattedTime}`;
+    }
+    //đổ dữ liệu vào rows trong datagrid
+    const rows = requestList.map((row) => ({
+        id: generateUniqueId(),
+        maHDKhamBenh: row.maHDKhamBenh,
+        tenBenhVien: row.tenBenhVien,
+        soTienDaKham: row.soTienDaKham,
+        benh: row.benh,
+        thoiGianTao: formatDateTime(row.thoiGianTao),
+        tinhTrang: row.tinhTrang,
+        tenGoiBHApDung: getInsurancePackageName(row.maGoiBHApDung),
+        soTienHoanTra: row.soTienHoanTra,
+    }));
 
-	//tạo columnn cho datagrid
-	const columns = [
-		{ field: "id", headerName: "STT", width: 50 },
-		{ field: "maHDKhamBenh", headerName: "Mã HĐ Khám Bệnh", width: 150 },
-		{ field: "tenBenhVien", headerName: "Tên Bệnh Viện", width: 250 },
-		{ field: "benh", headerName: "Bệnh", width: 150 },
-		{ field: "tenGoiBHApDung", headerName: "Gói BH Áp Dụng", width: 200 },
-		{
-			field: "soTienDaKham",
-			headerName: "Số Tiền Đã Khám",
-			type: "number",
-			width: 150,
-		},
-		{
-			field: "soTienHoanTra",
-			headerName: "Số Tiền Hoàn Trả",
-			type: "number",
-			width: 150,
-		},
-		{
-			//một chút màu sắc cho cột tình trạng
-			field: "tinhTrang",
-			headerName: "Tình Trạng",
-			width: 100,
-			renderCell: (params) => {
-				const tinhTrangValue = params.value;
-				let cellColor;
-				// Set colors based on tinhTrangValue
-				switch (tinhTrangValue) {
-					case "Đã hoàn tiền":
-						cellColor = "green";
-						break;
-					case "Chờ duyệt":
-						cellColor = "orange";
-						break;
-					case "Không đủ điều kiện":
-						cellColor = "red";
-						break;
-					// Add more cases as needed
-					default:
-						cellColor = "black";
-				}
-				return <div style={{ color: cellColor }}>{tinhTrangValue}</div>;
-			},
-		},
-		{ field: "thoiGianTao", headerName: "Thời Gian Tạo", width: 200 },
-	];
-
+    //tạo columnn cho datagrid
+    const columns = [
+        { field: "id", headerName: "STT", width: 50 },
+        { field: "maHDKhamBenh", headerName: "Mã HĐ Khám Bệnh", width: 150 },
+        { field: "tenBenhVien", headerName: "Tên Bệnh Viện", width: 250 },
+        { field: "benh", headerName: "Bệnh", width: 150 },
+        { field: "tenGoiBHApDung", headerName: "Gói BH Áp Dụng", width: 200 },
+        {
+            field: "soTienDaKham",
+            headerName: "Số Tiền Đã Khám",
+            type: "number",
+            width: 150,
+        },
+        {
+            field: "soTienHoanTra",
+            headerName: "Số Tiền Hoàn Trả",
+            type: "number",
+            width: 150,
+        },
+        {
+            //một chút màu sắc cho cột tình trạng
+            field: "tinhTrang",
+            headerName: "Tình Trạng",
+            width: 100,
+            renderCell: (params) => {
+                const tinhTrangValue = params.value;
+                let cellColor;
+                // Set colors based on tinhTrangValue
+                switch (tinhTrangValue) {
+                    case "Đã hoàn tiền":
+                        cellColor = "green";
+                        break;
+                    case "Chờ duyệt":
+                        cellColor = "orange";
+                        break;
+                    case "Không đủ điều kiện":
+                        cellColor = "red";
+                        break;
+                    // Add more cases as needed
+                    default:
+                        cellColor = "black";
+                }
+                return <div style={{ color: cellColor }}>{tinhTrangValue}</div>;
+            },
+        },
+        { field: "thoiGianTao", headerName: "Thời Gian Tạo", width: 200 },
+    ];
 
     return (
         <Container component="main" maxWidth="md">
@@ -496,13 +490,6 @@ const RequestInvoice = () => {
                     )}
                 </div>
             </Paper>
-            <Snackbar
-                open={snackbarOpen}
-                autoHideDuration={2000}
-                onClose={handleSnackbarClose}
-                message={snackbarMessage}
-                anchorOrigin={{ vertical: "top", horizontal: "right" }}
-            />
         </Container>
     );
 };

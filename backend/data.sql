@@ -1,8 +1,7 @@
 ﻿--Create database BaoHiemYTe
 --go 
---use BaoHiemYTe
---go
-
+use BaoHiemYTe
+go
 -- Thay đổi cột để cho phép giá trị NULL
 --ALTER TABLE DonDangKy
 --ALTER COLUMN MaNV INT NULL;

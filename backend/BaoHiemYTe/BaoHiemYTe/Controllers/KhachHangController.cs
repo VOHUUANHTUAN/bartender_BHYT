@@ -46,13 +46,13 @@ namespace BaoHiemYTe.Controllers
                     {
                         MaKH = existingKhachHang.MaKH,
                         HoTen = existingKhachHang.HoTen,
-                        NgaySinh = existingKhachHang.NgaySinh,
-                        GioiTinh = existingKhachHang.GioiTinh,
                         CCCD = existingKhachHang.CCCD,
                         DiaChi = existingKhachHang.DiaChi,
                         SDT = existingKhachHang.SDT,
-                        Email = existingKhachHang.Email   ,
+                        Email = existingKhachHang.Email,
                         SoDu = existingKhachHang.SoDu,
+                        NgaySinh = existingKhachHang.NgaySinh,
+                        GioiTinh = existingKhachHang.GioiTinh,
                         username = username_
                     };
 
@@ -93,6 +93,9 @@ namespace BaoHiemYTe.Controllers
                     existingKhachHang.DiaChi = khachHangDTO.DiaChi;
                     existingKhachHang.SDT = khachHangDTO.SDT;
                     existingKhachHang.Email = khachHangDTO.Email;
+                    existingKhachHang.GioiTinh = khachHangDTO.GioiTinh;
+                    existingKhachHang.CCCD = khachHangDTO.CCCD;
+                    existingKhachHang.NgaySinh = khachHangDTO.NgaySinh;
                     userDbContext.SaveChanges();
                     return Ok("Cập nhật thông tin thành công");
                 }
@@ -106,6 +109,9 @@ namespace BaoHiemYTe.Controllers
                         SDT = khachHangDTO.SDT,
                         SoDu = 5000000,
                         Email = khachHangDTO.Email,
+                        CCCD = khachHangDTO.CCCD,
+                        GioiTinh = khachHangDTO.GioiTinh,
+                        NgaySinh = khachHangDTO.NgaySinh,
                         username = username_
                     };
                     userDbContext.KhachHang.Add(newKhachHang);
@@ -141,6 +147,7 @@ namespace BaoHiemYTe.Controllers
         [HttpGet("GetAllKhachHang")]
         public IActionResult GetAllKhachHang()
         {
+
             try
             {
                 var tokenService = new TokenService();

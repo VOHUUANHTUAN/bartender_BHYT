@@ -1,43 +1,89 @@
-// File: TaskAndImage.js
-import { memo } from "react"
-import "./style.scss"
-import logo from "./staff_img.jpeg"
+// src/components/HomePageStaff.js
+
+import React from "react";
 import { Link } from "react-router-dom";
+import { Container, Typography, List, ListItem, Button } from "@mui/material";
+
 const HomePageStaff = () => {
     return (
-        <div className="task-and-image">
-            <div className="task-bar">
-                <ul>
-                    <li>
-                        <Link to="/registrationForms">Duyệt đơn đăng ký</Link>
-                    </li>
-                    <li>Đơn thanh toán</li>
-                    <li>Danh sách khách hàng</li>
-                    <li>Lịch sử thanh toán</li>
-                    <li> <Link to="/insurancePackManagement">Chính sách bảo hiểm</Link></li>
-                    <li>Lịch sử thanh toán</li>
-                    <li>Báo cáo tài chính</li>
-                    <li>Ưu đãi dành cho nhận viên</li>
-                    <li>Các chương trình sắp tới của công ty</li>
-                </ul>
-            </div>
-            <div className="image-display">
-                <img src={logo} alt="Image_staff" />
-                <div className="text_over_image">Hãy làm việc bằng cả trái tim bạn nhé!!!</div>
-            </div>
-            <div className="work_title">
-                <div className="work_title_01">
-                    <h1>Khách hàng là thượng đế</h1>
-                    <p>Hãy làm việc để phục vụ khách hàng và công ty chúng ta sẽ ngày càng phát triển</p>
-                </div>
-                <div className="work_title_02">
-                    <h1>Chăm chỉ làm việc</h1>
-                    <p>Có một công việc và làm việc hăng say là một con người hạnh phúc, có ích với xã hội</p>
-                </div>
-            </div>
-        </div>
-
+        <Container maxWidth="md" sx={{ marginTop: 5 }}>
+            <Typography variant="h3" align="center" gutterBottom>
+                Staff Home Page
+            </Typography>
+            <List>
+                <ListItem>
+                    <Button
+                        component={Link}
+                        to="/staff"
+                        variant="contained"
+                        color="primary"
+                    >
+                        Staff
+                    </Button>
+                </ListItem>
+                <ListItem>
+                    <Button
+                        component={Link}
+                        to="/registrationForms"
+                        variant="contained"
+                        color="primary"
+                    >
+                        Registration Forms
+                    </Button>
+                </ListItem>
+                <ListItem>
+                    <Button
+                        component={Link}
+                        to="/transactions"
+                        variant="contained"
+                        color="primary"
+                    >
+                        Transactions
+                    </Button>
+                </ListItem>
+                <ListItem>
+                    <Button
+                        component={Link}
+                        to="/insurancePackManagement/add"
+                        variant="contained"
+                        color="primary"
+                    >
+                        Add Insurance Pack
+                    </Button>
+                </ListItem>
+                <ListItem>
+                    <Button
+                        component={Link}
+                        to="/insurancePackManagement"
+                        variant="contained"
+                        color="primary"
+                    >
+                        Insurance Pack Management
+                    </Button>
+                </ListItem>
+                <ListItem>
+                    <Button
+                        component={Link}
+                        to="/infoCustomer"
+                        variant="contained"
+                        color="primary"
+                    >
+                        Info Customer
+                    </Button>
+                </ListItem>
+                <ListItem>
+                    <Button
+                        component={Link}
+                        to="/financialReport"
+                        variant="contained"
+                        color="primary"
+                    >
+                        Financial Report
+                    </Button>
+                </ListItem>
+            </List>
+        </Container>
     );
 };
 
-export default memo(HomePageStaff);
+export default HomePageStaff;
