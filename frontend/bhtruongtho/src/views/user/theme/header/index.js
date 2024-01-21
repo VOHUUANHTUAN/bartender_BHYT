@@ -12,11 +12,13 @@ import LockIcon from "@mui/icons-material/Lock";
 import Avatar from "@mui/material/Avatar";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import Divider from "@mui/material/Divider";
+import EventIcon from "@mui/icons-material/Event";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Tooltip from "@mui/material/Tooltip";
 import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import { getUserInfoByToken } from "../../../../api/connect";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import ReceiptIcon from "@mui/icons-material/Receipt";
@@ -263,7 +265,7 @@ const Header = () => {
                                             <Divider />
                                             <MenuItem onClick={handleClose}>
                                                 <ListItemIcon>
-                                                    <LockIcon fontSize="small" />
+                                                    <EventIcon fontSize="small" />
                                                 </ListItemIcon>
                                                 <Link
                                                     to={`/${ROUTERS.USER.INVOICEHISTORYPAGE}`}
@@ -281,7 +283,7 @@ const Header = () => {
                                             </MenuItem>
                                             <MenuItem onClick={handleClose}>
                                                 <ListItemIcon>
-                                                    <LockIcon fontSize="small" />
+                                                    <MonetizationOnIcon fontSize="small" />
                                                 </ListItemIcon>
                                                 <Link
                                                     to={`/${ROUTERS.USER.TRANSACTION}`}
