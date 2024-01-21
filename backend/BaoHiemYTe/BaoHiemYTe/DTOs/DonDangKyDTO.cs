@@ -12,8 +12,8 @@ public class DonDangKyDTO
     public DateTime ThoiGianHetHan { get; set; }
     public string TinhTrang { get; set; }
     //LuaChonThanhToan(1 lần/Năm)
-    public string LiDoTuChoi {  get; set; }
-    public DateTime ThoiGianDuyet {  get; set; }
+    public string? LiDoTuChoi {  get; set; }
+    public DateTime? ThoiGianDuyet {  get; set; }
     public int SoKyHanThanhToan { get; set; }
     public int TongGia { get; set; }
     public int? MaKH { get; set; }
@@ -23,7 +23,7 @@ public class DonDangKyDTO
     public GoiBaoHiem? GoiBaoHiem { get; set; }
 
     public NhanVien? NhanVien { get; set; }
-    public List<int> BenhIds { get; set; }  // Danh sách id bệnh
+    public List<TinhTrangBenhDTO> BenhIds { get; set; }  // Danh sách id bệnh
 }
 
 
