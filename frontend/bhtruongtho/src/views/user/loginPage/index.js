@@ -23,6 +23,7 @@ const Login = () => {
         username: "",
         password: "",
     });
+
     const [loginError, setLoginError] = useState(null); // Thêm state để theo dõi lỗi đăng nhập
     const navigate = useNavigate();
 
@@ -88,6 +89,12 @@ const Login = () => {
                 console.log("Login successful.");
 
                 openSnackbar("Đăng nhập thành công", "success");
+                if (res.role == "Nhân viên") {
+                    navigate("/staff");
+                    console.log(res.role);
+                    return;
+                }
+
                 navigate("/");
             }
         } catch (error) {
