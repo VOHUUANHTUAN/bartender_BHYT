@@ -2,7 +2,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import HomePage from "./views/user/homePage";
 import { ROUTERS } from "./utils/router";
 import MasterLayout from "./views/user/theme/masterLayout";
-import NewsPage from "./views/user/newsPage";
+import ProfilePage from "./views/user/contactPage";
 import ProductDetailPage from "./views/user/productPage/detail.js";
 import ProductPage from "./views/user/productPage/index.js";
 import Login from "./views/user/loginPage";
@@ -48,8 +48,8 @@ const RouterCustom = () => {
             loginRequired: false,
         },
         {
-            path: ROUTERS.USER.NEWS,
-            component: <NewsPage />,
+            path: ROUTERS.USER.CONTACT,
+            component: <ProfilePage />,
             loginRequired: false,
         },
         {

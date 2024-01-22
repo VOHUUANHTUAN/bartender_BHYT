@@ -1,7 +1,7 @@
 import { memo, useState, useEffect } from "react";
 import "./style.scss";
 import { ROUTERS } from "../../../../utils/router";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useUser } from "../../../../context/UserContext";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import * as React from "react";
@@ -21,7 +21,8 @@ import { getUserInfoByToken } from "../../../../api/connect";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 const Header = () => {
     const navigate = useNavigate();
-
+    const location = useLocation();
+    const locationPath = location.pathname.startsWith('/') ? location.pathname.slice(1) : location.pathname;
     // Gọi hàm để lấy thông tin người dùng
     // Gọi hàm để lấy thông tin người dùng
     const { user, login, logout } = useUser();
@@ -76,8 +77,8 @@ const Header = () => {
 
         },
         {
-            name: "Tin tức",
-            path: ROUTERS.USER.NEWS,
+            name: "Liên hệ",
+            path: ROUTERS.USER.CONTACT,
         },
     ]);
 
@@ -103,37 +104,13 @@ const Header = () => {
                                     {menus?.map((menu, menuKey) => (
                                         <li
                                             key={menuKey}
-                                            className={
-                                                menuKey === 0 ? "active" : ""
-                                            }
-                                        >
+                                            className={locationPath === menu.path ? 'active' : ''}                                          
+                                        >            
+                                        {console.log(menu?.path)}                               
                                             <Link to={menu?.path}>
                                                 {menu?.name}
                                             </Link>
-                                            {menu.child && (
-                                                <ul className="header_menu_dropdown">
-                                                    {menu.child.map(
-                                                        (
-                                                            childItem,
-                                                            childKey
-                                                        ) => (
-                                                            <li
-                                                                key={`${menuKey}-${childKey}`}
-                                                            >
-                                                                <Link
-                                                                    to={
-                                                                        childItem.path
-                                                                    }
-                                                                >
-                                                                    {
-                                                                        childItem.name
-                                                                    }
-                                                                </Link>
-                                                            </li>
-                                                        )
-                                                    )}
-                                                </ul>
-                                            )}
+                                           
                                         </li>
                                     ))}
                                 </ul>
