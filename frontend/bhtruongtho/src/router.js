@@ -25,6 +25,11 @@ import InsurancePack from "./views/staff/insurancePackManagement/index.js";
 import InsPackDetailPage from "./views/staff/insurancePackManagement/insPackMDetail.js";
 import AddInsPack from "./views/staff/insurancePackManagement/addInsPack.js";
 import InfoCustomerDetail from "./views/user/infoCustomer/detail.js";
+import Admin from "./views/admin/createstaff/index.js";
+import HomePageAdmin from "./views/admin/homePage/index.js";
+
+import CheckOnStaff from "./views/admin/checkOnStaff/index.js"
+
 
 
 import ListYeuCauHoanTra from "./views/user/CapNhatYeuCauHoanTra/index.js";
@@ -87,6 +92,21 @@ const RouterCustom = () => {
     }, [location.pathname]);
     const userRouters = [
         {
+            path: ROUTERS.USER.HOMEPAGEADMIN,
+            component: <HomePageAdmin />,
+            loginRequired: false,
+        },
+        {
+            path: ROUTERS.USER.CHECKONSTAFF,
+            component: <CheckOnStaff />,
+            loginRequired: false,
+        },
+        {
+            path: ROUTERS.USER.ADMIN,
+            component: <Admin />,
+            loginRequired: false,
+        },
+        {
             path: ROUTERS.USER.HOME,
             component: <HomePage />,
             loginRequired: false,
@@ -119,6 +139,7 @@ const RouterCustom = () => {
             component: <ChangePassword />,
             loginRequired: true,
         },
+
         {
             path: ROUTERS.USER.INVOICEHISTORYPAGE,
             component: <InvoiceHistory />,

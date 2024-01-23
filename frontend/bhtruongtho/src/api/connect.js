@@ -178,6 +178,29 @@ export const getNhanVienByID = (ID, token) => {
         },
     });
 };
+// Import axiosClient và END_POINT từ nơi khác trong code của bạn
+
+export const postNhanVien = (data, token) => {
+    return axiosClient.post(
+        `${END_POINT.NHANVIEN}`,
+        data,
+        {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        }
+    );
+};
+export const getAllNhanVien = (token) => {
+    return axiosClient.get(
+        `${END_POINT.NHANVIEN}`,
+        {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        }
+    );
+};
 
 export const putDonDangKyByID = async (ID, Data, token) => {
     try {
