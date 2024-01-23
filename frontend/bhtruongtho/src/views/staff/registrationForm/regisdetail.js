@@ -179,6 +179,7 @@ const DetailPage = () => {
         }
     };
 
+
     return (
         <div className="container__body">
             {loading ? (

@@ -4,6 +4,7 @@ import { useUser } from "../../../context/UserContext";
 import { Container, Paper, TextField, Button, Typography } from "@mui/material";
 import { useSnackbar } from "../../../context/SnackbarContext";
 import MuiAlert from "@mui/material/Alert";
+
 const ChangePasswordForm = () => {
     const { user } = useUser();
     const [currentPassword, setCurrentPassword] = useState("");
@@ -17,15 +18,24 @@ const ChangePasswordForm = () => {
         !newPassword ||
         !confirmPassword ||
         newPassword !== confirmPassword;
-    const handleChangePassword = async (e) => {
-        console.log(user);
 
+    const isValidPassword = (password) => {
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+        return passwordRegex.test(password);
+    };
+
+    const handleChangePassword = async (e) => {
         e.preventDefault();
 
+        if (!isValidPassword(newPassword)) {
+            openSnackbar("Mật khẩu không đúng định dạng. Yêu cầu ít nhất 8 ký tự đặc biệt, có ít nhất một ký tự hoa, một ký tự thường và một số.", "warning");
+            return;
+        }
         if (isButtonDisabled) {
             openSnackbar("Mật khẩu không trùng khớp", "warning");
             return;
         }
+
 
         setLoading(true);
 
@@ -39,8 +49,10 @@ const ChangePasswordForm = () => {
                 },
                 localStorage.getItem("token")
             );
-            if (response)
+
+            if (response) {
                 openSnackbar("Thay đổi password thành công", "success");
+            }
         } catch (error) {
             console.log(error);
             openSnackbar(error.response.data, "warning");
@@ -48,6 +60,7 @@ const ChangePasswordForm = () => {
             setLoading(false);
         }
     };
+
     return (
         <Container component="main" maxWidth="xs">
             <Paper
@@ -104,7 +117,6 @@ const ChangePasswordForm = () => {
                     </Button>
                 </form>
             </Paper>
-
         </Container>
     );
 };

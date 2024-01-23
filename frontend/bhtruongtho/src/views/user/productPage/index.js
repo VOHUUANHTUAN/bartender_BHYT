@@ -65,7 +65,6 @@ const ProductPage = () => {
                                             </p>
                                         </div>
                                     </div>
-
                                     <div className="card__btn">
                                         <Link to={`detail/${goiBH.maGoiBH}`}>
                                             <p>Xem thêm</p>

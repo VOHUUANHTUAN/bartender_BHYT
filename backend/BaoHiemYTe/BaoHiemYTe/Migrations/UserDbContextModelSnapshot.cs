@@ -218,6 +218,38 @@ namespace BaoHiemYTe.Migrations
                     b.ToTable("HoaDonKhamBenh");
                 });
 
+            modelBuilder.Entity("BaoHiemYTe.Domain.HoaDonNapTien", b =>
+                {
+                    b.Property<int>("MaHD")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MaHD"));
+
+                    b.Property<int>("MaKH")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MaNV")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SoDu")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SoTien")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ThoiGianNap")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("MaHD");
+
+                    b.HasIndex("MaKH");
+
+                    b.HasIndex("MaNV");
+
+                    b.ToTable("HoaDonNapTien");
+                });
+
             modelBuilder.Entity("BaoHiemYTe.Domain.HoaDonThanhToanDK", b =>
                 {
                     b.Property<int>("MaHD")
@@ -518,6 +550,25 @@ namespace BaoHiemYTe.Migrations
                         .IsRequired();
 
                     b.Navigation("BenhVien");
+                });
+
+            modelBuilder.Entity("BaoHiemYTe.Domain.HoaDonNapTien", b =>
+                {
+                    b.HasOne("BaoHiemYTe.Domain.KhachHang", "KhachHang")
+                        .WithMany()
+                        .HasForeignKey("MaKH")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BaoHiemYTe.Domain.NhanVien", "NhanVien")
+                        .WithMany()
+                        .HasForeignKey("MaNV")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("KhachHang");
+
+                    b.Navigation("NhanVien");
                 });
 
             modelBuilder.Entity("BaoHiemYTe.Domain.HoaDonThanhToanDK", b =>

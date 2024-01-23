@@ -18,12 +18,18 @@ import Profile from "./views/user/profilePage/index.js";
 import Pay from "./views/user/payPage/index.js";
 import PaidDetail from "./views/user/payPage/paidDetail.js";
 import UnPaidDetail from "./views/user/payPage/unpaidDetail.js";
-import InfoCustomer from "./views/staff/infoCustomer/index.js";
-import FinancialReport from "./views/staff/financialReport/index.js";
+import InfoCustomer from "./views/user/infoCustomer/index.js";
+import Recharge from "./views/user/infoCustomer/recharge.js";
+import FinancialReport from "./views/user/financialReport";
 import InsurancePack from "./views/staff/insurancePackManagement/index.js";
 import InsPackDetailPage from "./views/staff/insurancePackManagement/insPackMDetail.js";
 import AddInsPack from "./views/staff/insurancePackManagement/addInsPack.js";
-import InfoCustomerDetail from "./views/staff/infoCustomer/detail.js";
+import InfoCustomerDetail from "./views/user/infoCustomer/detail.js";
+import HistoryPay from "./views/user/infoCustomer/historyPay.js";
+import Admin from "./views/admin/createstaff/index.js";
+import HomePageAdmin from "./views/admin/homePage/index.js";
+
+import CheckOnStaff from "./views/admin/checkOnStaff/index.js";
 
 import ListYeuCauHoanTra from "./views/user/CapNhatYeuCauHoanTra/index.js";
 import YeuCauHoanTraDetail from "./views/user/CapNhatYeuCauHoanTra/detailycht.js";
@@ -85,6 +91,21 @@ const RouterCustom = () => {
     }, [location.pathname]);
     const userRouters = [
         {
+            path: ROUTERS.USER.HOMEPAGEADMIN,
+            component: <HomePageAdmin />,
+            loginRequired: false,
+        },
+        {
+            path: ROUTERS.USER.CHECKONSTAFF,
+            component: <CheckOnStaff />,
+            loginRequired: false,
+        },
+        {
+            path: ROUTERS.USER.ADMIN,
+            component: <Admin />,
+            loginRequired: false,
+        },
+        {
             path: ROUTERS.USER.HOME,
             component: <HomePage />,
             loginRequired: false,
@@ -117,6 +138,7 @@ const RouterCustom = () => {
             component: <ChangePassword />,
             loginRequired: true,
         },
+
         {
             path: ROUTERS.USER.INVOICEHISTORYPAGE,
             component: <InvoiceHistory />,
@@ -234,6 +256,14 @@ const RouterCustom = () => {
                 />
                 <Route path="pay/detailPaid/:id" element={<PaidDetail />} />
                 <Route path="pay/detailUnpaid/:id" element={<UnPaidDetail />} />
+                <Route
+                    path="infoCustomer/Recharge/:id"
+                    element={<Recharge />}
+                />
+                <Route
+                    path="infoCustomer/historyPay/:id"
+                    element={<HistoryPay />}
+                />
             </Routes>
         </MasterLayout>
     );
