@@ -3,6 +3,7 @@ using BaoHiemYTe.Domain;
 using BaoHiemYTe.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -42,7 +43,33 @@ namespace BaoHiemYTe.Controllers
             var role = tokenService.GetRoleFromToken(HttpContext.Request);
             if (role != "Nhân viên")
             {
-                return Unauthorized("Unauthorized: role is missing or invalid");
+                // Không phải nhân viên, lấy tất cả đơn đăng ký liên quan đến khách hàng
+                var donDangKysForCustomer = await _dbContext.DonDangKy
+                    .Include(d => d.KhachHang)
+                    .Include(d => d.GoiBaoHiem)
+                    .Include(d => d.NhanVien)
+                    .Where(d => d.KhachHang.username == username)
+                    .ToListAsync();
+
+                var donDangKyDTOsForCustomer = donDangKysForCustomer.Select(d => new DonDangKyDTO
+                {
+                    MaDonDK = d.MaDonDK,
+                    MaGoiBH = d.MaGoiBH,
+                    ThoiGianDK = d.ThoiGianDK,
+                    ThoiGianBD = d.ThoiGianBD,
+                    ThoiGianHetHan = d.ThoiGianHetHan,
+                    TinhTrang = d.TinhTrang,
+                    SoKyHanThanhToan = d.SoKyHanThanhToan,
+                    TongGia = d.TongGia,
+                    MaKH = d.MaKH,
+                    MaNV = d.MaNV,
+                    KhachHang = d.KhachHang,
+                    GoiBaoHiem = d.GoiBaoHiem,
+                    NhanVien = d.NhanVien,
+                    LiDoTuChoi = d.LiDoTuChoi,
+                    ThoiGianDuyet = d.ThoiGianDuyet ?? default(DateTime),
+                });
+                return Ok(donDangKyDTOsForCustomer);
             }
             if (string.IsNullOrEmpty(username))
             {
@@ -96,8 +123,45 @@ namespace BaoHiemYTe.Controllers
             var role = tokenService.GetRoleFromToken(HttpContext.Request);
             if (role != "Nhân viên")
             {
-                return Unauthorized("Unauthorized: role is missing or invalid");
+                var donDangKyKH = await _dbContext.DonDangKy
+                   .Include(d => d.KhachHang)
+                   .Include(d => d.GoiBaoHiem)
+                   .Include(d => d.NhanVien)
+                   .FirstOrDefaultAsync(d => d.MaDonDK == id && d.KhachHang.username == username);
+
+                if (donDangKyKH == null)
+                {
+                    return Unauthorized("Unauthorized: You do not have permission to access this invoice");
+                }
+                var danhSachBenh = await _dbContext.TinhTrangBenh
+     .Where(tb => tb.MaDonDK == id)
+     .Include(tb => tb.Benh)  // Include the related Benh entity
+     .ToListAsync();
+
+              
+
+
+                var donDangKyDTO_KH = new DonDangKyDTO
+                {
+                    MaDonDK = donDangKyKH.MaDonDK,
+                    MaGoiBH = donDangKyKH.MaGoiBH,
+                    ThoiGianDK = donDangKyKH.ThoiGianDK,
+                    ThoiGianBD = donDangKyKH.ThoiGianBD,
+                    ThoiGianHetHan = donDangKyKH.ThoiGianHetHan,
+                    TinhTrang = donDangKyKH.TinhTrang,
+                    SoKyHanThanhToan = donDangKyKH.SoKyHanThanhToan,
+                    ThoiGianDuyet = donDangKyKH.ThoiGianDuyet ?? default(DateTime),
+                    TongGia = donDangKyKH.TongGia,
+                    MaKH = donDangKyKH.MaKH,
+                    MaNV = donDangKyKH.MaNV,
+                    KhachHang = donDangKyKH.KhachHang,
+                    GoiBaoHiem = donDangKyKH.GoiBaoHiem,
+                    NhanVien = donDangKyKH.NhanVien
+                };
+                donDangKyDTO_KH.Benh = danhSachBenh;
+                return Ok(donDangKyDTO_KH);
             }
+            //Nếu là nhân viên
             var donDangKy = await _dbContext.DonDangKy
                 .Include(d => d.KhachHang)
                 .Include(d => d.GoiBaoHiem)
@@ -173,13 +237,13 @@ namespace BaoHiemYTe.Controllers
                     await _dbContext.SaveChangesAsync();
 
                     // Chèn danh sách id bệnh vào TinhTrangBenh
-                    foreach (var benhId in donDangKyDTO.BenhIds)
+                    foreach (var benh in donDangKyDTO.Benh)
                     {
                         var tinhTrangBenh = new TinhTrangBenh
                         {
                             MaDonDK = donDangKy.MaDonDK,
-                            MaBenh = benhId,
-                            TinhTrang = "" // Thay bằng tình trạng thích hợp
+                            MaBenh = benh.MaBenh,
+                            TinhTrang = benh.TinhTrang // Thay bằng tình trạng thích hợp
                         };
 
                         _dbContext.TinhTrangBenh.Add(tinhTrangBenh);

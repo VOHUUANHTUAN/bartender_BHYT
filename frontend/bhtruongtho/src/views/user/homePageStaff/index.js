@@ -1,43 +1,83 @@
-// File: TaskAndImage.js
-import { memo } from "react"
-import "./style.scss"
-import logo from "./staff_img.jpeg"
+import React from "react";
 import { Link } from "react-router-dom";
-const HomePageStaff = () => {
-    return (
-        <div className="task-and-image">
-            <div className="task-bar">
-                <ul>
-                    <li>
-                        <Link to="/registrationForms">Duyệt đơn đăng ký</Link>
-                    </li>
-                    <li>Đơn thanh toán</li>
-                    <li>Danh sách khách hàng</li>
-                    <li>Lịch sử thanh toán</li>
-                    <li> <Link to="/insurancePackManagement">Chính sách bảo hiểm</Link></li>
-                    <li>Lịch sử thanh toán</li>
-                    <li>Báo cáo tài chính</li>
-                    <li>Ưu đãi dành cho nhận viên</li>
-                    <li>Các chương trình sắp tới của công ty</li>
-                </ul>
-            </div>
-            <div className="image-display">
-                <img src={logo} alt="Image_staff" />
-                <div className="text_over_image">Hãy làm việc bằng cả trái tim bạn nhé!!!</div>
-            </div>
-            <div className="work_title">
-                <div className="work_title_01">
-                    <h1>Khách hàng là thượng đế</h1>
-                    <p>Hãy làm việc để phục vụ khách hàng và công ty chúng ta sẽ ngày càng phát triển</p>
-                </div>
-                <div className="work_title_02">
-                    <h1>Chăm chỉ làm việc</h1>
-                    <p>Có một công việc và làm việc hăng say là một con người hạnh phúc, có ích với xã hội</p>
-                </div>
-            </div>
-        </div>
+import { Container, Typography, Paper, Grid, Button } from "@mui/material";
+import { ROUTERS } from "../../../utils/router";
 
+const HomePageStaff = () => {
+    // Giả sử bạn có dữ liệu về số lượng đơn vị với địa chỉ tương ứng
+    const data = [
+        {
+            title: "Đơn đăng ký",
+            count: 10,
+            color: "#FFB6C1",
+            address: ROUTERS.USER.DONDANGKY,
+        },
+        {
+            title: "Lịch sử giao dịch",
+            count: 5,
+            color: "#98FB98",
+            address: ROUTERS.USER.TRANSACTION,
+        },
+
+        {
+            title: "Quản lý gói bảo hiểm",
+            count: 15,
+            color: "#FFD700",
+            address: ROUTERS.USER.INSURANCEPACKM,
+        },
+        {
+            title: "Thông tin khách hàng",
+            count: 7,
+            color: "#AFEEEE",
+            address: ROUTERS.USER.INFOCUSTOMER,
+        },
+        {
+            title: "Báo cáo tài chính",
+            count: 12,
+            color: "#FFA07A",
+            address: ROUTERS.USER.FINANCIALREPORT,
+        },
+    ];
+
+    return (
+        <Container maxWidth="md" sx={{ marginTop: 5 }}>
+            <Typography variant="h3" align="center" gutterBottom>
+                Staff Home Page
+            </Typography>
+            <Grid container spacing={2}>
+                {data.map((item, index) => (
+                    <Grid item xs={6} md={4} lg={3} key={index}>
+                        <Paper
+                            sx={{
+                                padding: 2,
+                                textAlign: "center",
+                                backgroundColor: item.color,
+                                height: "100%",
+                                display: "flex",
+                                flexDirection: "column",
+                                justifyContent: "space-between",
+                            }}
+                        >
+                            <Typography variant="h6" gutterBottom>
+                                {item.title}
+                            </Typography>
+                            <Typography variant="h4">{item.count}</Typography>
+                            <Button
+                                component={Link}
+                                to={`../${item.address}`}
+                                variant="contained"
+                                color="primary"
+                                fullWidth
+                                sx={{ marginTop: 2 }}
+                            >
+                                View Details
+                            </Button>
+                        </Paper>
+                    </Grid>
+                ))}
+            </Grid>
+        </Container>
     );
 };
 
-export default memo(HomePageStaff);
+export default HomePageStaff;

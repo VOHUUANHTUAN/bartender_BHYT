@@ -109,6 +109,9 @@ const BillList = () => {
             flex: 1,
         },
     ];
+    const [sortModel, setSortModel] = useState([
+        { field: "thoiGianThanhToan", sort: "desc" }, // Initial sort configuration
+    ]);
     const handleViewDetail = (maHD, loaiHoaDon) => {
         if (loaiHoaDon === "Thanh toán") {
             console.log("chuyển đến chi tiết hoá đơn thanh toán ", maHD);
@@ -139,6 +142,10 @@ const BillList = () => {
                             autoWidth
                             disableRowSelectionOnClick
                             getRowId={(row) => row.id}
+                            sortModel={sortModel}
+                            onSortModelChange={(newSortModel) =>
+                                setSortModel(newSortModel)
+                            }
                         />
                     </Box>
                 </div>

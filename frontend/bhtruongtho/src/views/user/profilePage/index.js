@@ -100,6 +100,7 @@ const ChangeInformation = () => {
 
         return formattedAmount;
     };
+
     const handleSaveInformation = () => {
         // Kiểm tra định dạng
         try {
