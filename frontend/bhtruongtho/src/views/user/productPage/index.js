@@ -67,13 +67,16 @@ const ProductPage = () => {
                                     <div className="card__body">
                                         <p>{goiBH.motaGoiBH}</p>
                                         <p>Giá: {formatCurrency(goiBH.gia)}</p>
-                                        <p>Tỉ lệ hoàn tiền: {goiBH.tiLeHoanTien}%</p>
+                                        <p>
+                                            Tỉ lệ hoàn tiền:{" "}
+                                            {goiBH.tiLeHoanTien}%
+                                        </p>
+                                    </div>
 
                                     <div className="card__btn">
                                         <Link to={`detail/${goiBH.maGoiBH}`}>
                                             <p>Xem thêm</p>
                                         </Link>
-
                                     </div>
                                 </li>
                             ))}
