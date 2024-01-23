@@ -1,27 +1,18 @@
 import React, { useState } from "react";
-import {
-    Container,
-    Paper,
-    TextField,
-    Button,
-    Typography,
-    Snackbar,
-} from "@mui/material";
+import { Container, Paper, TextField, Button, Typography } from "@mui/material";
 import { KhachHang_DangKyTaiKhoan } from "../../../api/connect";
-import { useNavigate, Link } from "react-router-dom";
-import { TRUE } from "sass";
+// import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
+import { useSnackbar } from "../../../context/SnackbarContext";
+import bcrypt from "bcryptjs";
 
 const Register = () => {
+    const { openSnackbar } = useSnackbar();
     const [usernameError, setUsernameError] = useState(false);
     const [passwordError, setPasswordError] = useState(false);
     const [confirmPasswordError, setConfirmPasswordError] = useState(false);
 
     //Bảng thông báo
-    const [snackbarOpen, setSnackbarOpen] = useState(false);
-    const [snackbarMessage, setSnackbarMessage] = useState("");
-    const handleSnackbarClose = () => {
-        setSnackbarOpen(false);
-    };
 
     const [formData, setFormData] = useState({
         username: "",
@@ -62,6 +53,7 @@ const Register = () => {
 
     const fetchData = async () => {
         try {
+            // const hashedPassword = await bcrypt.hash(formData.password, 10);
             const userData = {
                 username: formData.username,
                 password: formData.password,
@@ -69,14 +61,11 @@ const Register = () => {
             };
             // console.log(userData);
             const res = await KhachHang_DangKyTaiKhoan(userData);
-
             console.log(res);
-            setSnackbarMessage(res);
-            setSnackbarOpen(true);
+            openSnackbar(res, "success");
         } catch (error) {
-            console.error("Error sending request:", error.message);
-            setSnackbarMessage("Đã có lỗi xảy ra");
-            setSnackbarOpen(true);
+            // console.log(error.response.data);
+            openSnackbar(error.response.data, "error");
         }
     };
 
@@ -87,8 +76,7 @@ const Register = () => {
         const validationError = validateForm();
 
         if (validationError) {
-            setSnackbarMessage(validationError);
-            setSnackbarOpen(true);
+            openSnackbar(validationError, "error");
             return;
         }
 
@@ -168,13 +156,6 @@ const Register = () => {
                     </Typography>
                 </form>
             </Paper>
-            <Snackbar
-                open={snackbarOpen}
-                autoHideDuration={2000}
-                onClose={handleSnackbarClose}
-                message={snackbarMessage}
-                anchorOrigin={{ vertical: "top", horizontal: "right" }}
-            />
         </Container>
     );
 };

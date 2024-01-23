@@ -23,10 +23,12 @@ import {
     Snackbar,
 } from "@mui/material";
 import Box from "@mui/material/Box";
+import { useSnackbar } from "../../../context/SnackbarContext";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import './style.scss';
 const RequestInvoice = () => {
     //user context
+    const { openSnackbar } = useSnackbar();
     const { user } = useUser();
     //error và loading
     const [error, setError] = useState(null);
@@ -59,6 +61,7 @@ const RequestInvoice = () => {
 
     //thông báo lỗi
     const [invoiceCodeError, setInvoiceCodeError] = useState(false);
+
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState("");
 
@@ -74,6 +77,7 @@ const RequestInvoice = () => {
     const handleSnackbarClose = () => {
         setSnackbarOpen(false);
     };
+
 
     //handle cho dữ liệu thay đổi
     const handleChangeData = (e) => {
@@ -118,16 +122,18 @@ const RequestInvoice = () => {
                 if (selectedHospitalName && formData.invoiceCode !== "") {
                     // Gọi API
                     try {
-                        const soTienKhamBenh = await getSoTienKhamByCus(localStorage.getItem("token"), formData.invoiceCode, selectedHospitalName);
+                        const soTienKhamBenh = await getSoTienKhamByCus(
+                            localStorage.getItem("token"),
+                            formData.invoiceCode,
+                            selectedHospitalName
+                        );
                         // Gọi API thành công, thiết lập giá trị cho amount
                         setAmount(soTienKhamBenh);
                     } catch (error) {
                         // Xử lý lỗi khi không thể gọi được API
-                        setSnackbarMessage(error.response.data);
-                        setSnackbarOpen(true);
+                        openSnackbar(error.response.data, "error");
                         setAmount("");
                     }
-
                 }
             } catch (error) {
                 setError(error);
@@ -144,7 +150,9 @@ const RequestInvoice = () => {
                 setLoading(true);
                 //API cho tab1
                 // Gọi API để lấy dữ liệu về gói Bảo hiểm
-                const goiBHByUs = await getGoiBHByCus(localStorage.getItem("token"));
+                const goiBHByUs = await getGoiBHByCus(
+                    localStorage.getItem("token")
+                );
                 setInsurancePackages(goiBHByUs);
                 //gọi api lấy dữ liệu tất cả bệnh viện
                 const benhVien = await getBenhVienAPI();
@@ -160,7 +168,9 @@ const RequestInvoice = () => {
                 }
                 //API cho tab2
                 //Gọi API để lấy yêu cầu hoàn trả theo username
-                const yCHTByUs = await getYCHTByCus(localStorage.getItem("token"));
+                const yCHTByUs = await getYCHTByCus(
+                    localStorage.getItem("token")
+                );
                 setRequestList(yCHTByUs);
             } catch (error) {
                 setError(error);
@@ -231,8 +241,7 @@ const RequestInvoice = () => {
         //gọi hàm validate
         const validationError = validateForm();
         if (validationError) {
-            setSnackbarMessage(validationError);
-            setSnackbarOpen(true);
+            openSnackbar(validationError, "error");
             return;
         }
         // Handle form submission logic here
@@ -251,13 +260,11 @@ const RequestInvoice = () => {
             //gọi api post
             const responseData = await createRequest(yeuCauData);
             //thông báo thành công
-            setSnackbarMessage(responseData);
-            setSnackbarOpen(true);
+            openSnackbar(responseData, "success");
         } catch (error) {
             // Xử lý các lỗi khác (ví dụ: mất kết nối)
             //thông báo lỗi
-            setSnackbarMessage(error.response.data);
-            setSnackbarOpen(true);
+            openSnackbar(error.response.data, "error");
         } finally {
             setLoading(false);
         }
@@ -485,13 +492,6 @@ const RequestInvoice = () => {
                     )}
                 </div>
             </Paper>
-            <Snackbar
-                open={snackbarOpen}
-                autoHideDuration={2000}
-                onClose={handleSnackbarClose}
-                message={snackbarMessage}
-                anchorOrigin={{ vertical: "top", horizontal: "right" }}
-            />
         </Container>
     );
 };

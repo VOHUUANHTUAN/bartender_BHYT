@@ -11,12 +11,15 @@ import Box from "@mui/material/Box";
 import LockIcon from "@mui/icons-material/Lock";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import Divider from "@mui/material/Divider";
+import EventIcon from "@mui/icons-material/Event";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Tooltip from "@mui/material/Tooltip";
 import Logout from "@mui/icons-material/Logout";
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import { getUserInfoByToken } from "../../../../api/connect";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
+import ReceiptIcon from "@mui/icons-material/Receipt";
 const Header = () => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -25,6 +28,8 @@ const Header = () => {
     // Gọi hàm để lấy thông tin người dùng
     const { user, login, logout } = useUser();
 
+    // Kiểm tra nếu user là Nhân viên thì không hiển thị Header và Footer
+    const shouldShowLayout = !user || (user && user.role !== "Nhân viên");
     const handleLogout = () => {
         logout();
         navigate("/");
@@ -33,6 +38,9 @@ const Header = () => {
     useEffect(() => {
         // Kiểm tra xem có thông tin người dùng trong local storage không
         getUserInfo(localStorage.getItem("token"));
+        if (user && user.firstLogin) {
+            navigate("/PersonalInfo");
+        }
     }, []);
 
     const getUserInfo = async (token) => {
@@ -48,9 +56,6 @@ const Header = () => {
                 });
                 localStorage.setItem("token", token);
                 localStorage.setItem("username", response.username);
-                localStorage.setItem("firstLogin", response.firstLogin);
-                localStorage.setItem("role", response.role);
-                localStorage.setItem("auth", true);
                 console.log("Login successful");
             } else {
                 localStorage.clear();
@@ -64,6 +69,7 @@ const Header = () => {
             console.log(error.message);
         }
     };
+
     const [menus, setMenus] = useState([
         {
             name: "Trang chủ",
@@ -72,7 +78,6 @@ const Header = () => {
         {
             name: "Sản phẩm",
             path: ROUTERS.USER.PRODUCT,
-
         },
         {
             name: "Liên hệ",
@@ -80,6 +85,13 @@ const Header = () => {
         },
     ]);
 
+    const handleHomeClick = () => {
+        if (user && user.role === "Nhân viên") {
+            navigate(ROUTERS.USER.STAFF);
+        } else {
+            navigate(ROUTERS.USER.HOME);
+        }
+    };
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
@@ -95,6 +107,7 @@ const Header = () => {
                     <div className="row">
                         <div className="col-xl-3 col-lg-3 col-md-3 col-sm-12 header_logo">
                             <div>BARTENDER_HCMUS</div>
+
                         </div>
                         <div className="col-xl-6 col-lg-6 col-md-9 col-sm-12">
                             <nav className="header_menu">
@@ -110,13 +123,14 @@ const Header = () => {
                                            
                                         </li>
                                     ))}
+
                                 </ul>
                             </nav>
                         </div>
                         <div className="col-xl-3 col-lg-3 col-md-12 col-sm-12 header_top_right">
                             {/* <span>Đăng ký tư vấn</span> */}
                             <ul>
-                                {user ? (
+                                {localStorage.getItem("token") ? (
                                     <>
                                         <Box
                                             sx={{
@@ -126,7 +140,15 @@ const Header = () => {
                                             }}
                                         >
                                             <Typography sx={{ minWidth: 100 }}>
-                                                Xin chào, {user.username}!
+                                                {localStorage.getItem(
+                                                    "username"
+                                                )
+                                                    ? "Xin chào " +
+                                                      localStorage.getItem(
+                                                          "username"
+                                                      ) +
+                                                      "!"
+                                                    : ""}
                                             </Typography>
                                             <Tooltip title="Account">
                                                 <IconButton
@@ -199,7 +221,9 @@ const Header = () => {
                                                 <ListItemIcon>
                                                     <AccountCircleIcon fontSize="small" />
                                                 </ListItemIcon>
-                                                <Link to="/PersonalInfo">
+                                                <Link
+                                                    to={`/${ROUTERS.USER.PROFILE}`}
+                                                >
                                                     Thông tin cá nhân
                                                 </Link>
                                             </MenuItem>
@@ -214,9 +238,29 @@ const Header = () => {
                                             <Divider />
                                             <MenuItem onClick={handleClose}>
                                                 <ListItemIcon>
-                                                    <LockIcon fontSize="small" />
+                                                    <EventIcon fontSize="small" />
                                                 </ListItemIcon>
-                                                <Link to="/invoice">
+                                                <Link
+                                                    to={`/${ROUTERS.USER.INVOICEHISTORYPAGE}`}
+                                                >
+                                                    Lịch sử đăng ký
+                                                </Link>
+                                            </MenuItem>
+                                            <MenuItem onClick={handleClose}>
+                                                <ListItemIcon>
+                                                    <ReceiptIcon fontSize="small" />
+                                                </ListItemIcon>
+                                                <Link to="/pay">
+                                                    Hóa đơn đăng ký
+                                                </Link>
+                                            </MenuItem>
+                                            <MenuItem onClick={handleClose}>
+                                                <ListItemIcon>
+                                                    <MonetizationOnIcon fontSize="small" />
+                                                </ListItemIcon>
+                                                <Link
+                                                    to={`/${ROUTERS.USER.TRANSACTION}`}
+                                                >
                                                     Lịch sử giao dịch
                                                 </Link>
                                             </MenuItem>

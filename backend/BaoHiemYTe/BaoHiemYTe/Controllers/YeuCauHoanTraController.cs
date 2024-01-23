@@ -30,6 +30,7 @@ namespace BaoHiemYTe.Controllers
             {
                 return BadRequest(ModelState);
             }
+
             try
             {
                 var tokenService = new TokenService();
@@ -84,6 +85,7 @@ namespace BaoHiemYTe.Controllers
             {
                 return BadRequest(ModelState);
             }
+
             try
             {
                 var tokenService = new TokenService();

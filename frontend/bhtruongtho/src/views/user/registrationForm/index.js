@@ -13,6 +13,7 @@ const ListDonDangKy = () => {
   const [loading, setLoading] = useState(true);
   const [donDangKyList, setDonDangKyList] = useState([]);
   const [selectedIds, setSelectedIds] = useState([]);
+  const [error, setError] = useState(null); // New state for handling errors
 
   useEffect(() => {
     const fetchData = async () => {
@@ -21,6 +22,7 @@ const ListDonDangKy = () => {
         setDonDangKyList(data);
       } catch (error) {
         console.error('Error fetching data:', error);
+        setError('Error fetching data. Please try again.'); // Set error state
       } finally {
         setLoading(false);
       }
@@ -28,8 +30,18 @@ const ListDonDangKy = () => {
 
     fetchData();
   }, []);
+  const formatCurrency = (amount) => {
+    const formattedAmount = new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    }).format(amount);
 
-  const formatDate = (date) => dayjs(date).format('YYYY/MM/DD');
+    return formattedAmount;
+  };
+  const formatDate = (date) => {
+    const formattedDate = dayjs(date).format('DD/MM/YYYY');
+    return formattedDate === '01/01/1901' ? '' : formattedDate;
+  };
 
   const rows = donDangKyList.map((item, index) => ({
     id: index + 1,
@@ -41,7 +53,7 @@ const ListDonDangKy = () => {
     thoiGianDuyet: item.thoiGianDuyet ? formatDate(item.thoiGianDuyet) : '',
     tinhTrang: item.tinhTrang,
     soKyHanThanhToan: item.soKyHanThanhToan,
-    tongGia: item.tongGia,
+    tongGia: formatCurrency(item.tongGia),
     maKH: item.maKH,
     maNV: item.maNV,
     liDoTuChoi: item.liDoTuChoi,
@@ -79,7 +91,8 @@ const ListDonDangKy = () => {
         rows={rows}
         columns={columns}
         pageSize={5}
-        checkboxSelection
+        hideFooterPagination
+        hideFooterSelectedRowCount
         onRowSelectionModelChange={(newRowSelectionModel) => {
           setSelectedIds(newRowSelectionModel);
         }}
@@ -87,7 +100,7 @@ const ListDonDangKy = () => {
       />
       <div>
         {selectedIds.length > 0 && (
-          <Button component={Link} to={`detail/${selectedIds[0]}`} variant="contained" color="primary">
+          <Button component={Link} to={`detail/${selectedIds[0]}`} variant="contained" color="primary" style={{ marginTop: '10px' }}>
             Xem
           </Button>
         )}
