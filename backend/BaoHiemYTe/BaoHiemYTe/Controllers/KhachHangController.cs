@@ -200,6 +200,64 @@ namespace BaoHiemYTe.Controllers
             }
         }
 
+        [HttpGet("{id}")]
+        public IActionResult GetKhachHangById(int id)
+        {
+            try
+            {
+                var tokenService = new TokenService();
+                var username = tokenService.GetUsernameFromToken(HttpContext.Request);
+
+                if (string.IsNullOrEmpty(username))
+                {
+                    return Unauthorized("Unauthorized: Token is missing or invalid");
+                }
+
+                // Kiểm tra xem người dùng có role "Nhân viên" hay không
+                var isNhanVien = userDbContext.Users.Any(u => u.username == username && u.role == "Nhân viên");
+
+                if (isNhanVien)
+                {
+                    // Tìm kiếm khách hàng theo ID
+                    var khachHang = userDbContext.KhachHang
+                        .FirstOrDefault(kh => kh.MaKH == id);
+
+                    if (khachHang != null)
+                    {
+                        // Chuyển đổi thành đối tượng DTO để trả về
+                        var khachHangDTO = new KhachHangDTO
+                        {
+                            MaKH = khachHang.MaKH,
+                            HoTen = khachHang.HoTen,
+                            NgaySinh = khachHang.NgaySinh,
+                            GioiTinh = khachHang.GioiTinh,
+                            CCCD = khachHang.CCCD,
+                            DiaChi = khachHang.DiaChi,
+                            SDT = khachHang.SDT,
+                            Email = khachHang.Email,
+                            SoDu = khachHang.SoDu,
+                            username = khachHang.username
+                        };
+
+                        return Ok(khachHangDTO);
+                    }
+                    else
+                    {
+                        return NotFound($"Không tìm thấy khách hàng với ID: {id}");
+                    }
+                }
+                else
+                {
+                    return BadRequest("Không có quyền truy cập thông tin khách hàng theo ID");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Lỗi trong quá trình xử lý: {ex.Message}");
+            }
+        }
+
+
 
     }
 }

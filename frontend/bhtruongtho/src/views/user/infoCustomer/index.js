@@ -73,9 +73,11 @@ const InfoCustomer = () => {
 		setSnackbarOpen(false);
 	};
 	const handleInfoClick = (rowData) => {
-		console.log("Info clicked for row with ID:", rowData.id);
-		// Thực hiện các xử lý khi click vào nút Info
+		const detailLink = `InfoCustomer/detail/${rowData.id}`; // Sử dụng rowData.id thay vì id
+		// Redirect tới trang detail với id tương ứng
+		window.location.href = detailLink;
 	};
+
 
 	const handleAssignmentClick = (rowData) => {
 		console.log("Assignment clicked for row with ID:", rowData.id);
