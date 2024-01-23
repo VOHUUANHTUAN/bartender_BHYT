@@ -1,4 +1,5 @@
 ﻿using BaoHiemYTe.Data;
+using BaoHiemYTe.Domain;
 using BaoHiemYTe.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -15,6 +16,46 @@ namespace BaoHiemYTe.Controllers
         {
             this.userDbContext = userDbContext;
         }
+        [HttpGet]
+        public IActionResult GetAllNhanVien()
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var tokenService = new TokenService();
+                var username = tokenService.GetUsernameFromToken(HttpContext.Request);
+                if (string.IsNullOrEmpty(username))
+                {
+                    return Unauthorized("Unauthorized: Token is missing or invalid");
+                }
+                var role = tokenService.GetRoleFromToken(HttpContext.Request);
+                if (role != "Admin")
+                {
+                    return Unauthorized("Unauthorized: Chỉ có Admin mới có quyền tạo nhân viên");
+                }
+                var nhanVienList = userDbContext.NhanVien
+                    .Select(u => new NhanVienDTO
+                    {
+                        MaNV = u.MaNV,
+                        HoTen = u.HoTen,
+                        DiaChi = u.DiaChi,
+                        SDT = u.SDT,
+                        Email = u.Email
+                    })
+                    .ToList();
+
+                return Ok(nhanVienList);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Lỗi trong quá trình lấy dữ liệu: {ex.Message}");
+            }
+        }
+
         [HttpGet("{username}")]
         public IActionResult GetByUsername()
         {
@@ -61,5 +102,124 @@ namespace BaoHiemYTe.Controllers
                 return StatusCode(500, $"Lỗi trong quá trình lấy dữ liệu: {ex.Message}");
             }
         }
+        [HttpPost]
+        public IActionResult CreateNhanVien([FromBody] TaoNhanVienDTO newNhanVienDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                // Thực hiện kiểm tra quyền truy cập và xác minh thông tin     
+                var tokenService = new TokenService();
+                var username = tokenService.GetUsernameFromToken(HttpContext.Request);
+                if (string.IsNullOrEmpty(username))
+                {
+                    return Unauthorized("Unauthorized: Token is missing or invalid");
+                }
+                   var role = tokenService.GetRoleFromToken(HttpContext.Request);
+                if (role != "Admin")
+                {
+                    return Unauthorized("Unauthorized: Chỉ có Admin mới có quyền tạo nhân viên");
+                }
+
+                // Tạo mới tài khoản người dùng
+                var newUser = new Users
+                {
+                    username = newNhanVienDTO.Username,
+                    password = newNhanVienDTO.Password,
+                    role = newNhanVienDTO.Role,
+                    FirstLogin = true
+                };
+
+                // Thêm người dùng mới vào cơ sở dữ liệu
+                userDbContext.Users.Add(newUser);
+                userDbContext.SaveChanges();
+
+                // Tạo mới nhân viên với thông tin từ DTO và username của người dùng
+                var newNhanVien = new NhanVien
+                {
+                    HoTen = newNhanVienDTO.HoTen,
+                    DiaChi = newNhanVienDTO.DiaChi,
+                    SDT = newNhanVienDTO.SDT,
+                    Email = newNhanVienDTO.Email,
+                    username = newNhanVienDTO.Username
+                };
+
+                // Thêm nhân viên mới vào cơ sở dữ liệu
+                userDbContext.NhanVien.Add(newNhanVien);
+                userDbContext.SaveChanges();
+
+                // Trả về thông tin nhân viên vừa tạo
+                var createdNhanVienDTO = new NhanVienDTO
+                {
+                    MaNV = newNhanVien.MaNV,
+                    HoTen = newNhanVien.HoTen,
+                    DiaChi = newNhanVien.DiaChi,
+                    SDT = newNhanVien.SDT,
+                    Email = newNhanVien.Email
+                };
+
+                return CreatedAtAction(nameof(GetByUsername), new { username = newNhanVien.username }, createdNhanVienDTO);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Lỗi trong quá trình tạo mới nhân viên: {ex.Message}");
+            }
+        }
+
+    
+        [HttpGet("GetHoaDonNapTien")]
+        public IActionResult GetHoaDonNapTien()
+        {
+            try
+            {
+                var tokenService = new TokenService();
+                var username = tokenService.GetUsernameFromToken(HttpContext.Request);
+                if (string.IsNullOrEmpty(username))
+                {
+                    return Unauthorized("Unauthorized: Token is missing or invalid");
+                }
+                //var username = "admin";
+                // Kiểm tra xem MaNV có tồn tại và có role Nhân viên hay không
+                var nhanVien = userDbContext.NhanVien
+                    .FirstOrDefault(nv => nv.username == username);
+
+                if (nhanVien == null)
+                {
+                    return Unauthorized("Không có quyền truy cập");
+                }
+
+                // Lấy danh sách hóa đơn nạp tiền
+                var hoaDonNapTienList = userDbContext.HoaDonNapTien
+                    .Where(hd => hd.MaNV == nhanVien.MaNV)
+                    .Select(hd => new HoaDonNapTienDTO
+                    {
+                        MaHD = hd.MaHD,
+                        SoTien = hd.SoTien,
+                        SoDu = hd.SoDu,
+                        ThoiGianNap = hd.ThoiGianNap,
+                        MaKH = hd.MaKH,
+                        MaNV = hd.MaNV
+                    })
+                    .ToList();
+
+                if (hoaDonNapTienList != null && hoaDonNapTienList.Any())
+                {
+                    return Ok(hoaDonNapTienList);
+                }
+                else
+                {
+                    return NotFound("Không có hóa đơn nạp tiền nào");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Lỗi trong quá trình xử lý: {ex.Message}");
+            }
+        }
+
     }
 }

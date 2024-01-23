@@ -16,7 +16,7 @@ namespace BaoHiemYTe.Controllers
     public class HoaDonThanhToanDKController : ControllerBase
     {
         // GET: api/<GoiBaoHiemController>
-       
+
         private readonly UserDbContext userDbContext;
         private readonly TokenService tokenService;
         private readonly ILogger<HoaDonThanhToanDKController> _logger;
@@ -230,9 +230,9 @@ namespace BaoHiemYTe.Controllers
                     ThoiGianHetHan = h.ThoiGianHetHan,
                     HanKy = h.HanKy,
                     TinhTrangThanhToan = h.TinhTrangThanhToan,
-                    TienPhat= h.TienPhat,
-                    LiDoPhat= h.LiDoPhat,
-                    TongTien= h.TongTien,
+                    TienPhat = h.TienPhat,
+                    LiDoPhat = h.LiDoPhat,
+                    TongTien = h.TongTien,
                     ThoiGianThanhToan = h.ThoiGianThanhToan,
                     MaDonDK = h.MaDonDK,
                     // Thêm tên Gói Bảo Hiểm
@@ -274,18 +274,18 @@ namespace BaoHiemYTe.Controllers
                         ThoiGianHetHan = h.DonDangKy.ThoiGianHetHan,
                         TinhTrang = h.DonDangKy.TinhTrang,
                         SoKyHanThanhToan = h.DonDangKy.SoKyHanThanhToan,
-                        TongGia= h.DonDangKy.TongGia,
+                        TongGia = h.DonDangKy.TongGia,
                         // Thông tin Hóa Đơn Thanh Toán
                         MaHD = h.MaHD,
                         SoTien = h.SoTien,
-                        TienPhat= h.TienPhat,
-                        LiDoPhat= h.LiDoPhat,
-                        TongTien= h.TongTien,
+                        TienPhat = h.TienPhat,
+                        LiDoPhat = h.LiDoPhat,
+                        TongTien = h.TongTien,
                         HanKy = h.HanKy,
                         TinhTrangThanhToan = h.TinhTrangThanhToan,
                         ThoiGianThanhToan = h.ThoiGianThanhToan,
                         MaDonDK = h.MaDonDK,
-                        ThoiGianHetHanThanhToan=h.ThoiGianHetHan,
+                        ThoiGianHetHanThanhToan = h.ThoiGianHetHan,
                     })
                     .FirstOrDefault();
 
@@ -528,7 +528,76 @@ namespace BaoHiemYTe.Controllers
             }
         }
 
+        [HttpGet("LichSuThanhToan/{maKH}")]
+        public IActionResult LichSuDaThanhToan(int maKH)
+        {
+            try
+            {
+                var tokenService = new TokenService();
+                var username = tokenService.GetUsernameFromToken(HttpContext.Request);
 
+                if (string.IsNullOrEmpty(username))
+                {
+                    return Unauthorized("Unauthorized: Token is missing or invalid");
+                }
+                //var username = "admin";
+
+                // Kiểm tra xem người dùng có role "Nhân viên" hay không
+                var isNhanVien = userDbContext.Users.Any(u => u.username == username && u.role == "Nhân viên");
+
+                if (isNhanVien)
+                {
+                    // Lấy danh sách MaDonDK từ bảng DonDangKy
+                    var maDonDKs = userDbContext.DonDangKy
+                        .Where(d => d.MaKH == maKH)
+                        .Select(d => d.MaDonDK)
+                        .ToList();
+
+                    if (maDonDKs == null || !maDonDKs.Any())
+                    {
+                        return NotFound($"Người dùng {maKH} không có Đơn Đăng Ký");
+                    }
+
+                    // Lấy thông tin Hóa Đơn từ bảng HoaDonThanhToanDK
+                    var hoaDonThanhToanEntities = userDbContext.HoaDonThanhToanDK
+                        .Where(h => maDonDKs.Contains(h.MaDonDK))
+                        .ToList();
+
+                    if (hoaDonThanhToanEntities == null || !hoaDonThanhToanEntities.Any())
+                    {
+                        return NotFound($"Người dùng {maKH} không có Hóa Đơn Thanh Toán Đăng Ký");
+                    }
+
+                    // Chuyển đổi từ List<HoaDonThanhToanDK> sang List<HoaDonThanhToanDKDTO>
+                    var hoaDonThanhToanDTOs = hoaDonThanhToanEntities.Select(h => new HoaDonThanhToanDKDTO
+                    {
+                        MaHD = h.MaHD,
+                        SoTien = h.SoTien,
+                        ThoiGianHetHan = h.ThoiGianHetHan,
+                        HanKy = h.HanKy,
+                        TinhTrangThanhToan = h.TinhTrangThanhToan,
+                        ThoiGianThanhToan = h.ThoiGianThanhToan,
+                        MaDonDK = h.MaDonDK,
+                        TongTien = h.TongTien,
+                        MaKH = userDbContext.DonDangKy
+                                .Where(g => g.MaDonDK == h.MaDonDK)
+                                .Select(g => g.MaKH)
+                                .FirstOrDefault(),
+                    }).ToList();
+
+                    return Ok(hoaDonThanhToanDTOs);
+                }
+                else
+                {
+                    return BadRequest("Không có quyền truy cập danh sách khách hàng");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Lỗi: {ex.Message}");
+            }
+        }
 
 
     }
