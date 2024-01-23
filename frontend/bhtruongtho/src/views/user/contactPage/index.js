@@ -4,7 +4,7 @@ import {Container,Typography, List, ListItem, ListItemText, Link, Paper  } from 
 const ProfilePage = ()=>{
     return <>
       <Container component="main" maxWidth="xl">
-      <Paper id="introduction-section" elevation={3} style={{ padding: '20px', margin: '40px', textAlign: 'left' }}>
+      <Paper id="contact-section" elevation={3} style={{ padding: '20px', margin: '40px', textAlign: 'left' }}>
       {/* Lời cảm ơn đã sử dụng bảo hiểm */}
       <div style={{ marginBottom: '20px' }}>
         <Typography variant="h4" gutterBottom>
@@ -36,7 +36,7 @@ const ProfilePage = ()=>{
       {/* Liên hệ */}
       <div>
         <Typography variant="h4" gutterBottom>
-          Liên Hệ
+          Thông Tin Liên Hệ
         </Typography>
         <List>
       <ListItem>

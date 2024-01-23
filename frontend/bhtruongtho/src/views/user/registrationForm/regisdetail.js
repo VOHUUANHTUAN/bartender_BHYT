@@ -159,7 +159,6 @@ const DetailPage = () => {
         if (reason === 'clickaway') {
             return;
         }
-        setSnackbarOpen(false);
     };
     return (
         <div className="container__body">
