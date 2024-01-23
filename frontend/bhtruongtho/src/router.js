@@ -18,7 +18,8 @@ import Profile from "./views/user/profilePage/index.js";
 import Pay from "./views/user/payPage/index.js";
 import PaidDetail from "./views/user/payPage/paidDetail.js";
 import UnPaidDetail from "./views/user/payPage/unpaidDetail.js";
-import InfoCustomer from "./views/user/infoCustomer";
+import InfoCustomer from "./views/user/infoCustomer/index.js";
+import Recharge from "./views/user/infoCustomer/recharge.js";
 import FinancialReport from "./views/user/financialReport";
 import InsurancePack from "./views/staff/insurancePackManagement/index.js";
 import InsPackDetailPage from "./views/staff/insurancePackManagement/insPackMDetail.js";
@@ -195,6 +196,7 @@ const RouterCustom = () => {
                 />
                 <Route path="pay/detailPaid/:id" element={<PaidDetail />} />
                 <Route path="pay/detailUnpaid/:id" element={<UnPaidDetail />} />
+                <Route path="infoCustomer/Recharge/:id" element={<Recharge />} />
             </Routes>
         </MasterLayout>
     );

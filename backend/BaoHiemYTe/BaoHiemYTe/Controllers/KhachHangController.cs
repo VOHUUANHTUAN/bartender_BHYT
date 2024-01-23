@@ -133,17 +133,7 @@ namespace BaoHiemYTe.Controllers
                 return StatusCode(500, $"Lỗi trong quá trình xử lý: {ex.Message}");
             }
         }
-        // PUT api/<KhachHangController>/5
-        //[HttpPut("{id}")]
-        //public void Put(int id, [FromBody] string value)
-        //{
-        //}
-
-        //// DELETE api/<KhachHangController>/5
-        //[HttpDelete("{id}")]
-        //public void Delete(int id)
-        //{
-        //}
+      
         [HttpGet("GetAllKhachHang")]
         public IActionResult GetAllKhachHang()
         {
@@ -199,7 +189,60 @@ namespace BaoHiemYTe.Controllers
                 return StatusCode(500, $"Lỗi trong quá trình xử lý: {ex.Message}");
             }
         }
+        [HttpPost("NapTien")]
+        public IActionResult NapTien([FromBody] NapTienDTO napTienDTO)
+        {
+            try
+            {
+                var tokenService = new TokenService();
+                var username = tokenService.GetUsernameFromToken(HttpContext.Request);
 
+                if (string.IsNullOrEmpty(username))
+                {
+                    return Unauthorized("Unauthorized: Token is missing or invalid");
+                }
+                //var username = "admin";
+
+                // Kiểm tra xem người dùng có role "Nhân viên" hay không
+                var isNhanVien = userDbContext.Users.Any(u => u.username == username && u.role == "Nhân viên");
+
+                if (!isNhanVien)
+                {
+                    return BadRequest("Không có quyền truy cập chức năng nạp tiền");
+                }
+
+                // Kiểm tra xem MaKH có tồn tại hay không
+                var khachHang = userDbContext.KhachHang.FirstOrDefault(kh => kh.MaKH == napTienDTO.MaKH);
+
+                if (khachHang == null)
+                {
+                    return NotFound($"Không tìm thấy thông tin cho khách hàng có MaKH: {napTienDTO.MaKH}");
+                }
+
+                // Nạp tiền vào tài khoản của khách hàng
+                khachHang.SoDu += napTienDTO.SoTien;
+                userDbContext.SaveChanges();
+
+                // Tạo hóa đơn nạp tiền
+                var hoadonNapTien = new HoaDonNapTien
+                {
+                    SoTien = napTienDTO.SoTien,
+                    SoDu = khachHang.SoDu,
+                    ThoiGianNap = DateTime.Now,
+                    MaKH = khachHang.MaKH,
+                    MaNV = userDbContext.NhanVien.FirstOrDefault(nv => nv.username == username)?.MaNV ?? 0
+                };
+
+                userDbContext.HoaDonNapTien.Add(hoadonNapTien);
+                userDbContext.SaveChanges();
+
+                return Ok("Nạp tiền thành công");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Lỗi trong quá trình xử lý: {ex.Message}");
+            }
+        }
 
     }
 }

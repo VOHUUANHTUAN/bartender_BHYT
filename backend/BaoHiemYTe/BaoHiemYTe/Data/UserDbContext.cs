@@ -119,7 +119,11 @@ namespace BaoHiemYTe.Data
             modelBuilder.Entity<HoaDonThanhToanDK>()
               .HasIndex(hd => hd.ThoiGianThanhToan)
               .IsUnique();
-
+            modelBuilder.Entity<HoaDonNapTien>()
+              .HasOne(h => h.NhanVien)
+              .WithMany()
+              .HasForeignKey(h => h.MaNV)
+              .OnDelete(DeleteBehavior.Restrict); // Chỉnh sửa dòng này
         }
 
         public DbSet<DonDangKy> DonDangKy { get; set; }
@@ -129,6 +133,7 @@ namespace BaoHiemYTe.Data
         public DbSet<HoaDonKhamBenh> HoaDonKhamBenh { get; set; }
         public DbSet<YeuCauHoanTra> YeuCauHoanTra { get; set; }
         public DbSet<HoaDonHoanTra> HoaDonHoanTra { get; set; }
+        public DbSet<HoaDonNapTien> HoaDonNapTien { get; set; }
 
 
     }

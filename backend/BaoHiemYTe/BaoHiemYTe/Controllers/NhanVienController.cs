@@ -61,5 +61,55 @@ namespace BaoHiemYTe.Controllers
                 return StatusCode(500, $"Lỗi trong quá trình lấy dữ liệu: {ex.Message}");
             }
         }
+        [HttpGet("GetHoaDonNapTien")]
+        public IActionResult GetHoaDonNapTien()
+        {
+            try
+            {
+                var tokenService = new TokenService();
+                var username = tokenService.GetUsernameFromToken(HttpContext.Request);
+                if (string.IsNullOrEmpty(username))
+                {
+                    return Unauthorized("Unauthorized: Token is missing or invalid");
+                }
+                //var username = "admin";
+                // Kiểm tra xem MaNV có tồn tại và có role Nhân viên hay không
+                var nhanVien = userDbContext.NhanVien
+                    .FirstOrDefault(nv => nv.username == username);
+
+                if (nhanVien == null)
+                {
+                    return Unauthorized("Không có quyền truy cập");
+                }
+
+                // Lấy danh sách hóa đơn nạp tiền
+                var hoaDonNapTienList = userDbContext.HoaDonNapTien
+                    .Where(hd => hd.MaNV == nhanVien.MaNV)
+                    .Select(hd => new HoaDonNapTienDTO
+                    {
+                        MaHD = hd.MaHD,
+                        SoTien = hd.SoTien,
+                        SoDu = hd.SoDu,
+                        ThoiGianNap = hd.ThoiGianNap,
+                        MaKH = hd.MaKH,
+                        MaNV = hd.MaNV
+                    })
+                    .ToList();
+
+                if (hoaDonNapTienList != null && hoaDonNapTienList.Any())
+                {
+                    return Ok(hoaDonNapTienList);
+                }
+                else
+                {
+                    return NotFound("Không có hóa đơn nạp tiền nào");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Lỗi trong quá trình xử lý: {ex.Message}");
+            }
+        }
+
     }
 }

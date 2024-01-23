@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BaoHiemYTe.Migrations
 {
     /// <inheritdoc />
-    public partial class tien_final : Migration
+    public partial class tien_f : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -208,6 +208,35 @@ namespace BaoHiemYTe.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "HoaDonNapTien",
+                columns: table => new
+                {
+                    MaHD = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SoTien = table.Column<int>(type: "int", nullable: false),
+                    SoDu = table.Column<int>(type: "int", nullable: false),
+                    ThoiGianNap = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    MaKH = table.Column<int>(type: "int", nullable: false),
+                    MaNV = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_HoaDonNapTien", x => x.MaHD);
+                    table.ForeignKey(
+                        name: "FK_HoaDonNapTien_KhachHang_MaKH",
+                        column: x => x.MaKH,
+                        principalTable: "KhachHang",
+                        principalColumn: "MaKH",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_HoaDonNapTien_NhanVien_MaNV",
+                        column: x => x.MaNV,
+                        principalTable: "NhanVien",
+                        principalColumn: "MaNV",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "YeuCauHoanTra",
                 columns: table => new
                 {
@@ -364,6 +393,16 @@ namespace BaoHiemYTe.Migrations
                 column: "MaBV");
 
             migrationBuilder.CreateIndex(
+                name: "IX_HoaDonNapTien_MaKH",
+                table: "HoaDonNapTien",
+                column: "MaKH");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_HoaDonNapTien_MaNV",
+                table: "HoaDonNapTien",
+                column: "MaNV");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_HoaDonThanhToanDK_LiDoPhat",
                 table: "HoaDonThanhToanDK",
                 column: "LiDoPhat",
@@ -428,6 +467,9 @@ namespace BaoHiemYTe.Migrations
 
             migrationBuilder.DropTable(
                 name: "HoaDonHoanTra");
+
+            migrationBuilder.DropTable(
+                name: "HoaDonNapTien");
 
             migrationBuilder.DropTable(
                 name: "HoaDonThanhToanDK");
