@@ -38,9 +38,6 @@ const Register = () => {
             setConfirmPasswordError(!usernameRegex.test(e.target.value));
         }
         // Check if passwords match when typing in the confirmation field
-        if (e.target.name === "password") {
-            setPasswordError(e.target.value !== formData.confirmPassword);
-        } // Check if passwords match when typing in the confirmation field
         if (e.target.name === "confirmPassword") {
             setConfirmPasswordError(e.target.value !== formData.password);
         }

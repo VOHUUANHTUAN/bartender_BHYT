@@ -31,8 +31,10 @@ import {
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers";
+import { useSnackbar } from "../../../context/SnackbarContext";
 
 const InsuranceRegistration = () => {
+    const { openSnackbar } = useSnackbar();
     const params = useParams();
     const [selectedPackage, setSelectedPackage] = useState(null);
     const [duration, setDuration] = useState("");
@@ -41,25 +43,44 @@ const InsuranceRegistration = () => {
     const [startDate, setStartDate] = useState(dayjs());
     const [selectedBenhs, setSelectedBenhs] = useState([]);
     const [benhData, setBenhData] = useState([]);
-    //Bảng thông báo
-    const [snackbarOpen, setSnackbarOpen] = useState(false);
-    const [snackbarMessage, setSnackbarMessage] = useState("");
-    const handleSnackbarClose = () => {
-        setSnackbarOpen(false);
-    };
 
-    const handleCheckboxChange = (benhId) => {
+    const handleCheckboxChange = (MaBenh) => {
         setSelectedBenhs((prevSelectedBenhs) => {
-            if (prevSelectedBenhs.includes(benhId)) {
+            if (prevSelectedBenhs.includes(MaBenh)) {
                 // If the checkbox is already checked, remove it
-                return prevSelectedBenhs.filter((id) => id !== benhId);
+                return prevSelectedBenhs.filter((id) => id !== MaBenh);
             } else {
                 // If the checkbox is not checked, add it
-                return [...prevSelectedBenhs, benhId];
+                return [...prevSelectedBenhs, MaBenh];
             }
         });
     };
+    const handleSeverityChange = (MaBenh, TinhTrang) => {
+        setSelectedBenhs((prevSelectedBenhs) => {
+            const updatedSelectedBenhs = [...prevSelectedBenhs];
+            const index = updatedSelectedBenhs.findIndex(
+                (item) => item.MaBenh === MaBenh
+            );
 
+            if (index !== -1) {
+                // If the disease is already selected
+                if (TinhTrang === "Cancel") {
+                    // If "Cancel" is selected, remove the disease from the list
+                    updatedSelectedBenhs.splice(index, 1);
+                } else {
+                    // Update the TinhTrang level
+                    updatedSelectedBenhs[index].TinhTrang = TinhTrang;
+                }
+            } else {
+                // If the disease is not selected and "Cancel" is not chosen, add it with the selected TinhTrang
+                if (TinhTrang !== "Cancel") {
+                    updatedSelectedBenhs.push({ MaBenh, TinhTrang });
+                }
+            }
+
+            return updatedSelectedBenhs;
+        });
+    };
     const fetchDataBenh = async () => {
         try {
             const response = await getBenhByMaGBH(params.id);
@@ -98,6 +119,16 @@ const InsuranceRegistration = () => {
     // Khi nhấn nút đăng ký
     const handleRegistrationSubmit = (e) => {
         e.preventDefault();
+        const currentDate = dayjs();
+        const allowedStartDate = currentDate.add(1, "month");
+
+        if (startDate.isAfter(allowedStartDate)) {
+            openSnackbar(
+                "Ngày bắt đầu gói không quá 1 tháng kể từ thời điểm hiện tại",
+                "error"
+            );
+            return;
+        }
 
         var HoaDonList = calculatePaymentDetails(
             insuranceAmount,
@@ -105,7 +136,7 @@ const InsuranceRegistration = () => {
             paymentFrequency,
             startDate
         );
-        console.log(HoaDonList);
+        // console.log(HoaDonList);
 
         var data_DonDangKy = {
             MaGoiBH: selectedPackage.maGoiBH,
@@ -116,9 +147,9 @@ const InsuranceRegistration = () => {
                 .format("YYYY-MM-DD"),
             TinhTrang: "Chờ duyệt",
             TongGia: calculateTotalAmount(),
-            BenhIDs: selectedBenhs,
+            benh: selectedBenhs,
         };
-        // console.log(data_DonDangKy);
+        console.log(data_DonDangKy);
         // console.log(selectedBenhs);
 
         call_API_post_DonDangKy(localStorage.getItem("token"), data_DonDangKy);
@@ -127,12 +158,10 @@ const InsuranceRegistration = () => {
     const call_API_post_DonDangKy = async (token, data) => {
         try {
             const response = await KH_post_DonDangKy(token, data);
-            setSnackbarMessage(response);
-            setSnackbarOpen(true);
+            openSnackbar(response, "success");
         } catch (error) {
             // console.error("Error sending request:", error.message);
-            setSnackbarMessage(error.message);
-            setSnackbarOpen(true);
+            openSnackbar(error.message, "error");
         }
     };
 
@@ -198,31 +227,64 @@ const InsuranceRegistration = () => {
                             <Typography variant="body1">
                                 Tỉ lệ hoàn tiền: {selectedPackage.tiLeHoanTien}%
                             </Typography>
-                            <FormControl
-                                fullWidth
-                                style={{ marginTop: "20px" }}
-                            >
-                                <InputLabel id="duration-label">
-                                    Thời hạn (năm)
-                                </InputLabel>
-                                <Select
-                                    labelId="duration-label"
-                                    label="Thời hạn (năm)"
-                                    id="duration"
-                                    value={duration}
-                                    onChange={(e) =>
-                                        setDuration(e.target.value)
-                                    }
-                                    required
-                                >
-                                    <MenuItem value={1}>1</MenuItem>
-                                    <MenuItem value={2}>2</MenuItem>
-                                    <MenuItem value={3}>3</MenuItem>
-                                    <MenuItem value={4}>4</MenuItem>
-                                    <MenuItem value={5}>5</MenuItem>
-                                    {/* Thêm các giá trị khác nếu cần */}
-                                </Select>
-                            </FormControl>
+
+                            <Grid container spacing={2}>
+                                <Grid item xs={6}>
+                                    <FormControl
+                                        fullWidth
+                                        style={{ marginTop: "20px" }}
+                                    >
+                                        <InputLabel id="duration-label">
+                                            Thời hạn (năm)
+                                        </InputLabel>
+                                        <Select
+                                            labelId="duration-label"
+                                            label="Thời hạn (năm)"
+                                            id="duration"
+                                            value={duration}
+                                            onChange={(e) =>
+                                                setDuration(e.target.value)
+                                            }
+                                            required
+                                        >
+                                            <MenuItem value={1}>1</MenuItem>
+                                            <MenuItem value={2}>2</MenuItem>
+                                            <MenuItem value={3}>3</MenuItem>
+                                            <MenuItem value={4}>4</MenuItem>
+                                            <MenuItem value={5}>5</MenuItem>
+                                            {/* Thêm các giá trị khác nếu cần */}
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <FormControl
+                                        fullWidth
+                                        style={{ marginTop: "20px" }}
+                                    >
+                                        <InputLabel id="payment-frequency-label">
+                                            Số kỳ hạn mỗi năm
+                                        </InputLabel>
+                                        <Select
+                                            labelId="payment-frequency-label"
+                                            label="Số kỳ hạn mỗi năm"
+                                            id="payment-frequency"
+                                            value={paymentFrequency}
+                                            onChange={(e) =>
+                                                setPaymentFrequency(
+                                                    e.target.value
+                                                )
+                                            }
+                                            required
+                                        >
+                                            <MenuItem value={1}>1</MenuItem>
+                                            <MenuItem value={2}>2</MenuItem>
+                                            <MenuItem value={3}>3</MenuItem>
+                                            <MenuItem value={4}>4</MenuItem>
+                                            {/* Thêm các giá trị khác nếu cần */}
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                            </Grid>
                             {/* chọn ngày */}
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                 <Grid container spacing={2}>
@@ -268,30 +330,7 @@ const InsuranceRegistration = () => {
                                     </Grid>
                                 </Grid>
                             </LocalizationProvider>
-                            <FormControl
-                                fullWidth
-                                style={{ marginTop: "20px" }}
-                            >
-                                <InputLabel id="payment-frequency-label">
-                                    Số kỳ hạn mỗi năm
-                                </InputLabel>
-                                <Select
-                                    labelId="payment-frequency-label"
-                                    label="Số kỳ hạn mỗi năm"
-                                    id="payment-frequency"
-                                    value={paymentFrequency}
-                                    onChange={(e) =>
-                                        setPaymentFrequency(e.target.value)
-                                    }
-                                    required
-                                >
-                                    <MenuItem value={1}>1</MenuItem>
-                                    <MenuItem value={2}>2</MenuItem>
-                                    <MenuItem value={3}>3</MenuItem>
-                                    <MenuItem value={4}>4</MenuItem>
-                                    {/* Thêm các giá trị khác nếu cần */}
-                                </Select>
-                            </FormControl>
+
                             <FormControl
                                 fullWidth
                                 style={{ marginTop: "20px" }}
@@ -333,7 +372,11 @@ const InsuranceRegistration = () => {
                                         <TableRow>
                                             <TableCell>Tên bệnh</TableCell>
                                             <TableCell>Mô tả</TableCell>
-                                            <TableCell>Chọn</TableCell>
+                                            <TableCell
+                                                style={{ width: "135px" }}
+                                            >
+                                                Mức độ bệnh
+                                            </TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
@@ -346,16 +389,53 @@ const InsuranceRegistration = () => {
                                                     {benh.moTa}
                                                 </TableCell>
                                                 <TableCell>
-                                                    <Checkbox
-                                                        checked={selectedBenhs.includes(
-                                                            benh.maBenh
-                                                        )}
-                                                        onChange={() =>
-                                                            handleCheckboxChange(
-                                                                benh.maBenh
-                                                            )
-                                                        }
-                                                    />
+                                                    <FormControl fullWidth>
+                                                        <InputLabel
+                                                            id={`severity-label-${benh.maBenh}`}
+                                                        >
+                                                            Chọn
+                                                        </InputLabel>
+                                                        <Select
+                                                            labelId={`severity-label-${benh.maBenh}`}
+                                                            label="Chọn"
+                                                            value={
+                                                                selectedBenhs.find(
+                                                                    (item) =>
+                                                                        item.MaBenh ===
+                                                                        benh.maBenh
+                                                                )?.TinhTrang ||
+                                                                ""
+                                                            }
+                                                            onChange={(e) =>
+                                                                handleSeverityChange(
+                                                                    benh.maBenh,
+                                                                    e.target
+                                                                        .value
+                                                                )
+                                                            }
+                                                        >
+                                                            <MenuItem
+                                                                value={"Cancel"}
+                                                            >
+                                                                Huỷ chọn
+                                                            </MenuItem>
+                                                            <MenuItem
+                                                                value={"Nhẹ"}
+                                                            >
+                                                                Nhẹ
+                                                            </MenuItem>
+                                                            <MenuItem
+                                                                value={"Vừa"}
+                                                            >
+                                                                Vừa
+                                                            </MenuItem>
+                                                            <MenuItem
+                                                                value={"Nặng"}
+                                                            >
+                                                                Nặng
+                                                            </MenuItem>
+                                                        </Select>
+                                                    </FormControl>
                                                 </TableCell>
                                             </TableRow>
                                         ))}
@@ -388,13 +468,6 @@ const InsuranceRegistration = () => {
                     )}
                 </form>
             </Paper>
-            <Snackbar
-                open={snackbarOpen}
-                autoHideDuration={2000}
-                onClose={handleSnackbarClose}
-                message={snackbarMessage}
-                anchorOrigin={{ vertical: "top", horizontal: "right" }}
-            />
         </Container>
     );
 };

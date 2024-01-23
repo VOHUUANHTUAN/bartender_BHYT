@@ -13,6 +13,8 @@ export const ROUTERS = {
         DONDANGKY: "registrationForms",
         REQUESTINVOICE: "requestinvoice",
         PAY: "pay",
+        INVOICEHISTORYPAGE: "invoiceHistory",
+        INVOICEHISTORYDETAILPAGE: "invoiceHistory/detail",
 
         STAFF: "staff",
         DONDANGKY: "registrationForms",
