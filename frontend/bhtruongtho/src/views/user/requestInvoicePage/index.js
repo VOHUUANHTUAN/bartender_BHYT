@@ -25,6 +25,7 @@ import {
 import Box from "@mui/material/Box";
 import { useSnackbar } from "../../../context/SnackbarContext";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import './style.scss';
 const RequestInvoice = () => {
     //user context
     const { openSnackbar } = useSnackbar();
@@ -60,7 +61,23 @@ const RequestInvoice = () => {
 
     //thông báo lỗi
     const [invoiceCodeError, setInvoiceCodeError] = useState(false);
-    const [amountError, setAmountError] = useState(false);
+
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState("");
+
+    const formatCurrency = (amount) => {
+        const formattedAmount = new Intl.NumberFormat("vi-VN", {
+            style: "currency",
+            currency: "VND",
+        }).format(amount);
+    
+        return formattedAmount;
+    };
+    //handle tab thông báo
+    const handleSnackbarClose = () => {
+        setSnackbarOpen(false);
+    };
+
 
     //handle cho dữ liệu thay đổi
     const handleChangeData = (e) => {
@@ -302,31 +319,16 @@ const RequestInvoice = () => {
             width: 150,
         },
         {
-            //một chút màu sắc cho cột tình trạng
-            field: "tinhTrang",
-            headerName: "Tình Trạng",
-            width: 100,
-            renderCell: (params) => {
-                const tinhTrangValue = params.value;
-                let cellColor;
-                // Set colors based on tinhTrangValue
-                switch (tinhTrangValue) {
-                    case "Đã hoàn tiền":
-                        cellColor = "green";
-                        break;
-                    case "Chờ duyệt":
-                        cellColor = "orange";
-                        break;
-                    case "Không đủ điều kiện":
-                        cellColor = "red";
-                        break;
-                    // Add more cases as needed
-                    default:
-                        cellColor = "black";
-                }
-                return <div style={{ color: cellColor }}>{tinhTrangValue}</div>;
-            },
-        },
+            field: 'tinhTrang',
+            headerName: 'Tình Trạng',
+            width: 160,
+            cellClassName: (params) => `status-cell ${params.value.replace(/\s/g, '').toLowerCase()}`,
+            renderCell: (params) => (
+              <div className={`bordered-cell ${params.value.replace(/\s/g, '').toLowerCase()}`}>
+                {params.value}
+              </div>
+            ),
+          },
         { field: "thoiGianTao", headerName: "Thời Gian Tạo", width: 200 },
     ];
 
@@ -336,7 +338,7 @@ const RequestInvoice = () => {
                 elevation={3}
                 style={{
                     padding: "20px",
-                    marginTop: "120px",
+                    marginTop: "40px",
                     marginBottom: "100px",
                 }}
             >
@@ -395,7 +397,7 @@ const RequestInvoice = () => {
                                 <TextField
                                     label="Số tiền"
                                     name="amount"
-                                    value={amount}
+                                    value={formatCurrency(amount)}
                                     //onChange={handleChangeData}
                                     fullWidth
                                     required
@@ -447,7 +449,7 @@ const RequestInvoice = () => {
                                 </FormControl>
                                 <TextField
                                     label="Số tiền hoàn trả"
-                                    value={refundAmount}
+                                    value={formatCurrency(refundAmount)}
                                     fullWidth
                                     margin="normal"
                                     InputProps={{ readOnly: true }}

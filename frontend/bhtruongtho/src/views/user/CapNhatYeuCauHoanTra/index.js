@@ -12,7 +12,7 @@ import './style.scss';
 const ListYeuCauHoanTra = () => {
     const [yeuCauHoanTraList, setYeuCauHoanTraList] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [selectedIds, setSelectedIds] = useState([]);
+    const [selectedId, setSelectedId] = useState('');
     const { user } = useUser();
     console.log(user);
 
@@ -36,23 +36,34 @@ const ListYeuCauHoanTra = () => {
 
         fetchData();
     }, []);
+    const formatDate = (date) => (dayjs(date).isValid() ? dayjs(date).format('DD/MM/YYYY') : '');
+    const formatRelativeTime = (date) => (dayjs(date).isValid() ? dayjs(date).fromNow() : '');
+    const formatCurrency = (amount) => {
+        const formattedAmount = new Intl.NumberFormat("vi-VN", {
+            style: "currency",
+            currency: "VND",
+        }).format(amount);
 
-    const formatDate = (date) => dayjs(date).format('YYYY/MM/DD');
-    const formatRelativeTime = (date) => dayjs(date).fromNow();
+        return formattedAmount;
+    };
+
 
     const columns = [
-        { field: 'maYC', headerName: 'Mã Yêu Cầu', flex: 1 },
-        { field: 'maHDKhamBenh', headerName: 'Mã Hồ Sơ Khám Bệnh', flex: 1 },
-        { field: 'maGoiBHApDung', headerName: 'Mã Gói BH Áp Dụng', flex: 1 },
-        { field: 'maKH', headerName: 'Mã Khách Hàng', flex: 1 },
-        { field: 'maNV', headerName: 'Mã NV', flex: 1 },
-        { field: 'tenBenhVien', headerName: 'Tên Bệnh Viện', flex: 1 },
-        { field: 'soTienDaKham', headerName: 'Số Tiền Đã Khám', flex: 1 },
-        { field: 'benh', headerName: 'Bệnh', flex: 1 },
+        { field: 'maYC', headerName: 'Mã Yêu Cầu', width: 120 },
+        { field: 'maHDKhamBenh', headerName: 'Mã Hồ Sơ Khám Bệnh', width: 120 },
+        { field: 'maGoiBHApDung', headerName: 'Mã Gói BH Áp Dụng', width: 120 },
+        { field: 'maKH', headerName: 'Mã Khách Hàng', width: 120 },
+        { field: 'maNV', headerName: 'Mã NV', width: 120 },
+        { field: 'tenBenhVien', headerName: 'Tên Bệnh Viện', width: 120 },
+        {
+            field: 'soTienDaKham', headerName: 'Số Tiền Đã Khám', valueFormatter: (params) => formatCurrency(params.value),
+            width: 120
+        },
+        { field: 'benh', headerName: 'Bệnh', width: 120 },
         {
             field: 'thoiGianTao',
             headerName: 'Thời Gian Tạo',
-            flex: 1,
+            width: 120,
             valueFormatter: (params) => formatDate(params.value),
         },
         {
@@ -61,20 +72,23 @@ const ListYeuCauHoanTra = () => {
             width: 160,
             cellClassName: (params) => `status-cell ${params.value.replace(/\s/g, '').toLowerCase()}`,
             renderCell: (params) => (
-                <div className={`bordered-cell ${params.value.replace(/\s/g, '').toLowerCase()}`}>
-                    {params.value}
-                </div>
+              <div className={`bordered-cell ${params.value.replace(/\s/g, '').toLowerCase()}`}>
+                {params.value}
+              </div>
             ),
-        },
+          },
         {
             field: 'soTienHoanTra',
             headerName: 'Số Tiền Hoàn Trả',
-            flex: 1,
+            width: 120,
+
+            valueFormatter: (params) => formatCurrency(params.value),
+
         },
         {
             field: 'thoiGianDuyet',
             headerName: 'Thời Gian Duyệt',
-            flex: 1,
+            width: 120,
             valueFormatter: (params) => formatDate(params.value),
         },
     ];
@@ -85,18 +99,18 @@ const ListYeuCauHoanTra = () => {
                 rows={yeuCauHoanTraList}
                 columns={columns}
                 pageSize={5}
-                checkboxSelection
                 onRowSelectionModelChange={(newRowSelectionModel) => {
-                    setSelectedIds(newRowSelectionModel);
+                    setSelectedId(newRowSelectionModel);
                 }}
-                rowSelectionModel={selectedIds}
+                rowSelectionModel={selectedId}
+                showFooter={false}
+                hideFooterSelectedRowCount
+                hideFooterPagination
             />
             <div>
-                {selectedIds.length > 0 && (
-                    <Button component={Link} to={`detail/${selectedIds[0]}`} variant="contained" color="primary">
-                        Xem
-                    </Button>
-                )}
+                <Button component={Link} to={`detail/${selectedId}`} variant="contained" color="primary" style={{ marginTop: '10px' }}>
+                    Xem
+                </Button>
             </div>
         </Box>
     );

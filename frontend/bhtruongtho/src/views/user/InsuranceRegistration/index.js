@@ -147,7 +147,7 @@ const InsuranceRegistration = () => {
                 .format("YYYY-MM-DD"),
             TinhTrang: "Chờ duyệt",
             TongGia: calculateTotalAmount(),
-            BenhIDs: selectedBenhs,
+            benh: selectedBenhs,
         };
         console.log(data_DonDangKy);
         // console.log(selectedBenhs);
@@ -227,31 +227,64 @@ const InsuranceRegistration = () => {
                             <Typography variant="body1">
                                 Tỉ lệ hoàn tiền: {selectedPackage.tiLeHoanTien}%
                             </Typography>
-                            <FormControl
-                                fullWidth
-                                style={{ marginTop: "20px" }}
-                            >
-                                <InputLabel id="duration-label">
-                                    Thời hạn (năm)
-                                </InputLabel>
-                                <Select
-                                    labelId="duration-label"
-                                    label="Thời hạn (năm)"
-                                    id="duration"
-                                    value={duration}
-                                    onChange={(e) =>
-                                        setDuration(e.target.value)
-                                    }
-                                    required
-                                >
-                                    <MenuItem value={1}>1</MenuItem>
-                                    <MenuItem value={2}>2</MenuItem>
-                                    <MenuItem value={3}>3</MenuItem>
-                                    <MenuItem value={4}>4</MenuItem>
-                                    <MenuItem value={5}>5</MenuItem>
-                                    {/* Thêm các giá trị khác nếu cần */}
-                                </Select>
-                            </FormControl>
+
+                            <Grid container spacing={2}>
+                                <Grid item xs={6}>
+                                    <FormControl
+                                        fullWidth
+                                        style={{ marginTop: "20px" }}
+                                    >
+                                        <InputLabel id="duration-label">
+                                            Thời hạn (năm)
+                                        </InputLabel>
+                                        <Select
+                                            labelId="duration-label"
+                                            label="Thời hạn (năm)"
+                                            id="duration"
+                                            value={duration}
+                                            onChange={(e) =>
+                                                setDuration(e.target.value)
+                                            }
+                                            required
+                                        >
+                                            <MenuItem value={1}>1</MenuItem>
+                                            <MenuItem value={2}>2</MenuItem>
+                                            <MenuItem value={3}>3</MenuItem>
+                                            <MenuItem value={4}>4</MenuItem>
+                                            <MenuItem value={5}>5</MenuItem>
+                                            {/* Thêm các giá trị khác nếu cần */}
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <FormControl
+                                        fullWidth
+                                        style={{ marginTop: "20px" }}
+                                    >
+                                        <InputLabel id="payment-frequency-label">
+                                            Số kỳ hạn mỗi năm
+                                        </InputLabel>
+                                        <Select
+                                            labelId="payment-frequency-label"
+                                            label="Số kỳ hạn mỗi năm"
+                                            id="payment-frequency"
+                                            value={paymentFrequency}
+                                            onChange={(e) =>
+                                                setPaymentFrequency(
+                                                    e.target.value
+                                                )
+                                            }
+                                            required
+                                        >
+                                            <MenuItem value={1}>1</MenuItem>
+                                            <MenuItem value={2}>2</MenuItem>
+                                            <MenuItem value={3}>3</MenuItem>
+                                            <MenuItem value={4}>4</MenuItem>
+                                            {/* Thêm các giá trị khác nếu cần */}
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                            </Grid>
                             {/* chọn ngày */}
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                 <Grid container spacing={2}>
@@ -297,30 +330,7 @@ const InsuranceRegistration = () => {
                                     </Grid>
                                 </Grid>
                             </LocalizationProvider>
-                            <FormControl
-                                fullWidth
-                                style={{ marginTop: "20px" }}
-                            >
-                                <InputLabel id="payment-frequency-label">
-                                    Số kỳ hạn mỗi năm
-                                </InputLabel>
-                                <Select
-                                    labelId="payment-frequency-label"
-                                    label="Số kỳ hạn mỗi năm"
-                                    id="payment-frequency"
-                                    value={paymentFrequency}
-                                    onChange={(e) =>
-                                        setPaymentFrequency(e.target.value)
-                                    }
-                                    required
-                                >
-                                    <MenuItem value={1}>1</MenuItem>
-                                    <MenuItem value={2}>2</MenuItem>
-                                    <MenuItem value={3}>3</MenuItem>
-                                    <MenuItem value={4}>4</MenuItem>
-                                    {/* Thêm các giá trị khác nếu cần */}
-                                </Select>
-                            </FormControl>
+
                             <FormControl
                                 fullWidth
                                 style={{ marginTop: "20px" }}

@@ -1,4 +1,5 @@
 // Login.js
+import React, { useEffect, useState } from "react";
 import {
     Button,
     Container,
@@ -7,8 +8,6 @@ import {
     TextField,
     Typography,
 } from "@mui/material";
-import bcrypt from "bcryptjs";
-import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { logingettoken } from "../../../api/connect";
 import { useSnackbar } from "../../../context/SnackbarContext";
@@ -23,27 +22,18 @@ const Login = () => {
         username: "",
         password: "",
     });
+
     const [loginError, setLoginError] = useState(null); // Thêm state để theo dõi lỗi đăng nhập
     const navigate = useNavigate();
 
-    const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value,
-        });
-        if (e.target.name === "username") {
-            const usernameRegex = /^[a-zA-Z0-9_@#&]+$/;
-            setUsernameError(!usernameRegex.test(e.target.value));
-        }
-        if (e.target.name === "password") {
-            const usernameRegex = /^[a-zA-Z0-9_@#&]+$/;
-            setPasswordError(!usernameRegex.test(e.target.value));
-        }
-    };
-
     const validateForm = () => {
-        if (usernameError || passwordError) {
-            return "Vui lòng kiểm tra lại thông tin";
+        const usernameRegex = /^[a-zA-Z0-9_@#&]+$/;
+        if (!usernameRegex.test(formData.username)) {
+            return "Username chỉ được chứa chữ cái và số, dấu _ @ # &";
+        }
+
+        if (!usernameRegex.test(formData.password)) {
+            return "Password chỉ được chứa chữ cái và số, dấu _ @ # &";
         }
         return null; // Validation passed
     };
@@ -54,26 +44,21 @@ const Login = () => {
         }
     }, [user, navigate]);
 
+    // Khi nhấn nút đăng nhập
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             const validationError = validateForm();
 
             if (validationError) {
-                openSnackbar(validationError);
-
+                openSnackbar(validationError, "error");
                 return;
             }
 
-            // const hashedPassword = await bcrypt.hash(
-            //     formData.password,
-            //     formData.username
-            // );
             const res = await logingettoken(
                 formData.username,
                 formData.password
             );
-            // const res = await logingettoken(formData.username, hashedPassword);
 
             if (res) {
                 login({
@@ -87,7 +72,13 @@ const Login = () => {
 
                 console.log("Login successful.");
 
-                openSnackbar("Đăng nhập thành công", "success");
+                openSnackbar("Đăng nhập thành công");
+                if (res.role === "Nhân viên") {
+                    navigate("/staff");
+                    console.log(res.role);
+                    return;
+                }
+
                 navigate("/");
             }
         } catch (error) {
@@ -97,14 +88,13 @@ const Login = () => {
                 openSnackbar("Có lỗi xảy ra khi kết nối với máy chủ", "error");
             }
         }
-        // openSnackbar("đmm", "error");
     };
 
     return (
         <Container maxWidth="xs">
             <Paper
                 elevation={3}
-                style={{ padding: "20px", margin: "150px 0px 50px 0px" }}
+                style={{ padding: "20px", margin: "50px 0px 50px 0px" }}
             >
                 <h2>Login</h2>
                 <form onSubmit={handleSubmit}>
@@ -116,11 +106,16 @@ const Login = () => {
                         required
                         name="username"
                         value={formData.username}
-                        onChange={handleChange}
                         error={usernameError}
                         helperText={
                             usernameError &&
                             "Username chỉ được chứa chữ cái và số, dấu _ @ # &"
+                        }
+                        onChange={(e) =>
+                            setFormData({
+                                ...formData,
+                                username: e.target.value,
+                            })
                         }
                     />
                     <TextField
@@ -132,11 +127,16 @@ const Login = () => {
                         required
                         name="password"
                         value={formData.password}
-                        onChange={handleChange}
                         error={passwordError}
                         helperText={
                             passwordError &&
                             "Password chỉ được chứa chữ cái và số, dấu _ @ # &"
+                        }
+                        onChange={(e) =>
+                            setFormData({
+                                ...formData,
+                                password: e.target.value,
+                            })
                         }
                     />
                     {loginError && (

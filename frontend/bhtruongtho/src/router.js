@@ -2,7 +2,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import HomePage from "./views/user/homePage";
 import { ROUTERS } from "./utils/router";
 import MasterLayout from "./views/user/theme/masterLayout";
-import NewsPage from "./views/user/newsPage";
+import ProfilePage from "./views/user/contactPage";
 import ProductDetailPage from "./views/user/productPage/detail.js";
 import ProductPage from "./views/user/productPage/index.js";
 import Login from "./views/user/loginPage";
@@ -24,23 +24,34 @@ import FinancialReport from "./views/user/financialReport";
 import InsurancePack from "./views/staff/insurancePackManagement/index.js";
 import InsPackDetailPage from "./views/staff/insurancePackManagement/insPackMDetail.js";
 import AddInsPack from "./views/staff/insurancePackManagement/addInsPack.js";
+import InfoCustomerDetail from "./views/user/infoCustomer/detail.js";
+
 
 import ListYeuCauHoanTra from "./views/user/CapNhatYeuCauHoanTra/index.js";
 import YeuCauHoanTraDetail from "./views/user/CapNhatYeuCauHoanTra/detailycht.js";
 import Transactions from "./views/user/transactionsPage";
+import InvoiceHistory from "./views/user/InvoiceHistoryPage/index.js";
+import InvoiceHistoryDetail from "./views/user/InvoiceHistoryPage/detail.js";
 import { useEffect } from "react";
 import { dayCalendarSkeletonClasses } from "@mui/x-date-pickers";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getUserInfoByToken } from "./api/connect";
 import { useSnackbar } from "./context/SnackbarContext";
+import { CachedTwoTone } from "@mui/icons-material";
 
-const AuthGuard = ({ component: Component, loginRequired }) => {
+const AuthGuard = ({ component: Component, loginRequired, onlyStaff }) => {
     const { user, login, logout } = useUser();
 
     //Nếu loginRequired=true và Không_Có_Koken
+    // const userInfo = {};
+    // try {
+    //     userInfo = getUserInfoByToken(localStorage.getItem("token"));
+    // } catch {}
     if (loginRequired && !localStorage.getItem("token")) {
         return <Navigate to={`/${ROUTERS.USER.LOGIN}`} />;
     }
+    // else if (userInfo && userInfo.role == "Nhân viên" && onlyStaff)
+    //     return <Navigate to={`/${ROUTERS.USER.HOME}`} />;
     return Component;
 };
 
@@ -49,14 +60,30 @@ const RouterCustom = () => {
     const { user } = useUser();
     const navigate = useNavigate();
 
+    // const kiemtra_FirstLogin = (token) => {
+    //     const res = getUserInfoByToken(localStorage.getItem("token"));
+    //     return;
+    // };
     //Mỗi khi có đường dẫn thay đổi thì kiểm tra
     useEffect(() => {
-        // Hành động mà bạn muốn thực hiện khi đường dẫn thay đổi
+        // Hành động mà bạn muốn thực hiện khi đường dẫn thay đổiconst userInfo = {};
+        // let userInfo;
+        // try {
+        //     const res = getUserInfoByToken(localStorage.getItem("token"));
+        //     res.then((userInfo) => {
+        //         console.log(userInfo);
+        //     }).catch((error) => {
+        //         console.error("Error getting user info:", error);
+        //     });
+        // } catch {}
+
         console.log("Đường dẫn đã thay đổi:", location.pathname);
         if (user && user.firstLogin) {
             navigate("/Profile");
         }
-        // kiemTraCacThongTinDangNhap(localStorage.getItem("token"));
+        // if (onlyStaff && userInfo.role != "Nhân viên") {
+        //     navigate("/");
+        // }
     }, [location.pathname]);
     const userRouters = [
         {
@@ -65,8 +92,8 @@ const RouterCustom = () => {
             loginRequired: false,
         },
         {
-            path: ROUTERS.USER.NEWS,
-            component: <NewsPage />,
+            path: ROUTERS.USER.CONTACT,
+            component: <ProfilePage />,
             loginRequired: false,
         },
         {
@@ -93,8 +120,12 @@ const RouterCustom = () => {
             loginRequired: true,
         },
         {
+            path: ROUTERS.USER.INVOICEHISTORYPAGE,
+            component: <InvoiceHistory />,
+            loginRequired: true,
+        },
+        {
             path: ROUTERS.USER.PAY,
-
             component: <Pay />,
             loginRequired: true,
         },
@@ -102,6 +133,7 @@ const RouterCustom = () => {
             path: ROUTERS.USER.STAFF,
             component: <HomePageStaff />,
             loginRequired: false,
+            onlyStaff: true,
         },
         {
             path: ROUTERS.USER.REQUESTINVOICE,
@@ -121,18 +153,22 @@ const RouterCustom = () => {
         {
             path: ROUTERS.USER.DONDANGKY,
             component: <ListDonDangKy />,
+            loginRequired: true,
         },
         {
             path: ROUTERS.USER.INSURANCEPACKM,
             component: <InsurancePack />,
+            loginRequired: true,
         },
         {
             path: ROUTERS.USER.ADDINSPACK,
             component: <AddInsPack />,
+            loginRequired: true,
         },
         {
             path: ROUTERS.USER.YEUCAUHOANTRA,
             component: <ListYeuCauHoanTra />,
+            loginRequired: true,
         },
 
         {
@@ -165,6 +201,7 @@ const RouterCustom = () => {
                             <AuthGuard
                                 component={item.component}
                                 loginRequired={item.loginRequired}
+                                onlyStaff={item.onlyStaff}
                             />
                         }
                     />
@@ -181,14 +218,17 @@ const RouterCustom = () => {
                     path="InsuranceRegistration/:id"
                     element={<InsuranceRegistration />}
                 />
-                {/* <Route path="product/detail/:id" element={<AuthGuard component={<ProductDetailPage />} loginRequired={true} />} /> */}
                 <Route
-                    path="registrationForms/detail/:id"
-                    element={<DonDangKyDetail />}
+                    path="InfoCustomer/detail/:id"
+                    element={<InfoCustomerDetail />}
                 />
                 <Route
                     path="requestrefund/detail/:id"
                     element={<YeuCauHoanTraDetail />}
+                />
+                <Route
+                    path="invoiceHistory/detail/:id"
+                    element={<InvoiceHistoryDetail />}
                 />
                 <Route
                     path="insurancePackManagement/detail/:id"

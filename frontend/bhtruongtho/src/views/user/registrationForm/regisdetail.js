@@ -2,9 +2,8 @@ import React, { memo, useState, useEffect } from 'react';
 import { getDonDangKyByID, getNhanVienByID, putDonDangKyByID, getUserInfoByToken } from '../../../api/connect';
 import { useParams } from 'react-router-dom';
 import { Grid, Paper, Typography, Button, Input, FormLabel } from '@mui/material';
-import Snackbar from '@mui/material/Snackbar';
-import MuiAlert from '@mui/material/Alert';
-import dayjs from "dayjs";
+import { useSnackbar } from "../../../context/SnackbarContext";
+
 
 
 const DetailPage = () => {
@@ -18,14 +17,20 @@ const DetailPage = () => {
     const [email, setEmail] = useState('')
     const [sdt, setSdt] = useState('')
     const today = new Date()
-    const [snackbarOpen, setSnackbarOpen] = useState(false);
-    const [snackbarMessage, setSnackbarMessage] = useState('');
-    const [snackbarSeverity, setSnackbarSeverity] = useState('error'); // 'error', 'success', 'warning', 'info'
+    const { openSnackbar } = useSnackbar();
     const [reasonForDenial, setReasonForDenial] = useState('');
     const [showDenialReasonInput, setShowDenialReasonInput] = useState(false);
 
     const params = useParams();
     const [currentuser, setCurrentuser] = useState({})
+    const formatCurrency = (amount) => {
+        const formattedAmount = new Intl.NumberFormat("vi-VN", {
+            style: "currency",
+            currency: "VND",
+        }).format(amount);
+
+        return formattedAmount;
+    };
     useEffect(() => {
         const fetchUserData = async () => {
             try {
@@ -57,7 +62,7 @@ const DetailPage = () => {
         };
 
         fetchData();
-    }, [params.id, snackbarOpen]); // Thêm snackbarOpen vào dependencies
+    }, [params.id]); // Thêm snackbarOpen vào dependencies
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -83,7 +88,7 @@ const DetailPage = () => {
 
         fetchUserData();
 
-    }, [snackbarOpen]); // Thêm snackbarOpen vào dependencies
+    }, []); // Thêm snackbarOpen vào dependencies
     const updateStatus_accept = async () => {
         console.log('donDangKy.tinhTrang:', donDangKy.tinhTrang);
 
@@ -150,11 +155,6 @@ const DetailPage = () => {
     };
 
 
-    const openSnackbar = (message, severity) => {
-        setSnackbarMessage(message);
-        setSnackbarSeverity(severity);
-        setSnackbarOpen(true);
-    };
     const handleCloseSnackbar = (event, reason) => {
         if (reason === 'clickaway') {
             return;
@@ -174,7 +174,7 @@ const DetailPage = () => {
                                 <>
                                     <Typography variant="body1">Tên gói bảo hiểm: {donDangKy.goiBaoHiem.tenGoiBH}</Typography>
                                     <Typography variant="body1">Mô tả gói bảo hiểm: {donDangKy.goiBaoHiem.motaGoiBH}</Typography>
-                                    <Typography variant="body1">Giá: {donDangKy.goiBaoHiem.gia}</Typography>
+                                    <Typography variant="body1">Giá: {formatCurrency(donDangKy.goiBaoHiem.gia)}</Typography>
 
                                 </>
                             ) : (
@@ -220,7 +220,7 @@ const DetailPage = () => {
                             </div>
 
                             <div style={{ marginBottom: '10px', backgroundColor: '#f0f0f0', padding: '8px', borderRadius: '4px' }}>
-                                <Typography variant="body1">Tổng giá: {donDangKy.tongGia}</Typography>
+                                <Typography variant="body1">Tổng giá: {formatCurrency(donDangKy.tongGia)}</Typography>
                             </div>
 
                             <div style={{ backgroundColor: '#f0f0f0', padding: '8px', borderRadius: '4px' }}>
@@ -259,21 +259,7 @@ const DetailPage = () => {
                             <Button variant="contained" style={{ marginBottom: "10px", backgroundColor: 'rgb(25, 118, 210)' }} onClick={updateStatus_denied}>Từ chối</Button>
                         </Grid>
                     </Grid>
-                    <Snackbar
-                        open={snackbarOpen}
-                        autoHideDuration={6000}
-                        onClose={handleCloseSnackbar}
-                        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-                    >
-                        <MuiAlert
-                            elevation={6}
-                            variant="filled"
-                            severity={snackbarSeverity}
-                            onClose={handleCloseSnackbar}
-                        >
-                            {snackbarMessage}
-                        </MuiAlert>
-                    </Snackbar>
+
                 </Grid>
             )
             }

@@ -2,7 +2,7 @@ export const ROUTERS = {
     USER: {
         HOME: "",
         PRODUCT: "product",
-        NEWS: "news",
+        CONTACT: "contact",
         LOGIN: "login",
         REGISTER: "register",
         CHANGEPASSWORD: "changepassword",
@@ -13,6 +13,8 @@ export const ROUTERS = {
         DONDANGKY: "registrationForms",
         REQUESTINVOICE: "requestinvoice",
         PAY: "pay",
+        INVOICEHISTORYPAGE: "invoiceHistory",
+        INVOICEHISTORYDETAILPAGE: "invoiceHistory/detail",
 
         STAFF: "staff",
         DONDANGKY: "registrationForms",
