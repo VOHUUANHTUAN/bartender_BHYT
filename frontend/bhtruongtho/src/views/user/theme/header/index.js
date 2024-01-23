@@ -31,7 +31,8 @@ const Header = () => {
     const { user, login, logout } = useUser();
 
     // Kiểm tra nếu user là Nhân viên thì không hiển thị Header và Footer
-    const shouldShowLayout = !user || (user && user.role !== "Nhân viên");
+    const shouldShowLayoutStaff = !user || (user && user.role !== "Nhân viên");
+    const shouldShowLayoutAdmin = !user || (user && user.role !== "Admin");
     const handleLogout = () => {
         logout();
         navigate("/");
@@ -108,9 +109,19 @@ const Header = () => {
                 <div className="container__header__footer">
                     <div className="row">
                         <div className="col-xl-3 col-lg-3 col-md-3 col-sm-3 header_logo">
-                            <Link to="/staff">Trang chủ</Link>
+                            {shouldShowLayoutStaff ? (
+                                <>
+                                    {shouldShowLayoutAdmin ? (
+                                        <div> BarTender </div>
+                                    ) : (
+                                        <Link to="/admin">Trang chủ</Link>
+                                    )}
+                                </>
+                            ) : (
+                                <Link to="/staff">Trang chủ</Link>
+                            )}
                         </div>
-                        {shouldShowLayout ? (
+                        {shouldShowLayoutStaff && shouldShowLayoutAdmin ? (
                             <>
                                 <div className="col-xl-6 col-lg-6 col-md-9 col-sm-12">
                                     <nav className="header_menu">

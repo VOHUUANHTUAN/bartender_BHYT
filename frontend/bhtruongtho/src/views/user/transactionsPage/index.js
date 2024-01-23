@@ -54,7 +54,7 @@ const BillList = () => {
             maHD: row.maHD,
             soTien: row.soTien,
             thoiGianThanhToan: dayjs(row.thoiGianThanhToan).format(
-                "HH:mm:ss DD/MM/YYYY"
+                "DD/MM/YYYY HH:mm:ss"
             ),
             maDon: row.maDon,
             loaiHoaDon: row.loaiHoaDon,

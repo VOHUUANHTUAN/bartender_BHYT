@@ -14,6 +14,7 @@ import {
     Input,
     FormLabel,
 } from "@mui/material";
+import dayjs from "dayjs";
 import { useSnackbar } from "../../../context/SnackbarContext";
 
 const DetailPage = () => {
@@ -179,7 +180,6 @@ const DetailPage = () => {
         }
     };
 
-
     return (
         <div className="container__body">
             {loading ? (
@@ -279,12 +279,9 @@ const DetailPage = () => {
                             >
                                 <Typography variant="body1">
                                     Thời gian đăng ký:{" "}
-                                    {new Date(
-                                        donDangKy.thoiGianDK
-                                    ).toLocaleTimeString()}{" "}
-                                    {new Date(
-                                        donDangKy.thoiGianDK
-                                    ).toLocaleDateString()}
+                                    {dayjs(donDangKy.thoiGianDK).format(
+                                        "DD/MM/YYYY HH:mm:ss"
+                                    )}
                                 </Typography>
                             </div>
 
@@ -299,13 +296,9 @@ const DetailPage = () => {
                                 <Typography variant="body1">
                                     Thời gian bắt đầu:{" "}
                                     {donDangKy.thoiGianBD
-                                        ? new Date(
-                                              donDangKy.thoiGianBD
-                                          ).toLocaleTimeString() +
-                                          " " +
-                                          new Date(
-                                              donDangKy.thoiGianBD
-                                          ).toLocaleDateString()
+                                        ? dayjs(donDangKy.thoiGianBD).format(
+                                              "DD/MM/YYYY"
+                                          )
                                         : "Chưa kích hoạt"}
                                 </Typography>
                             </div>
@@ -321,13 +314,9 @@ const DetailPage = () => {
                                 <Typography variant="body1">
                                     Thời gian hết hạn:{" "}
                                     {donDangKy.thoiGianHetHan
-                                        ? new Date(
+                                        ? dayjs(
                                               donDangKy.thoiGianHetHan
-                                          ).toLocaleTimeString() +
-                                          " " +
-                                          new Date(
-                                              donDangKy.thoiGianHetHan
-                                          ).toLocaleDateString()
+                                          ).format("DD/MM/YYYY")
                                         : "Chưa kích hoạt"}
                                 </Typography>
                             </div>

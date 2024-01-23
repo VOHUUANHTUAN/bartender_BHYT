@@ -18,14 +18,14 @@ import Profile from "./views/user/profilePage/index.js";
 import Pay from "./views/user/payPage/index.js";
 import PaidDetail from "./views/user/payPage/paidDetail.js";
 import UnPaidDetail from "./views/user/payPage/unpaidDetail.js";
-import InfoCustomer from "./views/user/infoCustomer/index.js";
-import Recharge from "./views/user/infoCustomer/recharge.js";
-import FinancialReport from "./views/user/financialReport";
+import InfoCustomer from "./views/staff/infoCustomer/index.js";
+import Recharge from "./views/staff/infoCustomer/recharge.js";
+import FinancialReport from "./views/staff/financialReport";
 import InsurancePack from "./views/staff/insurancePackManagement/index.js";
 import InsPackDetailPage from "./views/staff/insurancePackManagement/insPackMDetail.js";
 import AddInsPack from "./views/staff/insurancePackManagement/addInsPack.js";
-import InfoCustomerDetail from "./views/user/infoCustomer/detail.js";
-import HistoryPay from "./views/user/infoCustomer/historyPay.js";
+import InfoCustomerDetail from "./views/staff/infoCustomer/detail.js";
+import HistoryPay from "./views/staff/infoCustomer/historyPay.js";
 import Admin from "./views/admin/createstaff/index.js";
 import HomePageAdmin from "./views/admin/homePage/index.js";
 
@@ -93,17 +93,17 @@ const RouterCustom = () => {
         {
             path: ROUTERS.USER.HOMEPAGEADMIN,
             component: <HomePageAdmin />,
-            loginRequired: false,
+            loginRequired: true,
         },
         {
             path: ROUTERS.USER.CHECKONSTAFF,
             component: <CheckOnStaff />,
-            loginRequired: false,
+            loginRequired: true,
         },
         {
-            path: ROUTERS.USER.ADMIN,
+            path: ROUTERS.USER.ADMINADDNEWSTAFF,
             component: <Admin />,
-            loginRequired: false,
+            loginRequired: true,
         },
         {
             path: ROUTERS.USER.HOME,
@@ -124,6 +124,7 @@ const RouterCustom = () => {
         {
             path: ROUTERS.USER.LOGIN,
             component: <Login />,
+            loginRequired: false,
         },
         {
             path: ROUTERS.USER.REGISTER,
@@ -152,7 +153,7 @@ const RouterCustom = () => {
         {
             path: ROUTERS.USER.STAFF,
             component: <HomePageStaff />,
-            loginRequired: false,
+            loginRequired: true,
             onlyStaff: true,
         },
         {
@@ -257,11 +258,11 @@ const RouterCustom = () => {
                 <Route path="pay/detailPaid/:id" element={<PaidDetail />} />
                 <Route path="pay/detailUnpaid/:id" element={<UnPaidDetail />} />
                 <Route
-                    path="infoCustomer/Recharge/:id"
+                    path="staff/infoCustomer/recharge/:id"
                     element={<Recharge />}
                 />
                 <Route
-                    path="infoCustomer/historyPay/:id"
+                    path="staff/infoCustomer/historyPay/:id"
                     element={<HistoryPay />}
                 />
             </Routes>

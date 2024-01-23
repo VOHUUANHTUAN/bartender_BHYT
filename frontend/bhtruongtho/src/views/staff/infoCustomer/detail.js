@@ -106,7 +106,9 @@ const DetailCustomer = () => {
                                 variant="outlined"
                                 margin="normal"
                                 fullWidth
-                                disabled
+                                InputProps={{
+                                    readOnly: true,
+                                }}
                                 value={hoTen}
                             />
                         </Grid>
@@ -116,103 +118,107 @@ const DetailCustomer = () => {
                                 variant="outlined"
                                 margin="normal"
                                 fullWidth
-                                disabled
+                                InputProps={{
+                                    readOnly: true,
+                                }}
                                 value={CCCD}
                             />
                         </Grid>
                     </Grid>
-                    <Grid container spacing={2}>
-                        <Grid item xs={6}>
-                            <FormControl
-                                fullWidth
-                                variant="outlined"
-                                margin="normal"
-                                required
-                            >
-                                <InputLabel id="gioiTinh-label">
-                                    Giới tính
-                                </InputLabel>
-                                <Select
-                                    labelId="gioiTinh-label"
-                                    id="gioiTinh"
-                                    value={gioiTinh}
-                                    label="Giới tính"
-                                    disabled
-                                >
-                                    <MenuItem value="Nam">Nam</MenuItem>
-                                    <MenuItem value="Nữ">Nữ</MenuItem>
-                                    {/* Add more options as needed */}
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={6} dateAdapter={AdapterDayjs}>
-                            <FormControl
-                                fullWidth
-                                style={{ marginTop: "15px" }}
-                            >
-                                <LocalizationProvider
-                                    dateAdapter={AdapterDayjs}
-                                >
-                                    <DatePicker
-                                        label="Ngày sinh"
-                                        value={ngaySinh}
-                                        disabled
-                                        renderInput={(params) => (
-                                            <TextField
-                                                {...params}
-                                                fullWidth
-                                                variant="outlined"
-                                                margin="normal"
-                                            />
-                                        )}
-                                        format="DD/MM/YYYY"
-                                    />
-                                </LocalizationProvider>
-                            </FormControl>
-                        </Grid>
-
-                        <TextField
-                            label="Địa chỉ"
+                    <Grid item xs={6}>
+                        <FormControl
+                            fullWidth
                             variant="outlined"
                             margin="normal"
-                            fullWidth
                             required
-                            value={diaChi}
-                            disabled
-                        />
-                        <TextField
-                            label="Email"
-                            variant="outlined"
-                            margin="normal"
-                            fullWidth
-                            required
-                            value={email}
-                            disabled
-                        />
-                        <Grid container spacing={2}>
-                            <Grid item xs={6}>
-                                <TextField
-                                    label="Số điện thoại"
-                                    variant="outlined"
-                                    margin="normal"
-                                    fullWidth
-                                    required
-                                    value={soDienThoai}
-                                    disabled
-                                />
-                            </Grid>
-                            <Grid item xs={6}>
-                                <TextField
-                                    label="Số dư"
-                                    variant="outlined"
-                                    margin="normal"
-                                    fullWidth
-                                    value={soDu}
+                        >
+                            <InputLabel id="gioiTinh-label">
+                                Giới tính
+                            </InputLabel>
+                            <Select
+                                labelId="gioiTinh-label"
+                                id="gioiTinh"
+                                value={gioiTinh}
+                                label="Giới tính"
+                                InputProps={{
+                                    readOnly: true,
+                                }}
+                            >
+                                <MenuItem value="Nam">Nam</MenuItem>
+                                <MenuItem value="Nữ">Nữ</MenuItem>
+                                {/* Add more options as needed */}
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                    <Grid item xs={6} dateAdapter={AdapterDayjs}>
+                        <FormControl fullWidth style={{ marginTop: "15px" }}>
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <DatePicker
+                                    label="Ngày sinh"
+                                    value={ngaySinh}
                                     InputProps={{
                                         readOnly: true,
                                     }}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            fullWidth
+                                            variant="outlined"
+                                            margin="normal"
+                                        />
+                                    )}
+                                    format="DD/MM/YYYY"
                                 />
-                            </Grid>
+                            </LocalizationProvider>
+                        </FormControl>
+                    </Grid>
+                    <TextField
+                        label="Địa chỉ"
+                        variant="outlined"
+                        margin="normal"
+                        fullWidth
+                        required
+                        value={diaChi}
+                        InputProps={{
+                            readOnly: true,
+                        }}
+                    />
+                    <TextField
+                        label="Email"
+                        variant="outlined"
+                        margin="normal"
+                        fullWidth
+                        required
+                        value={email}
+                        InputProps={{
+                            readOnly: true,
+                        }}
+                    />
+                    <Grid container spacing={2}>
+                        <Grid item xs={6}>
+                            <TextField
+                                label="Số điện thoại"
+                                variant="outlined"
+                                margin="normal"
+                                fullWidth
+                                required
+                                value={soDienThoai}
+                                InputProps={{
+                                    readOnly: true,
+                                }}
+                            />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <TextField
+                                label="Số dư"
+                                variant="outlined"
+                                margin="normal"
+                                fullWidth
+                                value={soDu}
+                                InputProps={{
+                                    readOnly: true,
+                                }}
+                            />
                         </Grid>
                     </Grid>{" "}
                     <Button

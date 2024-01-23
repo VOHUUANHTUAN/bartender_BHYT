@@ -6,7 +6,7 @@ import Box from "@mui/material/Box";
 import { DataGrid } from "@mui/x-data-grid";
 import IconButton from "@mui/material/IconButton";
 import InfoIcon from "@mui/icons-material/Info";
-import AssignmentIcon from "@mui/icons-material/Assignment";
+import HistoryIcon from "@mui/icons-material/History";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import { Link, useNavigate } from "react-router-dom";
@@ -76,17 +76,15 @@ const InfoCustomer = () => {
     };
     const handleInfoClick = (rowData) => {
         navigate(`../staff/InfoCustomer/detail/${rowData.id}`); // Sử dụng rowData.id thay vì id
-        // Redirect tới trang detail với id tương ứng
     };
 
-    const handleAssignmentClick = (rowData) => {
+    const handleHistoryClick = (rowData) => {
+        navigate(`../staff/InfoCustomer/historyPay/${rowData.id}`); // Sử dụng rowData.id thay vì id
         console.log("Assignment clicked for row with ID:", rowData.id);
-        // Thực hiện các xử lý khi click vào nút Assignment
     };
 
     const handleCreditCardClick = (rowData) => {
-        console.log("Credit Card clicked for row with ID:", rowData.id);
-        // Thực hiện các xử lý khi click vào nút Credit Card
+        navigate(`../staff/infoCustomer/recharge/${rowData.id}`); // Sử dụng rowData.id thay vì id
     };
     const columns = [
         { field: "maKH", headerName: "Mã KH", width: 100 },
@@ -110,11 +108,12 @@ const InfoCustomer = () => {
                             <InfoIcon />
                         </IconButton>
                     </Tooltip>
-                    <Tooltip title="Đơn đăng ký">
+
+                    <Tooltip title="Lịch sử thanh toán">
                         <IconButton
-                            onClick={() => handleAssignmentClick(params.row)}
+                            onClick={() => handleHistoryClick(params.row)}
                         >
-                            <AssignmentIcon />
+                            <HistoryIcon />
                         </IconButton>
                     </Tooltip>
 

@@ -5,7 +5,9 @@ import { Link, useParams } from "react-router-dom";
 import { ROUTERS } from "../../../utils/router";
 
 const importAll = (r) => r.keys().map(r);
-const images = importAll(require.context('../../../images/goibaohiem', false, /\.(png|jpe?g|svg)$/));
+const images = importAll(
+    require.context("../../../images/goibaohiem", false, /\.(png|jpe?g|svg)$/)
+);
 
 const ProductDetailPage = () => {
     const params = useParams();
@@ -47,14 +49,14 @@ const ProductDetailPage = () => {
     }
 
     if (error) {
-        return <p>Error: {error.message}</p>;
+        return <p>Mã gói bảo hiểm không hợp lệ</p>;
     }
 
     const imgStyle = {
-        width: '100%',  // Chiếm toàn bộ chiều rộng của container
-        height: '300px', // Đảm bảo tỉ lệ khung hình ảnh được giữ nguyên
-        transition: 'transform 0.3s',  // Hiệu ứng khi hover
-      };
+        width: "100%", // Chiếm toàn bộ chiều rộng của container
+        height: "300px", // Đảm bảo tỉ lệ khung hình ảnh được giữ nguyên
+        transition: "transform 0.3s", // Hiệu ứng khi hover
+    };
 
     return (
         <>
@@ -63,9 +65,9 @@ const ProductDetailPage = () => {
                     <div className="detail__container">
                         <div className="img-container">
                             <img
-                                        src={images[(params.id % images.length - 1)]}
-                                        alt={`Gói Bảo Hiểm ${params.id}`}
-                                        style={imgStyle}
+                                src={images[(params.id % images.length) - 1]}
+                                alt={`Gói Bảo Hiểm ${params.id}`}
+                                style={imgStyle}
                             />
                         </div>
                         <div className="card-content">
