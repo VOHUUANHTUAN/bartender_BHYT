@@ -72,11 +72,11 @@ const ListYeuCauHoanTra = () => {
             width: 160,
             cellClassName: (params) => `status-cell ${params.value.replace(/\s/g, '').toLowerCase()}`,
             renderCell: (params) => (
-                <div className={`bordered-cell ${params.value.replace(/\s/g, '').toLowerCase()}`}>
-                    {params.value}
-                </div>
+              <div className={`bordered-cell ${params.value.replace(/\s/g, '').toLowerCase()}`}>
+                {params.value}
+              </div>
             ),
-        },
+          },
         {
             field: 'soTienHoanTra',
             headerName: 'Số Tiền Hoàn Trả',

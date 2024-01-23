@@ -31,8 +31,6 @@ namespace BaoHiemYTe.Controllers
                 return BadRequest(ModelState);
             }
 
-            // Check for the presence and validity of the token
-          
             try
             {
                 var tokenService = new TokenService();

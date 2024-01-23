@@ -13,6 +13,14 @@ const ProductPage = () => {
         fetchData();
     }, []);
 
+    const formatCurrency = (amount) => {
+        const formattedAmount = new Intl.NumberFormat("vi-VN", {
+            style: "currency",
+            currency: "VND",
+        }).format(amount);
+
+        return formattedAmount;
+    };
     const [currentPage, setCurrentPage] = useState(1);
     const goiBHsPerPage = 6; // Số gói Bảo hiểm trên mỗi trang
     // Tính toán vị trí bắt đầu và kết thúc của danh sách gói Bảo hiểm trên trang hiện tại
@@ -55,10 +63,17 @@ const ProductPage = () => {
                                             </p>
                                         </div>
                                     </div>
+
+                                    <div className="card__body">
+                                        <p>{goiBH.motaGoiBH}</p>
+                                        <p>Giá: {formatCurrency(goiBH.gia)}</p>
+                                        <p>Tỉ lệ hoàn tiền: {goiBH.tiLeHoanTien}%</p>
+
                                     <div className="card__btn">
                                         <Link to={`detail/${goiBH.maGoiBH}`}>
                                             <p>Xem thêm</p>
                                         </Link>
+
                                     </div>
                                 </li>
                             ))}
