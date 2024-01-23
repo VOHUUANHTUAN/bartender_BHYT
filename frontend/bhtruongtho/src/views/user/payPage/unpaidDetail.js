@@ -11,7 +11,7 @@ import PaymentIcon from "@mui/icons-material/Payment"; // Import PaymentIcon fro
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import InputAdornment from "@mui/material/InputAdornment";
 import InfoIcon from "@mui/icons-material/Info"; // Import InfoIcon
-import { Snackbar } from "@mui/material";
+import { useSnackbar } from "../../../context/SnackbarContext";
 import {
     getHoaDonDKDaThanhToanDetail,
     getKhachHangInformation,
@@ -25,7 +25,7 @@ const UnPaidDetail = () => {
     const [error, setError] = useState(null);
     const [showDetails, setShowDetails] = useState(false);
     const [soDu, setSoDu] = useState(null);
-    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const { openSnackbar } = useSnackbar();
     const [snackbarMessage, setSnackbarMessage] = useState("");
     const [showReason, setShowReason] = useState(false);
 
@@ -39,10 +39,6 @@ const UnPaidDetail = () => {
         return `${formattedDate} ${formattedTime}`;
     }
 
-    const handleSnackbarClose = () => {
-        setSnackbarOpen(false);
-    };
-
     useEffect(() => {
         const fetchDetail = async () => {
             try {
@@ -50,8 +46,7 @@ const UnPaidDetail = () => {
                 const HD = await getHoaDonDKDaThanhToanDetail(maHD);
                 setDetail(HD);
             } catch (error) {
-                setSnackbarMessage("Error fetching detail");
-                setSnackbarOpen(true);
+                openSnackbar("Lấy thông tin thấy bại", "error");
                 setError(error);
             } finally {
                 setLoading(false);
@@ -68,12 +63,11 @@ const UnPaidDetail = () => {
                     localStorage.getItem("token")
                 );
                 setSoDu(infoKH.soDu);
-                setSnackbarMessage("Customer information fetched successfully");
-                setSnackbarOpen(true);
+              
+               
             } catch (error) {
-                setSnackbarMessage("Error fetching customer information");
-                setSnackbarOpen(true);
                 setError(error);
+                openSnackbar("Lấy thông tin thấy bại", "error");
             } finally {
                 setLoading(false);
             }
@@ -106,19 +100,11 @@ const UnPaidDetail = () => {
                     localStorage.getItem("token"),
                     detail.maHD
                 );
-
-                // Show Snackbar message for successful payment
-                setSnackbarMessage("Đã thanh toán thành công");
-                setSnackbarOpen(true);
-
-                // Navigate back to the /pay page after a successful payment
-                navigate("/pay");
-
+                openSnackbar("Đã thanh toán thành công", "success");
                 navigate("/pay");
             }
         } catch (error) {
-            setSnackbarMessage(error.response?.data || "Error during payment");
-            setSnackbarOpen(true);
+            openSnackbar(error.response?.data || "Error during payment", "error");
             setError(error);
         }
     };
@@ -451,13 +437,6 @@ const UnPaidDetail = () => {
                     </>
                 )}
             </Paper>
-            <Snackbar
-                open={snackbarOpen}
-                autoHideDuration={2000}
-                onClose={handleSnackbarClose}
-                message={snackbarMessage}
-                anchorOrigin={{ vertical: "top", horizontal: "right" }}
-            />
         </Container>
     );
 };

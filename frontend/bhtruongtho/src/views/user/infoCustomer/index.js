@@ -1,7 +1,7 @@
 import React, { memo, useState, useEffect } from "react";
 import { NV_getInfoCustomer } from "../../../api/connect";
 import { useUser } from "../../../context/UserContext";
-import { Container, Paper, Snackbar } from "@mui/material";
+import { Container, Paper, Snackbar, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import { DataGrid } from "@mui/x-data-grid";
 import IconButton from "@mui/material/IconButton";
@@ -10,7 +10,10 @@ import AssignmentIcon from "@mui/icons-material/Assignment";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import Tooltip from "@mui/material/Tooltip";
+import { useNavigate } from "react-router-dom";
+
 const InfoCustomer = () => {
+	const navigate = useNavigate();
 	const { user } = useUser();
 	const [error, setError] = useState(null);
 	const [loading, setLoading] = useState(false);
@@ -91,7 +94,9 @@ const InfoCustomer = () => {
 
 	const handleCreditCardClick = (rowData) => {
 		console.log("Credit Card clicked for row with ID:", rowData.id);
-		// Thực hiện các xử lý khi click vào nút Credit Card
+		const maKH = rowData.id;
+		console.log(rowData.id);
+		navigate(`/infoCustomer/Recharge/${maKH}`);
 	};
 	const columns = [
 		{ field: "maKH", headerName: "Mã KH", width: 100 },
@@ -163,6 +168,12 @@ const InfoCustomer = () => {
 					flexGrow: 1, // Đảm bảo chiều dài của Paper mở rộng theo chiều dài của Container
 				}}
 			>
+				<Typography
+					variant="h5"
+					style={{ fontWeight: "bold", marginBottom: "10px" }}
+				>
+					Danh sách khách hàng
+				</Typography>
 				<div style={{ padding: "20px", marginTop: "20px" }}>
 					<Box sx={{ height: 400, width: "100%" }}>
 						<DataGrid

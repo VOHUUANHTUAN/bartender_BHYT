@@ -28,9 +28,10 @@ const END_POINT = {
     INFOALLCUSTOMER: "KhachHang/GetAllKhachHang",
     PUNISH: "HoaDonThanhToanDK/capNhatHoaDon",
     REPORT: "HoaDonThanhToanDK/GetTongHopHoaDon",
-
     HOADONKHAMBENH: "HoaDonKhamBenh",
     GETSOTIENKHAM: "GetSoTienKham",
+    RECHARGE: "KhachHang/NapTien",
+    HOADONNAPTIEN: "NhanVien/GetHoaDonNapTien",
 };
 
 export const getGoiBHAPI = () => {
@@ -376,4 +377,25 @@ export const getGoiBHByNV = (token) => {
             Authorization: `Bearer ${token}`,
         },
     });
+};
+
+
+export const getHoaDonNapTien = (token) => {
+    return axiosClient.get(`${END_POINT.HOADONNAPTIEN}`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+};
+
+export const napTien = (token, maKH, soTien) => {
+    return axiosClient.post(
+        `${END_POINT.RECHARGE}`,
+        { maKH, soTien },
+        {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        }
+    );
 };

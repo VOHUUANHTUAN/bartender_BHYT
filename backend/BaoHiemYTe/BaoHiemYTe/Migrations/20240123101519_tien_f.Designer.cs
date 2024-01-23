@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BaoHiemYTe.Migrations
 {
     [DbContext(typeof(UserDbContext))]
-    [Migration("20231229061610_tien_final")]
-    partial class tien_final
+    [Migration("20240123101519_tien_f")]
+    partial class tien_f
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -219,6 +219,38 @@ namespace BaoHiemYTe.Migrations
                     b.HasIndex("MaBV");
 
                     b.ToTable("HoaDonKhamBenh");
+                });
+
+            modelBuilder.Entity("BaoHiemYTe.Domain.HoaDonNapTien", b =>
+                {
+                    b.Property<int>("MaHD")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MaHD"));
+
+                    b.Property<int>("MaKH")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MaNV")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SoDu")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SoTien")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ThoiGianNap")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("MaHD");
+
+                    b.HasIndex("MaKH");
+
+                    b.HasIndex("MaNV");
+
+                    b.ToTable("HoaDonNapTien");
                 });
 
             modelBuilder.Entity("BaoHiemYTe.Domain.HoaDonThanhToanDK", b =>
@@ -521,6 +553,25 @@ namespace BaoHiemYTe.Migrations
                         .IsRequired();
 
                     b.Navigation("BenhVien");
+                });
+
+            modelBuilder.Entity("BaoHiemYTe.Domain.HoaDonNapTien", b =>
+                {
+                    b.HasOne("BaoHiemYTe.Domain.KhachHang", "KhachHang")
+                        .WithMany()
+                        .HasForeignKey("MaKH")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BaoHiemYTe.Domain.NhanVien", "NhanVien")
+                        .WithMany()
+                        .HasForeignKey("MaNV")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("KhachHang");
+
+                    b.Navigation("NhanVien");
                 });
 
             modelBuilder.Entity("BaoHiemYTe.Domain.HoaDonThanhToanDK", b =>
