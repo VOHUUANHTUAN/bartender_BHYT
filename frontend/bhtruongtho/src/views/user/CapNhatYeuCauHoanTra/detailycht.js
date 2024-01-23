@@ -3,12 +3,17 @@ import { putYeuCauHoanTraByID, getNhanVienByID, getAllYeuCauHoanTraBYID, getUser
 import { useParams } from 'react-router-dom';
 import { useUser } from "../../../context/UserContext";
 import { Grid, Paper, Typography, Select, MenuItem, Button, TableContainer, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
-import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import dayjs from 'dayjs';
+import { useSnackbar } from "../../../context/SnackbarContext";
+
+
 const DetailPage = () => {
     const [loading, setLoading] = useState(true);
     const [yeuCauHoanTra, setYeuCauHoanTra] = useState({});
+    const [soTienHoanTra, setSoTienHoanTra] = useState('');
+    const { openSnackbar } = useSnackbar();
+
     const [selectedStatus, setSelectedStatus] = useState('');
     const [maNV, setMaNV] = useState('');
     const [nhanVien, setNhanVien] = useState('');
@@ -17,12 +22,18 @@ const DetailPage = () => {
 
     const params = useParams();
     const { user } = useUser();
-    const [snackbarOpen, setSnackbarOpen] = useState(false);
-    const [snackbarMessage, setSnackbarMessage] = useState('');
-    const [snackbarSeverity, setSnackbarSeverity] = useState('error');
+
 
     const [currentuser, setCurrentuser] = useState({})
-    const formatDate = (date) => dayjs(date).format('YYYY/MM/DD');
+    const formatDate = (date) => (dayjs(date).isValid() ? dayjs(date).format('DD/MM/YYYY') : '');
+    const formatCurrency = (amount) => {
+        const formattedAmount = new Intl.NumberFormat("vi-VN", {
+            style: "currency",
+            currency: "VND",
+        }).format(amount);
+
+        return formattedAmount;
+    };
     useEffect(() => {
         const fetchUserData = async () => {
             try {
@@ -96,20 +107,10 @@ const DetailPage = () => {
             }
         };
 
-        // Trigger data fetching when yeuCauHoanTra or params.id changes
         fetchData();
     }, [params.id, yeuCauHoanTra]);
-    const openSnackbar = (message, severity) => {
-        setSnackbarMessage(message);
-        setSnackbarSeverity(severity);
-        setSnackbarOpen(true);
-    };
-    const handleCloseSnackbar = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-        setSnackbarOpen(false);
-    };
+
+
     // Vietnamese names for keys
     const allrows = {
         maYC: <strong>Mã YC</strong>,
@@ -146,7 +147,7 @@ const DetailPage = () => {
                                     {Object.entries(yeuCauHoanTra).map(([key, value]) => (
                                         <TableRow key={key} >
                                             <TableCell>{allrows[key]}</TableCell>
-                                            <TableCell>{key === 'thoiGianDuyet' || key === 'thoiGianTao' ? formatDate(value) : value}</TableCell>
+                                            <TableCell>{key === 'thoiGianDuyet' || key === 'thoiGianTao' ? formatDate(value) : key === 'soTienHoanTra' || key === 'soTienDaKham' ? formatCurrency(value) : value}</TableCell>
                                         </TableRow>
                                     ))}
 
@@ -164,21 +165,7 @@ const DetailPage = () => {
 
                     </Paper>
                 </Grid>
-                <Snackbar
-                    open={snackbarOpen}
-                    autoHideDuration={6000}
-                    onClose={handleCloseSnackbar}
-                    anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-                >
-                    <MuiAlert
-                        elevation={6}
-                        variant="filled"
-                        severity={snackbarSeverity}
-                        onClose={handleCloseSnackbar}
-                    >
-                        {snackbarMessage}
-                    </MuiAlert>
-                </Snackbar>
+
             </Grid>
         </div >
     );
