@@ -23,5 +23,8 @@ export const ROUTERS = {
         INSURANCEPACKM: "insurancePackManagement",
         INFOCUSTOMER: "infoCustomer",
         FINANCIALREPORT: "financialReport",
+        ADMIN: 'addnewstaff',
+        CHECKONSTAFF: 'checkonstaff',
+        HOMEPAGEADMIN: 'admin',
     },
 };

@@ -16,7 +16,6 @@ import {
     InputAdornment,
     Tabs,
     Tab,
-    Snackbar,
 } from "@mui/material";
 import Box from "@mui/material/Box";
 import { DataGrid } from "@mui/x-data-grid";
@@ -88,7 +87,6 @@ const Pay = () => {
                 );
             } catch (error) {
                 try {
-                    openSnackbar(error.response.data, "error");
                 } catch {
                     openSnackbar(
                         "Có lỗi xảy ra khi kết nối với máy chủ",
@@ -135,7 +133,7 @@ const Pay = () => {
                 );
             } catch (error) {
                 try {
-                    openSnackbar(error.response.data, "error");
+                    
                 } catch {
                     openSnackbar(
                         "Có lỗi xảy ra khi kết nối với máy chủ",
