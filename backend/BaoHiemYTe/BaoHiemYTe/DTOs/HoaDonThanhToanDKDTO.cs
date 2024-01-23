@@ -19,7 +19,6 @@ namespace BaoHiemYTe.DTOs
         public DateTime? ThoiGianThanhToan { get; set; }
         public int MaDonDK { get; set; }
         public string TenGoiBH { get; set; }
-
-
+        public int MaKH { get; set; }
     }
 }

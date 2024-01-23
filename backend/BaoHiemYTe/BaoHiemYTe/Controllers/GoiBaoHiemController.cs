@@ -2,6 +2,7 @@
 using BaoHiemYTe.Domain;
 using BaoHiemYTe.DTOs;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -51,7 +52,7 @@ namespace BaoHiemYTe.Controllers
         [Route("{id}")]
         public IActionResult GetGoiBHById(int id)
         {
-            var goiBH = userDbContext.GoiBaoHiem.FirstOrDefault(x => x.MaGoiBH == id);
+            var goiBH = userDbContext.GoiBaoHiem.FirstOrDefault(x => x.MaGoiBH == id && x.TinhTrang == "Đang cung cấp");
             if (goiBH == null)
             {
                 return NotFound();
@@ -102,7 +103,7 @@ namespace BaoHiemYTe.Controllers
 
             // Lấy thông tin Benh từ bảng Benh
             var GoiBHEntities = userDbContext.GoiBaoHiem
-                .Where(h => maGoiBHs.Contains(h.MaGoiBH))
+                .Where(h => maGoiBHs.Contains(h.MaGoiBH ))
                 .ToList();
 
             if (GoiBHEntities == null || !GoiBHEntities.Any())
