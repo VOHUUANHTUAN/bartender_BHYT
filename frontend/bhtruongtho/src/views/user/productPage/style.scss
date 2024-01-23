@@ -39,6 +39,7 @@
 
 .card__container {
     //display: inline-block;
+    position: relative;
     width: 100%;
     overflow: hidden;
     box-shadow: 0 0 15px -5px;
@@ -47,11 +48,14 @@
     border-radius: 5px;
     padding: 10px;
     margin: 5px 5px;
+    z-index: 1;
 }
 
 .card__container:hover {
+    background: white;
     transform: scale(1.1);
     box-shadow: 0 0 15px 0;
+    z-index: 2;
 }
 
 .card__content {

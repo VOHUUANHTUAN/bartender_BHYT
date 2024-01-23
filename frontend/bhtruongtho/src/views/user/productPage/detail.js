@@ -3,6 +3,10 @@ import { getGoiBHByMaGBH, getBenhByMaGBH } from "../../../api/connect";
 import "./style.scss";
 import { Link, useParams } from "react-router-dom";
 import { ROUTERS } from "../../../utils/router";
+
+const importAll = (r) => r.keys().map(r);
+const images = importAll(require.context('../../../images/goibaohiem', false, /\.(png|jpe?g|svg)$/));
+
 const ProductDetailPage = () => {
     const params = useParams();
     const [dataGoiBH, setDataGoiBH] = useState(null);
@@ -46,13 +50,23 @@ const ProductDetailPage = () => {
         return <p>Error: {error.message}</p>;
     }
 
+    const imgStyle = {
+        width: '100%',  // Chiếm toàn bộ chiều rộng của container
+        height: '300px', // Đảm bảo tỉ lệ khung hình ảnh được giữ nguyên
+        transition: 'transform 0.3s',  // Hiệu ứng khi hover
+      };
+
     return (
         <>
             <div className="container__body">
                 <div className="detail__page">
                     <div className="detail__container">
                         <div className="img-container">
-                            <img src="" alt=""></img>
+                            <img
+                                        src={images[(params.id % images.length - 1)]}
+                                        alt={`Gói Bảo Hiểm ${params.id}`}
+                                        style={imgStyle}
+                            />
                         </div>
                         <div className="card-content">
                             <div className="detail__title">

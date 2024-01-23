@@ -4,6 +4,10 @@ import "./style.scss";
 import { Link } from "react-router-dom";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
+
+const importAll = (r) => r.keys().map(r);
+const images = importAll(require.context('../../../images/goibaohiem', false, /\.(png|jpe?g|svg)$/));
+
 const ProductPage = () => {
     const [goiBHs, setgoiBHs] = useState([]);
     const fetchData = async () => {
@@ -48,6 +52,20 @@ const ProductPage = () => {
                                     }`}
                                 >
                                     <div className="img-container">
+                                    <img src={images[(startIndex + goiBHKey) % images.length]} alt={`Gói Bảo Hiểm ${startIndex + goiBHKey + 1}`}></img>
+                                </div>
+                                    <div className="card__content">
+                                        <div className="card__title">
+                                            <h3> {goiBH.tenGoiBH}</h3>
+                                        </div>                           
+                                    </div>
+
+                                    <div className="card__body">
+                                        <p>{goiBH.motaGoiBH}</p>
+                                        <p>Giá: {formatCurrency(goiBH.gia)}</p>
+                                        <p>Tỉ lệ hoàn tiền: {goiBH.tiLeHoanTien}%</p>
+                                    </div>
+
                                         <img src="" alt=""></img>
                                     </div>
                                     <div className="card__content">
@@ -85,7 +103,7 @@ const ProductPage = () => {
                             page={currentPage}
                             onChange={handlePageChange}
                             variant="outlined"
-                            color="success"
+                            color="primary"
                         />
                     </Stack>
                 </div>

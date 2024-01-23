@@ -11,13 +11,11 @@ import {
   Typography,
   Snackbar,
 } from "@mui/material";
-import TableCell from '@mui/material/TableCell';
-import TableRow from '@mui/material/TableRow';
 import Grid from '@mui/material/Grid';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
-import { styled } from '@mui/material/styles';
+
 
 const InsPackDetailPage = () => {
 
@@ -89,7 +87,7 @@ const InsPackDetailPage = () => {
     <Container component="main" maxWidth="lg">
       <Paper
         elevation={3}
-        style={{ padding: "20px", marginTop: "120px", marginBottom: "100px" }}
+        style={{ padding: "20px", marginTop: "40px", marginBottom: "100px" }}
       >
         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
           <Typography component="h1" variant="h5" color="primary">
