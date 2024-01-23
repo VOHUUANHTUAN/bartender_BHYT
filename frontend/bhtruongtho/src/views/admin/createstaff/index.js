@@ -1,20 +1,20 @@
-import React, { memo, useState } from 'react';
-import { postNhanVien } from '../../../api/connect';
+import React, { memo, useState } from "react";
+import { postNhanVien } from "../../../api/connect";
 import { useSnackbar } from "../../../context/SnackbarContext";
 import { Container, Paper, TextField, Button, Typography } from "@mui/material";
-import { Link } from 'react-router-dom'; // Import Link
+import { Link } from "react-router-dom"; // Import Link
 
 const AddEmployeeForm = () => {
     const { openSnackbar } = useSnackbar();
 
     const [employeeData, setEmployeeData] = useState({
-        hoTen: '',
-        diaChi: '',
-        sdt: '',
-        email: '',
-        username: '',
-        password: '',
-        role: 'Nhân viên', //mặc định là Nhân viên
+        hoTen: "",
+        diaChi: "",
+        sdt: "",
+        email: "",
+        username: "",
+        password: "",
+        role: "Nhân viên", //mặc định là Nhân viên
     });
 
     const handleInputChange = (e) => {
@@ -29,26 +29,30 @@ const AddEmployeeForm = () => {
         e.preventDefault();
 
         try {
-            const response = await postNhanVien(employeeData, localStorage.getItem("token"));
-            console.log(response)
+            const response = await postNhanVien(
+                employeeData,
+                localStorage.getItem("token")
+            );
+            console.log(response);
             if (response) {
-                openSnackbar('Đăng kí nhân viên thành công', 'success');
-
+                openSnackbar("Đăng kí nhân viên thành công", "success");
             } else {
-                openSnackbar('Đăng kí nhân viên không thành công', 'error');
+                openSnackbar("Đăng kí nhân viên không thành công", "error");
             }
         } catch (error) {
-            openSnackbar('Lỗi kết nối với server', 'error');
+            openSnackbar("Lỗi kết nối với server", "error");
         }
     };
 
-
-
     return (
-        <Container component="main" maxWidth="xl">
-            <Paper elevation={3} style={{ padding: "20px", margin: "100px 0px 50px 0px" }}>
+        <Container component="main" maxWidth="md">
+            <Paper
+                elevation={3}
+                style={{ padding: "20px", margin: "50px 0px" }}
+            >
                 <Typography component="h2" variant="h5">
-                    Thêm nhân viên mới                 </Typography>
+                    Thêm nhân viên mới{" "}
+                </Typography>
                 <form onSubmit={handleSubmit}>
                     <TextField
                         label="Họ Tên"
@@ -111,15 +115,24 @@ const AddEmployeeForm = () => {
                         value={employeeData.password}
                         onChange={handleInputChange}
                     />
-                    <Button type="submit" variant="contained" color="primary" fullWidth style={{ marginTop: "20px" }}>
-                        Thêm mới                     </Button>
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        fullWidth
+                        style={{ marginTop: "20px" }}
+                    >
+                        Thêm mới{" "}
+                    </Button>
                     <Button
                         variant="contained"
-                        color="secondary"
+                        style={{
+                            backgroundColor: "#96B6C5",
+                            marginTop: "20px",
+                        }}
                         fullWidth
-                        component={Link} // Use Link component
-                        to="/admin"    // Specify the target route
-                        style={{ marginTop: "20px" }}
+                        component={Link}
+                        to="/admin"
                     >
                         Quay lại
                     </Button>

@@ -3,17 +3,19 @@ import { useParams, Link } from "react-router-dom";
 import {
     Container,
     Paper,
-    Typography,
+    TextField,
     TableContainer,
     Table,
     TableHead,
     TableBody,
     TableRow,
+    Typography,
+    Grid,
     TableCell,
     Button,
 } from "@mui/material";
 import dayjs from "dayjs";
-import { getDonDangKyByID } from "../../../api/connect"; // Import the actual API function to fetch the detail data
+import { getDonDangKyByID } from "../../../api/connect";
 import { ROUTERS } from "../../../utils/router";
 
 const RegistrationDetail = () => {
@@ -21,10 +23,8 @@ const RegistrationDetail = () => {
     const [registrationDetail, setRegistrationDetail] = useState(null);
 
     useEffect(() => {
-        console.log(params.id);
         const fetchData = async () => {
             try {
-                // Use the API function to fetch data based on the ID
                 const response = await getDonDangKyByID(
                     localStorage.getItem("token"),
                     params.id
@@ -37,60 +37,131 @@ const RegistrationDetail = () => {
         };
         fetchData();
     }, [params.id]);
+    const formatCurrency = (amount) => {
+        const formattedAmount = new Intl.NumberFormat("vi-VN", {
+            style: "currency",
+            currency: "VND",
+        }).format(amount);
 
+        return formattedAmount;
+    };
     return (
         <Container component="main" maxWidth="md">
             <Paper
                 elevation={3}
-                style={{ padding: "20px", margin: "150px 0px 20px 0px" }}
+                style={{ padding: "20px", margin: "50px 0px 20px 0px" }}
             >
                 {registrationDetail ? (
                     <>
-                        <Typography variant="h5">
-                            Chi tiết đơn đăng ký
+                        <Typography component="h1" variant="h5">
+                            Chi tiết đơn đăng ký {registrationDetail.maDonDK}
                         </Typography>
-                        <Typography variant="body1">
-                            Khách hàng: {registrationDetail.khachHang.hoTen}
-                        </Typography>
-                        <Typography variant="body1">
-                            Gói bảo hiểm:{" "}
-                            {registrationDetail.goiBaoHiem.tenGoiBH}
-                        </Typography>
-                        <Typography variant="body1">
-                            Tổng giá: {registrationDetail.tongGia}đ
-                        </Typography>
-                        <Typography variant="body1">
-                            Mã đơn đăng ký: {registrationDetail.maDonDK}
-                        </Typography>
-                        <Typography variant="body1">
-                            Thời gian đăng ký:{" "}
-                            {dayjs(registrationDetail.thoiGianDK).format(
-                                "DD/MM/YYYY HH:mm:ss"
-                            )}
-                        </Typography>
-                        <Typography variant="body1">
-                            Thời gian bắt đầu:{" "}
-                            {dayjs(registrationDetail.thoiGianBD).format(
-                                "DD/MM/YYYY"
-                            )}
-                        </Typography>
-                        <Typography variant="body1">
-                            Thời gian kết thúc:{" "}
-                            {dayjs(registrationDetail.thoiGianHetHan).format(
-                                "DD/MM/YYYY"
-                            )}
-                        </Typography>
-                        {/* Display additional information as needed */}
-                        <Typography variant="body1">
-                            Tình trạng: {registrationDetail.tinhTrang}
-                        </Typography>
-                        <Typography variant="body1">
-                            Nhân viên:{" "}
-                            {registrationDetail.nhanVien
-                                ? registrationDetail.nhanVien.hoTen ||
-                                  "Không có thông tin"
-                                : "Không có thông tin"}
-                        </Typography>
+                        <TextField
+                            style={{ marginTop: "20px" }}
+                            label="Khách hàng"
+                            value={registrationDetail.khachHang.hoTen}
+                            InputProps={{
+                                readOnly: true,
+                            }}
+                            fullWidth
+                        />
+                        <TextField
+                            style={{ marginTop: "20px" }}
+                            label="Gói bảo hiểm"
+                            value={registrationDetail.goiBaoHiem.tenGoiBH}
+                            InputProps={{
+                                readOnly: true,
+                            }}
+                            fullWidth
+                        />
+                        <Grid container spacing={2}>
+                            <Grid item xs={6}>
+                                <TextField
+                                    style={{ marginTop: "20px" }}
+                                    label="Thời gian đăng ký"
+                                    value={dayjs(
+                                        registrationDetail.thoiGianDK
+                                    ).format("DD/MM/YYYY HH:mm:ss")}
+                                    InputProps={{
+                                        readOnly: true,
+                                    }}
+                                    fullWidth
+                                />
+                            </Grid>
+                            <Grid item xs={6}>
+                                {" "}
+                                <TextField
+                                    style={{ marginTop: "20px" }}
+                                    label="Tổng giá"
+                                    value={`${formatCurrency(
+                                        registrationDetail.tongGia
+                                    )}`}
+                                    InputProps={{
+                                        readOnly: true,
+                                    }}
+                                    fullWidth
+                                />
+                            </Grid>
+                        </Grid>
+                        <Grid container spacing={2}>
+                            <Grid item xs={6}>
+                                <TextField
+                                    style={{ marginTop: "20px" }}
+                                    label="Thời gian bắt đầu"
+                                    value={dayjs(
+                                        registrationDetail.thoiGianBD
+                                    ).format("DD/MM/YYYY")}
+                                    InputProps={{
+                                        readOnly: true,
+                                    }}
+                                    fullWidth
+                                />
+                            </Grid>
+                            <Grid item xs={6}>
+                                {" "}
+                                <TextField
+                                    style={{ marginTop: "20px" }}
+                                    label="Thời gian bắt đầu"
+                                    value={dayjs(
+                                        registrationDetail.thoiGianHetHan
+                                    ).format("DD/MM/YYYY")}
+                                    InputProps={{
+                                        readOnly: true,
+                                    }}
+                                    fullWidth
+                                />
+                            </Grid>
+                        </Grid>
+                        <Grid container spacing={2}>
+                            <Grid item xs={6}>
+                                {" "}
+                                <TextField
+                                    style={{ marginTop: "20px" }}
+                                    label="Tình trạng"
+                                    value={registrationDetail.tinhTrang}
+                                    InputProps={{
+                                        readOnly: true,
+                                    }}
+                                    fullWidth
+                                />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <TextField
+                                    style={{ marginTop: "20px" }}
+                                    label="Nhân viên"
+                                    value={
+                                        registrationDetail.nhanVien
+                                            ? registrationDetail.nhanVien
+                                                  .hoTen || "Không có thông tin"
+                                            : "Không có thông tin"
+                                    }
+                                    InputProps={{
+                                        readOnly: true,
+                                    }}
+                                    fullWidth
+                                />
+                            </Grid>
+                        </Grid>{" "}
                         <TableContainer>
                             <Table>
                                 <TableHead>
@@ -143,9 +214,13 @@ const RegistrationDetail = () => {
                         </Button>
                     </>
                 ) : (
-                    <Typography variant="body1">
-                        Đang tải thông tin đơn đăng ký...
-                    </Typography>
+                    <TextField
+                        label="Đang tải thông tin đơn đăng ký..."
+                        InputProps={{
+                            readOnly: true,
+                        }}
+                        fullWidth
+                    />
                 )}
             </Paper>
         </Container>

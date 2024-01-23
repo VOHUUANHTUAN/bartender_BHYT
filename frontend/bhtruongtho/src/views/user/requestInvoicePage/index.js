@@ -20,12 +20,13 @@ import {
     InputLabel,
     Tabs,
     Tab,
-    Snackbar,
 } from "@mui/material";
 import Box from "@mui/material/Box";
 import { useSnackbar } from "../../../context/SnackbarContext";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import './style.scss';
+import dayjs from 'dayjs';
+
 const RequestInvoice = () => {
     //user context
     const { openSnackbar } = useSnackbar();
@@ -62,9 +63,6 @@ const RequestInvoice = () => {
     //thông báo lỗi
     const [invoiceCodeError, setInvoiceCodeError] = useState(false);
 
-    const [snackbarOpen, setSnackbarOpen] = useState(false);
-    const [snackbarMessage, setSnackbarMessage] = useState("");
-
     const formatCurrency = (amount) => {
         const formattedAmount = new Intl.NumberFormat("vi-VN", {
             style: "currency",
@@ -73,11 +71,6 @@ const RequestInvoice = () => {
     
         return formattedAmount;
     };
-    //handle tab thông báo
-    const handleSnackbarClose = () => {
-        setSnackbarOpen(false);
-    };
-
 
     //handle cho dữ liệu thay đổi
     const handleChangeData = (e) => {
@@ -142,7 +135,7 @@ const RequestInvoice = () => {
             }
         };
         fetchData();
-    }, [user, selectedHospitalName, formData.invoiceCode]);
+    }, [selectedHospitalName, formData.invoiceCode]);
     //xử lý gọi api
     useEffect(() => {
         const fetchData = async () => {
@@ -179,7 +172,7 @@ const RequestInvoice = () => {
             }
         };
         fetchData();
-    }, [user, selectedInsurancePackage, value]); //những thuộc tính nếu thay đôi sẽ gọi lại useEffect
+    }, [selectedInsurancePackage, value]); //những thuộc tính nếu thay đôi sẽ gọi lại useEffect
 
     const handleInsurancePackageChange = (e) => {
         setSelectedInsurancePackage(e.target.value);
@@ -276,27 +269,18 @@ const RequestInvoice = () => {
     const generateUniqueId = () => {
         return idCounter++;
     };
-    //hàm format định dạng thời gian Output: 04/10/2023 08:30
-    function formatDateTime(dateTimeString) {
-        const options = { year: "numeric", month: "2-digit", day: "2-digit" };
-        const date = new Date(dateTimeString);
-        const formattedDate = date.toLocaleDateString("en-GB", options);
-        const hours = date.getHours().toString().padStart(2, "0");
-        const minutes = date.getMinutes().toString().padStart(2, "0");
-        const formattedTime = `${hours}:${minutes}`;
-        return `${formattedDate} ${formattedTime}`;
-    }
+
     //đổ dữ liệu vào rows trong datagrid
     const rows = requestList.map((row) => ({
         id: generateUniqueId(),
         maHDKhamBenh: row.maHDKhamBenh,
         tenBenhVien: row.tenBenhVien,
-        soTienDaKham: row.soTienDaKham,
+        soTienDaKham: formatCurrency(row.soTienDaKham),
         benh: row.benh,
-        thoiGianTao: formatDateTime(row.thoiGianTao),
+        thoiGianTao:  dayjs(row.thoiGianTao).format('DD/MM/YYYY HH:mm:ss'),
         tinhTrang: row.tinhTrang,
         tenGoiBHApDung: getInsurancePackageName(row.maGoiBHApDung),
-        soTienHoanTra: row.soTienHoanTra,
+        soTienHoanTra: formatCurrency(row.soTienHoanTra),
     }));
 
     //tạo columnn cho datagrid
@@ -333,7 +317,7 @@ const RequestInvoice = () => {
     ];
 
     return (
-        <Container component="main" maxWidth="md">
+        <Container component="main" maxWidth="xl">
             <Paper
                 elevation={3}
                 style={{

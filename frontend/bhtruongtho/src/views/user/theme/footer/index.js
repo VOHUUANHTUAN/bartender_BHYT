@@ -36,7 +36,7 @@ const Footer = () => {
                         </div>
                     </div>
                     <div className="col-lg-3 col-md-6 col-sm-6 col-xs-12">
-                        <div className="footer_about">
+                        <div className="footer_widget">
                             <div className="footer_about_logo">
                                 Về chúng tôi
                             </div>
@@ -47,8 +47,6 @@ const Footer = () => {
                                     trực tuyến. Liên hệ ngay để được tư vấn và
                                     hỗ trợ chuyên nghiệp nhất.
                                 </li>
-                                <li></li>
-                                <li></li>
                             </ul>
                         </div>
                     </div>
@@ -63,7 +61,8 @@ const Footer = () => {
                                      </div></ScrollLink>
                                 </li>
                                 <li>
-                                    <Link to="/contact">Tin tức và sự kiện</Link>
+                                    <ScrollLink smooth to="/contact/#contact-section" duration={500}>
+                                    Tin tức và sự kiện</ScrollLink>
                                 </li>
                                 <li>
                                     <ScrollLink to="/#dieu-khoan-section" smooth={true} duration={500}>
