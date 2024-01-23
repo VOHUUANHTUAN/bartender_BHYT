@@ -71,6 +71,13 @@ export const getKhachHangInformation = (token) => {
         },
     });
 };
+export const getKhachHangInformationByID = (token, ID) => {
+    return axiosClient.get(`${END_POINT.KHACHHANG}/${ID}`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+};
 
 //Hàm cập nhật thông tin khách hàng
 export const updateKhachHangInformation = (token, khachHangData) => {

@@ -1,6 +1,5 @@
 import React, { memo, useState, useEffect } from 'react';
 import { getAllBenh, addBenhForGBH, getGoiBHByNV, addInsPack } from "../../../api/connect";
-import { useUser } from "../../../context/UserContext";
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -19,8 +18,8 @@ import {
   TextField,
   Button,
   Typography,
-  Snackbar,
 } from "@mui/material";
+import { useSnackbar } from "../../../context/SnackbarContext";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${theme.palette.mode === 'light' ? 'head' : 'body'}`]: {
@@ -39,15 +38,13 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-
 const AddInsPack = () => {
   //user context
-  const { user } = useUser();
+  const { openSnackbar } = useSnackbar();
   //error và loading
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   //khai báo các biến
-  const [dataBenhByGBH, setDataBenhByGBH] = useState([]);
   const [allBenh, setAllBenh] = useState([]);
   const [selectedValues, setSelectedValues] = useState([]);
   // Define the custom table component
@@ -111,8 +108,7 @@ const AddInsPack = () => {
     //gọi hàm validate
     const validationError = validateForm();
     if (validationError) {
-      setSnackbarMessage(validationError);
-      setSnackbarOpen(true);
+      openSnackbar(validationError, 'error');
       return;
     }
     const ageText = `Từ ${age[0]}-${age[1]}`;
@@ -135,8 +131,8 @@ const AddInsPack = () => {
 
     const listMaBenh = selectedValues.map(mapTenBenhToMaBenh)
     if (listMaBenh.length === 0) {
-      setSnackbarMessage('Vui lòng chọn ít nhất một bệnh');
-      setSnackbarOpen(true);
+      openSnackbar("Vui lòng chọn ít nhất một bệnh");
+      console.log(1)
       return;
     }
     try {
@@ -152,13 +148,11 @@ const AddInsPack = () => {
       }
 
       //thông báo thành công
-      setSnackbarMessage(responseData);
-      setSnackbarOpen(true);
+      openSnackbar(responseData)
     } catch (error) {
       // Xử lý các lỗi khác (ví dụ: mất kết nối)
       //thông báo lỗi
-      setSnackbarMessage(error.response.data);
-      setSnackbarOpen(true);
+      openSnackbar(error.response.data);
     } finally {
       setLoading(false);
     }
@@ -191,8 +185,6 @@ const AddInsPack = () => {
   const [giaError, setGiaError] = useState(false);
   const [tiLeHoanTienError, setTiLeHoanTienError] = useState(false);
   const [thoiHanBaoVeError, setThoiHanBaoVeError] = useState(false);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
 
   const getError = (fieldName) => {
     switch (fieldName) {
@@ -227,11 +219,6 @@ const AddInsPack = () => {
         return "";
     }
   };
-  //handle tab thông báo
-  const handleSnackbarClose = () => {
-    setSnackbarOpen(false);
-  };
-
 
   //validate cho các trường trong form
   const validateForm = () => {
@@ -256,18 +243,10 @@ const AddInsPack = () => {
     return null; // Validation passed
   };
 
-  useEffect(() => {
-    // Set the initial selected values only on mount
-    const initialSelectedValues = dataBenhByGBH.map((item) => item.tenBenh);
-    setSelectedValues(initialSelectedValues);
-
-  }, [dataBenhByGBH]);
-
   const handleSelectChange = (event, values) => {
     // Kiểm tra xem người dùng đã chọn ít nhất một bệnh hay chưa
     if (values.length === 0) {
-      setSnackbarMessage('Vui lòng chọn ít nhất một bệnh');
-      setSnackbarOpen(true);
+      openSnackbar("Vui lòng chọn ít nhất một bệnh", 'warning');
       return;
     }
     setSelectedValues(values);
@@ -386,13 +365,7 @@ const AddInsPack = () => {
         </div>
 
       </Paper>
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={2000}
-        onClose={handleSnackbarClose}
-        message={snackbarMessage}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-      />
+      
     </Container>
   );
 }

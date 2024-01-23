@@ -2,7 +2,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import HomePage from "./views/user/homePage";
 import { ROUTERS } from "./utils/router";
 import MasterLayout from "./views/user/theme/masterLayout";
-import NewsPage from "./views/user/newsPage";
+import ProfilePage from "./views/user/contactPage";
 import ProductDetailPage from "./views/user/productPage/detail.js";
 import ProductPage from "./views/user/productPage/index.js";
 import Login from "./views/user/loginPage";
@@ -23,6 +23,8 @@ import FinancialReport from "./views/user/financialReport";
 import InsurancePack from "./views/staff/insurancePackManagement/index.js";
 import InsPackDetailPage from "./views/staff/insurancePackManagement/insPackMDetail.js";
 import AddInsPack from "./views/staff/insurancePackManagement/addInsPack.js";
+import InfoCustomerDetail from "./views/user/infoCustomer/detail.js";
+
 
 import ListYeuCauHoanTra from "./views/user/CapNhatYeuCauHoanTra/index.js";
 import YeuCauHoanTraDetail from "./views/user/CapNhatYeuCauHoanTra/detailycht.js";
@@ -89,8 +91,8 @@ const RouterCustom = () => {
             loginRequired: false,
         },
         {
-            path: ROUTERS.USER.NEWS,
-            component: <NewsPage />,
+            path: ROUTERS.USER.CONTACT,
+            component: <ProfilePage />,
             loginRequired: false,
         },
         {
@@ -215,10 +217,9 @@ const RouterCustom = () => {
                     path="InsuranceRegistration/:id"
                     element={<InsuranceRegistration />}
                 />
-                {/* <Route path="product/detail/:id" element={<AuthGuard component={<ProductDetailPage />} loginRequired={true} />} /> */}
                 <Route
-                    path="registrationForms/detail/:id"
-                    element={<DonDangKyDetail />}
+                    path="InfoCustomer/detail/:id"
+                    element={<InfoCustomerDetail />}
                 />
                 <Route
                     path="requestrefund/detail/:id"
