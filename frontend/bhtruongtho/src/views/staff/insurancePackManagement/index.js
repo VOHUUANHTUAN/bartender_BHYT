@@ -9,12 +9,12 @@ import {
 } from "@mui/material";
 import Box from '@mui/material/Box';
 import { DataGrid, GridToolbar  } from '@mui/x-data-grid';
-
+import './style.scss';
 
 const InsurancePack = () => {
   const [loading, setLoading] = useState(true);
   const [goiBaoHiemList, setGoiBaoHiemList] = useState([]);
-  const [selectedIds, setSelectedIds] = useState([]);
+  const [selectedId, setSelectedId] = useState('');
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -29,25 +29,26 @@ const InsurancePack = () => {
 
     fetchData();
   }, []);
+  const formatCurrency = (amount) => {
+    const formattedAmount = new Intl.NumberFormat("vi-VN", {
+        style: "currency",
+        currency: "VND",
+    }).format(amount);
 
-
-  const handleProceedApproval = () => {
-    if (selectedIds.length > 0) {
-      const selectedId = selectedIds[0];
-      console.log(selectedId);
-    }
-  };
+    return formattedAmount;
+};
 
   const rows = goiBaoHiemList.map((item, index) => ({
     id: index + 1,
     maGoiBH: item.maGoiBH,
     tenGoiBH: item.tenGoiBH,
     motaGoiBH: item.motaGoiBH,
-    gia: item.gia,
-    tiLeHoanTien: item.tiLeHoanTien,
-    thoiHanBaoVe: item.thoiHanBaoVe,
+    gia: formatCurrency(item.gia),
+    tiLeHoanTien: item.tiLeHoanTien + " %",
+    thoiHanBaoVe: item.thoiHanBaoVe + " năm",
     tinhTrang: item.tinhTrang
   }));
+
 
   const columns = [
     { field: 'maGoiBH', headerName: 'Mã Gói BH', width: 100 },
@@ -56,24 +57,17 @@ const InsurancePack = () => {
     { field: 'gia', headerName: 'Giá', width: 100 },
     { field: 'tiLeHoanTien', headerName: 'Tỉ lệ Hoàn Tiền', width: 150 },
     { field: 'thoiHanBaoVe', headerName: 'Thời Hạn Bảo Vệ', width: 150 },
-    {  //một chút màu sắc cho cột tình trạng
-      field: "tinhTrang",
-      headerName: "Tình Trạng",
-      width: 180,
-      renderCell: (params) => {
-          const tinhTrangValue = params.value;
-          let cellColor;
-          // Set colors based on tinhTrangValue
-          switch (tinhTrangValue) {
-              case "Đang cung cấp":
-                  cellColor = "green";
-                  break;
-              // Add more cases as needed
-              default:
-                  cellColor = "gray";
-          }
-          return <div style={{ color: cellColor }}>{tinhTrangValue}</div>;
-      },}
+    {
+      field: 'tinhTrang',
+      headerName: 'Tình Trạng',
+      width: 160,
+      cellClassName: (params) => `status-cell ${params.value.replace(/\s/g, '').toLowerCase()}`,
+      renderCell: (params) => (
+        <div className={`bordered-cell ${params.value.replace(/\s/g, '').toLowerCase()}`}>
+          {params.value}
+        </div>
+      ),
+    },
   ];
   
   return (
@@ -109,14 +103,15 @@ const InsurancePack = () => {
           },
         }}
         pageSizeOptions={[5]}
+        hideFooterSelectedRowCount
         onRowSelectionModelChange={(newRowSelectionModel) => {
-          setSelectedIds(newRowSelectionModel);
+          setSelectedId(newRowSelectionModel);
         }}
-        rowSelectionModel={selectedIds}
+        rowSelectionModel={selectedId}
       />
       <div>
-        {selectedIds.length > 0 && (
-          <Button component={Link} to={`detail/${selectedIds[0]}`} variant="contained" color="primary">
+        {selectedId.length > 0 && (
+          <Button component={Link} to={`detail/${selectedId}`} variant="contained" color="primary">
             Xem chi tiết
           </Button>)}
       </div>

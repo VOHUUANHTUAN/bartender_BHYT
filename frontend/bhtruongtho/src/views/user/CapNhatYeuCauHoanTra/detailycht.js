@@ -146,7 +146,7 @@ const DetailPage = () => {
                                     {Object.entries(yeuCauHoanTra).map(([key, value]) => (
                                         <TableRow key={key} >
                                             <TableCell>{allrows[key]}</TableCell>
-                                            <TableCell>{key === 'thoiGianDuyet' || key === 'thoiGianTao' ? formatDate(value) : value}</TableCell>
+                                            <TableCell>{key === 'thoiGianDuyet' || key === 'thoiGianTao' ? formatDate(value) : value }</TableCell>
                                         </TableRow>
                                     ))}
 

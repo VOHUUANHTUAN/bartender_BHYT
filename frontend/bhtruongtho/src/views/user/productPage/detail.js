@@ -10,6 +10,14 @@ const ProductDetailPage = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    const formatCurrency = (amount) => {
+        const formattedAmount = new Intl.NumberFormat("vi-VN", {
+            style: "currency",
+            currency: "VND",
+        }).format(amount);
+
+        return formattedAmount;
+    };
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -52,7 +60,7 @@ const ProductDetailPage = () => {
                             </div>
                             <div className="detail__body">
                                 <p>{dataGoiBH.motaGoiBH}</p>
-                                <p>Giá: {dataGoiBH.gia} VND</p>
+                                <p>Giá: {formatCurrency(dataGoiBH.gia)} </p>
                                 <p>
                                     Tỉ lệ hoàn tiền: {dataGoiBH.tiLeHoanTien}%
                                 </p>

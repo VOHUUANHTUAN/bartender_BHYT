@@ -63,7 +63,7 @@ const Footer = () => {
                                      </div></ScrollLink>
                                 </li>
                                 <li>
-                                    <Link to="/news">Tin tức và sự kiện</Link>
+                                    <Link to="/contact">Tin tức và sự kiện</Link>
                                 </li>
                                 <li>
                                     <ScrollLink to="/#dieu-khoan-section" smooth={true} duration={500}>

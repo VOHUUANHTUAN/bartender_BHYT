@@ -4,57 +4,23 @@ import { useParams } from 'react-router-dom';
 import { useUser } from "../../../context/UserContext";
 import { ROUTERS } from "../../../utils/router";
 import { Link } from 'react-router-dom';
-import Chip from '@mui/material/Chip';
-import Autocomplete from '@mui/material/Autocomplete';
-import Stack from '@mui/material/Stack';
 import {
   Container,
   Paper,
-  TextField,
   Button,
   Typography,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  InputAdornment,
-  Tabs,
-  Tab,
   Snackbar,
 } from "@mui/material";
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell, { tableCellClasses } from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
+import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
-import Box from '@mui/material/Box';
-import { DataGrid } from '@mui/x-data-grid';
 import Grid from '@mui/material/Grid';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import { styled } from '@mui/material/styles';
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  [`&.${theme.palette.mode === 'light' ? 'head' : 'body'}`]: {
-    backgroundColor: theme.palette.mode === 'light' ? theme.palette.common.black : theme.palette.common.white,
-    color: theme.palette.mode === 'light' ? theme.palette.common.white : theme.palette.common.black,
-  },
-  fontSize: 14,
-}));
-
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  '&:nth-of-type(odd)': {
-    backgroundColor: theme.palette.action.hover,
-  },
-  '&:last-child td, &:last-child th': {
-    border: 0,
-  },
-}));
 
 const InsPackDetailPage = () => {
-  //user context
-  const { user } = useUser();
+
 
   const params = useParams();
   //error và loading
@@ -63,12 +29,6 @@ const InsPackDetailPage = () => {
   //khai báo các biến
   const [dataGoiBH, setDataGoiBH] = useState(null);
   const [dataBenhByGBH, setDataBenhByGBH] = useState([]);
-  const [allBenh, setAllBenh] = useState([]);
-
-  const [hospitalNameList, setHospitalNameList] = useState([]);
-  const [diseases, setDiseases] = useState([]);
-  const [insurancePackages, setInsurancePackages] = useState([]);
-  const [requestList, setRequestList] = useState([]);
 
   //thông báo lỗi
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -117,6 +77,14 @@ const InsPackDetailPage = () => {
     fetchData();
   }, [dataGoiBH]); //những thuộc tính nếu thay đôi sẽ gọi lại useEffect
 
+  const formatCurrency = (amount) => {
+    const formattedAmount = new Intl.NumberFormat("vi-VN", {
+        style: "currency",
+        currency: "VND",
+    }).format(amount);
+
+    return formattedAmount;
+};
   return (
     <Container component="main" maxWidth="lg">
       <Paper
@@ -137,7 +105,7 @@ const InsPackDetailPage = () => {
                   {dataGoiBH.tenGoiBH}
                 </Typography>
                 <Typography>Mô tả: {dataGoiBH.motaGoiBH}</Typography>
-                <Typography>Giá: {dataGoiBH.gia} VND</Typography>
+                <Typography>Giá: {formatCurrency(dataGoiBH.gia)} </Typography>
                 <Typography>Độ tuổi: {dataGoiBH.doTuoi}</Typography>
                 <Typography>Tỉ lệ hoàn tiền: {dataGoiBH.tiLeHoanTien}%</Typography>
                 <Typography>Thời hạn bảo vệ: {dataGoiBH.thoiHanBaoVe} năm</Typography>
