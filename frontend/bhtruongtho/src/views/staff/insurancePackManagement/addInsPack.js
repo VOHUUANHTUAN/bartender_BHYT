@@ -131,7 +131,7 @@ const AddInsPack = () => {
 
     const listMaBenh = selectedValues.map(mapTenBenhToMaBenh)
     if (listMaBenh.length === 0) {
-      openSnackbar("Vui lòng chọn ít nhất một bệnh");
+      openSnackbar("Vui lòng chọn ít nhất một bệnh", 'warning');
       console.log(1)
       return;
     }
@@ -223,19 +223,19 @@ const AddInsPack = () => {
   //validate cho các trường trong form
   const validateForm = () => {
     if (!formData.Ten) {
-      return "Ten không được để trống";
+      return "Tên không được để trống";
     }
     if (!formData.Mota) {
-      return "Mo ta không được để trống";
+      return "Mô tả không được để trống";
     }
     if (!formData.Gia) {
-      return "Gia không được để trống";
+      return "Giá không được để trống";
     }
     if (!formData.TiLeHoanTien) {
-      return "Ti le không được để trống";
+      return "Tỉ lệ không được để trống";
     }
     if (!formData.ThoiHanBaoVe) {
-      return "Thoi han không được để trống";
+      return "Thời hạn không được để trống";
     }
     if (tenError || moTaError || giaError || tiLeHoanTienError || thoiHanBaoVeError) {
       return "Thông tin chưa hợp lệ";
@@ -246,7 +246,7 @@ const AddInsPack = () => {
   const handleSelectChange = (event, values) => {
     // Kiểm tra xem người dùng đã chọn ít nhất một bệnh hay chưa
     if (values.length === 0) {
-      openSnackbar("Vui lòng chọn ít nhất một bệnh", 'warning');
+      openSnackbar("Vui lòng chọn ít nhất một bệnh", "warning");
       return;
     }
     setSelectedValues(values);
@@ -268,7 +268,7 @@ const AddInsPack = () => {
     <Container component="main" maxWidth="md">
       <Paper
         elevation={3}
-        style={{ padding: "20px", marginTop: "120px", marginBottom: "100px" }}
+        style={{ padding: "20px", marginTop: "40px", marginBottom: "100px" }}
       >
         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
           <Typography component="h1" variant="h5" color="primary">

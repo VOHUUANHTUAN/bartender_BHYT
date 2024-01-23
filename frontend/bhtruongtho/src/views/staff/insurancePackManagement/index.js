@@ -52,9 +52,9 @@ const InsurancePack = () => {
 
   const columns = [
     { field: 'maGoiBH', headerName: 'Mã Gói BH', width: 100 },
-    { field: 'tenGoiBH', headerName: 'Tên Gói BH', width: 150 },
-    { field: 'motaGoiBH', headerName: 'Mô Tả Gói BH', width: 250 },
-    { field: 'gia', headerName: 'Giá', width: 100 },
+    { field: 'tenGoiBH', headerName: 'Tên Gói BH', width: 200 },
+    { field: 'motaGoiBH', headerName: 'Mô Tả Gói BH', width: 350 },
+    { field: 'gia', headerName: 'Giá', width: 150 },
     { field: 'tiLeHoanTien', headerName: 'Tỉ lệ Hoàn Tiền', width: 150 },
     { field: 'thoiHanBaoVe', headerName: 'Thời Hạn Bảo Vệ', width: 150 },
     {
@@ -71,10 +71,10 @@ const InsurancePack = () => {
   ];
   
   return (
-    <Container component="main" maxWidth="lg">
+    <Container component="main" maxWidth="xl">
     <Paper
       elevation={3}
-      style={{ padding: "20px", marginTop: "120px", marginBottom: "100px" }}
+      style={{ padding: "20px", marginTop: "40px", marginBottom: "100px" }}
     >
       <div>
     <Box>
