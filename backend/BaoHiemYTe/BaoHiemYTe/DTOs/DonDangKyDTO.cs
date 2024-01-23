@@ -23,7 +23,7 @@ public class DonDangKyDTO
     public GoiBaoHiem? GoiBaoHiem { get; set; }
 
     public NhanVien? NhanVien { get; set; }
-    public List<TinhTrangBenhDTO> BenhIds { get; set; }  // Danh sách id bệnh
+    public List<TinhTrangBenh> Benh { get; set; }  // Danh sách id bệnh
 }
 
 

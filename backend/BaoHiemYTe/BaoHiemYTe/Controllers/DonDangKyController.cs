@@ -3,6 +3,7 @@ using BaoHiemYTe.Domain;
 using BaoHiemYTe.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -132,6 +133,13 @@ namespace BaoHiemYTe.Controllers
                 {
                     return Unauthorized("Unauthorized: You do not have permission to access this invoice");
                 }
+                var danhSachBenh = await _dbContext.TinhTrangBenh
+     .Where(tb => tb.MaDonDK == id)
+     .Include(tb => tb.Benh)  // Include the related Benh entity
+     .ToListAsync();
+
+              
+
 
                 var donDangKyDTO_KH = new DonDangKyDTO
                 {
@@ -150,7 +158,7 @@ namespace BaoHiemYTe.Controllers
                     GoiBaoHiem = donDangKyKH.GoiBaoHiem,
                     NhanVien = donDangKyKH.NhanVien
                 };
-
+                donDangKyDTO_KH.Benh = danhSachBenh;
                 return Ok(donDangKyDTO_KH);
             }
             //Nếu là nhân viên
@@ -229,13 +237,13 @@ namespace BaoHiemYTe.Controllers
                     await _dbContext.SaveChangesAsync();
 
                     // Chèn danh sách id bệnh vào TinhTrangBenh
-                    foreach (var benhId in donDangKyDTO.BenhIds)
+                    foreach (var benh in donDangKyDTO.Benh)
                     {
                         var tinhTrangBenh = new TinhTrangBenh
                         {
                             MaDonDK = donDangKy.MaDonDK,
-                            MaBenh = benhId.MaBenh,
-                            TinhTrang = benhId.TinhTrang // Thay bằng tình trạng thích hợp
+                            MaBenh = benh.MaBenh,
+                            TinhTrang = benh.TinhTrang // Thay bằng tình trạng thích hợp
                         };
 
                         _dbContext.TinhTrangBenh.Add(tinhTrangBenh);

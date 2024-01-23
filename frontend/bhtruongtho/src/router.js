@@ -150,18 +150,22 @@ const RouterCustom = () => {
         {
             path: ROUTERS.USER.DONDANGKY,
             component: <ListDonDangKy />,
+            loginRequired: true,
         },
         {
             path: ROUTERS.USER.INSURANCEPACKM,
             component: <InsurancePack />,
+            loginRequired: true,
         },
         {
             path: ROUTERS.USER.ADDINSPACK,
             component: <AddInsPack />,
+            loginRequired: true,
         },
         {
             path: ROUTERS.USER.YEUCAUHOANTRA,
             component: <ListYeuCauHoanTra />,
+            loginRequired: true,
         },
 
         {

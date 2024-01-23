@@ -50,6 +50,16 @@ const RegistrationDetail = () => {
                             Chi tiết đơn đăng ký
                         </Typography>
                         <Typography variant="body1">
+                            Khách hàng: {registrationDetail.khachHang.hoTen}
+                        </Typography>
+                        <Typography variant="body1">
+                            Gói bảo hiểm:{" "}
+                            {registrationDetail.goiBaoHiem.tenGoiBH}
+                        </Typography>
+                        <Typography variant="body1">
+                            Tổng giá: {registrationDetail.tongGia}đ
+                        </Typography>
+                        <Typography variant="body1">
                             Mã đơn đăng ký: {registrationDetail.maDonDK}
                         </Typography>
                         <Typography variant="body1">
@@ -70,24 +80,58 @@ const RegistrationDetail = () => {
                                 "DD/MM/YYYY"
                             )}
                         </Typography>
+                        {/* Display additional information as needed */}
                         <Typography variant="body1">
                             Tình trạng: {registrationDetail.tinhTrang}
                         </Typography>
                         <Typography variant="body1">
-                            Tổng giá: {registrationDetail.tongGia}đ
+                            Nhân viên:{" "}
+                            {registrationDetail.nhanVien
+                                ? registrationDetail.nhanVien.hoTen ||
+                                  "Không có thông tin"
+                                : "Không có thông tin"}
                         </Typography>
-                        {/* Display additional information as needed */}
-                        <Typography variant="body1">
-                            Khách hàng: {registrationDetail.khachHang.hoTen}
-                        </Typography>
-                        <Typography variant="body1">
-                            Gói bảo hiểm:{" "}
-                            {registrationDetail.goiBaoHiem.tenGoiBH}
-                        </Typography>
-                        <Typography variant="body1">
-                            Nhân viên: {registrationDetail.nhanVien.hoTen}
-                        </Typography>
-                        {/* Add more details based on your data structure */}
+                        <TableContainer>
+                            <Table>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell>Tên bệnh</TableCell>
+                                        <TableCell>Mô tả</TableCell>
+                                        <TableCell style={{ width: "135px" }}>
+                                            Mức độ bệnh
+                                        </TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {registrationDetail &&
+                                    registrationDetail.benh &&
+                                    registrationDetail.benh.length > 0 ? (
+                                        registrationDetail.benh.map((benh) => (
+                                            <TableRow key={benh.benh.id}>
+                                                <TableCell>
+                                                    {benh.benh.tenBenh ||
+                                                        "Không có thông tin"}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {benh.benh.moTa ||
+                                                        "Không có thông tin"}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {benh.tinhTrang ||
+                                                        "Không có thông tin"}
+                                                </TableCell>
+                                            </TableRow>
+                                        ))
+                                    ) : (
+                                        <TableRow>
+                                            <TableCell colSpan={3}>
+                                                Không có thông tin về bệnh
+                                            </TableCell>
+                                        </TableRow>
+                                    )}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
                         <Button
                             color="primary"
                             fullWidth
