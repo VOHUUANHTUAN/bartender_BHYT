@@ -32,6 +32,7 @@ const END_POINT = {
     GETSOTIENKHAM: "GetSoTienKham",
     RECHARGE: "KhachHang/NapTien",
     HOADONNAPTIEN: "NhanVien/GetHoaDonNapTien",
+    LICHSUTHANHTOAN: "HoaDonThanhToanDK/LichSuThanhToan",
 };
 
 export const getGoiBHAPI = () => {
@@ -395,6 +396,17 @@ export const napTien = (token, maKH, soTien) => {
         {
             headers: {
                 Authorization: `Bearer ${token}`,
+            },
+        }
+    );
+};
+
+export const getLichSuThanhToan = (maKH, token) => {
+    return axiosClient.get(
+        `${END_POINT.LICHSUTHANHTOAN}/${maKH}`,
+        {
+            headers: {
+                Authorization: `Bearer ${ token }`,
             },
         }
     );

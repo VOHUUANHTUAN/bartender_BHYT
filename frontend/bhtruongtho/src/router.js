@@ -25,6 +25,7 @@ import InsurancePack from "./views/staff/insurancePackManagement/index.js";
 import InsPackDetailPage from "./views/staff/insurancePackManagement/insPackMDetail.js";
 import AddInsPack from "./views/staff/insurancePackManagement/addInsPack.js";
 import InfoCustomerDetail from "./views/user/infoCustomer/detail.js";
+import HistoryPay from "./views/user/infoCustomer/historyPay.js";
 
 
 import ListYeuCauHoanTra from "./views/user/CapNhatYeuCauHoanTra/index.js";
@@ -237,6 +238,7 @@ const RouterCustom = () => {
                 <Route path="pay/detailPaid/:id" element={<PaidDetail />} />
                 <Route path="pay/detailUnpaid/:id" element={<UnPaidDetail />} />
                 <Route path="infoCustomer/Recharge/:id" element={<Recharge />} />
+                <Route path="infoCustomer/historyPay/:id" element={<HistoryPay />} />
             </Routes>
         </MasterLayout>
     );
