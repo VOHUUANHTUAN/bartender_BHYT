@@ -3,6 +3,7 @@ using BaoHiemYTe.Domain;
 using BaoHiemYTe.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -355,6 +356,7 @@ namespace BaoHiemYTe.Controllers
             }
         }
 
+        // Lấy toàn bộ lịch sử đăng ký của user hiện tại
         // GET: api/DonDangKy/KhachHang
         [HttpGet("LichSuDK")]
         public async Task<ActionResult<DonDangKyDTO>> danhsachdondk()
@@ -410,6 +412,75 @@ namespace BaoHiemYTe.Controllers
                 });
 
                 return Ok(donDangKyDTOs);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Lỗi: {ex.Message}");
+            }
+        }
+
+        // Nhân viên lấy toàn bộ lịch sử đăng ký của 1 user
+        // GET: api/DonDangKy/KhachHang
+        [HttpGet("LichSuDK/NhanVien/{user}")]
+        public async Task<ActionResult<DonDangKyDTO>> DonDKByNhanVien(string user)
+        {
+            try
+            {
+                var tokenService = new TokenService();
+                var username = tokenService.GetUsernameFromToken(HttpContext.Request);
+
+                if (string.IsNullOrEmpty(username))
+                {
+                    return Unauthorized("Unauthorized: Token is missing or invalid");
+                }
+                //var username = "admin";
+
+                // Kiểm tra xem người dùng có role "Nhân viên" hay không
+                var isNhanVien = _dbContext.Users.Any(u => u.username == username && u.role == "Nhân viên");
+
+
+                if (isNhanVien)
+                {
+                    // Lấy mã khách hàng
+                    var maKH = _dbContext.KhachHang
+                        .Where(u => u.username == user)
+                        .Select(u => u.MaKH)
+                        .FirstOrDefault();
+
+                    var donDangKys = await _dbContext.DonDangKy
+                    .Where(d => d.MaKH == maKH)
+                    .ToListAsync();
+
+                    if (donDangKys == null)
+                    {
+                        return NotFound();
+                    }
+
+                    var donDangKyDTOs = donDangKys.Select(d => new DonDangKyDTO
+                    {
+                        MaDonDK = d.MaDonDK,
+                        MaGoiBH = d.MaGoiBH,
+                        TenGoiBH = _dbContext.GoiBaoHiem
+                                .Where(g => g.MaGoiBH == d.MaGoiBH)
+                                .Select(g => g.TenGoiBH)
+                                .FirstOrDefault(),
+                        ThoiGianDK = d.ThoiGianDK,
+                        ThoiGianBD = d.ThoiGianBD,
+                        ThoiGianHetHan = d.ThoiGianHetHan,
+                        TinhTrang = d.TinhTrang,
+                        LiDoTuChoi = d.LiDoTuChoi,
+                        SoKyHanThanhToan = d.SoKyHanThanhToan,
+                        TongGia = d.TongGia,
+                        MaKH = d.MaKH,
+                        MaNV = d.MaNV
+                    });
+
+                    return Ok(donDangKyDTOs);
+                }
+                else
+                {
+                    return BadRequest("Không có quyền truy cập danh sách khách hàng");
+                }
             }
             catch (Exception ex)
             {

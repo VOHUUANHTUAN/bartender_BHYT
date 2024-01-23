@@ -35,6 +35,8 @@ const END_POINT = {
     DSDONDK: "DSDonDKByUser",
     LICHSUDATHANHTOAN: "LichSuDaThanhToan",
     TATCALICHSUDATHANHTOAN: "TatCaLichSuDaThanhToan",
+    NAPTIENKHACHHANG: "NapTienVaoTaiKhoan",
+    THONGTINKHACHHANG: "GetInfoUser",
 };
 
 export const getGoiBHAPI = () => {
@@ -375,6 +377,7 @@ export const getGoiBHByNV = (token) => {
     });
 };
 
+// Lấy ra các đơn đã đăng ký của user với tình trạng
 export const getLichSuDK = (token, tinhtrang) => {
     return axiosClient.get(`${END_POINT.DONDANGKY}/${END_POINT.LICHSUDK}/${tinhtrang}`, {
         headers: {
@@ -383,6 +386,7 @@ export const getLichSuDK = (token, tinhtrang) => {
     });
 };
 
+// Lấy ra tất cả các hóa đơn của user 
 export const getDSDonDK = (token) => {
     return axiosClient.get(`${END_POINT.DONDANGKY}/${END_POINT.LICHSUDK}`, {
         headers: {
@@ -391,14 +395,36 @@ export const getDSDonDK = (token) => {
     });
 };
 
+// Nhân viên lấy ra lịch sử thanh toán theo từng khách
 export const getLichSuDaThanhToan = (user) => {
     return axiosClient.get(
         `${END_POINT.HOADONTHANHTOANDK}/${END_POINT.LICHSUDATHANHTOAN}/${user}`
     );
 }
 
+// Nhân viên lấy ra tất cả lịch sử thanh toán của tất cả khách hàng
 export const getAllLichSuDaThanhToan = () => {
     return axiosClient.get(
         `${END_POINT.HOADONTHANHTOANDK}/${END_POINT.TATCALICHSUDATHANHTOAN}`
     );
+}
+
+// Nhân viên xem thông tin cá nhân khách hàng
+export const getInfoUser = (user, token) => {
+    return axiosClient.get(
+        `${END_POINT.KHACHHANG}/${END_POINT.THONGTINKHACHHANG}/${user}`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+}
+
+// Nhân viên nạp tiền cho khách hàng
+export const customerRecharge = (user, sotien, token) => {
+    return axiosClient.get(
+        `${END_POINT.KHACHHANG}/${END_POINT.NAPTIENKHACHHANG}/${user}/${sotien}`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
 }

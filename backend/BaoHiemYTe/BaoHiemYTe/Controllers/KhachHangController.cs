@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BaoHiemYTe.Controllers;
 using BaoHiemYTe.Domain;
+using System;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -169,9 +170,9 @@ namespace BaoHiemYTe.Controllers
                         {
                             MaKH = kh.MaKH,
                             HoTen = kh.HoTen,
-                            NgaySinh= kh.NgaySinh,
-                            GioiTinh= kh.GioiTinh,
-                            CCCD= kh.CCCD,
+                            NgaySinh = kh.NgaySinh,
+                            GioiTinh = kh.GioiTinh,
+                            CCCD = kh.CCCD,
                             DiaChi = kh.DiaChi,
                             SDT = kh.SDT,
                             Email = kh.Email,
@@ -200,6 +201,126 @@ namespace BaoHiemYTe.Controllers
             }
         }
 
+        [HttpGet("GetInfoUser/{user}")]
+        public IActionResult GetInfoKhachHang(string user)
+        {
+            try
+            {
+                var tokenService = new TokenService();
+                var username = tokenService.GetUsernameFromToken(HttpContext.Request);
 
+                if (string.IsNullOrEmpty(username))
+                {
+                    return Unauthorized("Unauthorized: Token is missing or invalid");
+                }
+                //var username = "admin";
+
+                // Kiểm tra xem người dùng có role "Nhân viên" hay không
+                var isNhanVien = userDbContext.Users.Any(u => u.username == username && u.role == "Nhân viên");
+
+                if (isNhanVien)
+                {
+                    var khachHang = userDbContext.KhachHang
+                        .Where(d => d.username == user)
+                        .Select(kh => new KhachHangDTO
+                        {
+                            MaKH = kh.MaKH,
+                            HoTen = kh.HoTen,
+                            NgaySinh = kh.NgaySinh,
+                            GioiTinh = kh.GioiTinh,
+                            CCCD = kh.CCCD,
+                            DiaChi = kh.DiaChi,
+                            SDT = kh.SDT,
+                            Email = kh.Email,
+                            SoDu = kh.SoDu,
+                            username = kh.username
+                        })
+                        .FirstOrDefault();
+
+                    if (khachHang != null)
+                    {
+                        return Ok(khachHang);
+                    }
+                    else
+                    {
+                        return NotFound("Không có thông tin về khách hàng này trong hệ thống.");
+                    }
+                }
+                else
+                {
+                    return BadRequest("Không có quyền truy cập danh sách khách hàng");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Lỗi trong quá trình xử lý: {ex.Message}");
+            }
+        }
+
+        [HttpGet("NapTienVaoTaiKhoan/{user}/{soTien}")]
+        public IActionResult NapTienVaoTaiKhoan(string user, int soTien)
+        {
+
+            try
+            {
+                var tokenService = new TokenService();
+                var username = tokenService.GetUsernameFromToken(HttpContext.Request);
+
+                if (string.IsNullOrEmpty(username))
+                {
+                    return Unauthorized("Unauthorized: Token is missing or invalid");
+                }
+                //var username = "admin";
+
+                // Kiểm tra xem người dùng có role "Nhân viên" hay không
+                var isNhanVien = userDbContext.Users.Any(u => u.username == username && u.role == "Nhân viên");
+
+                if (isNhanVien)
+                {
+                    //var khachHang = userDbContext.KhachHang
+                    //    .Where(d => d.username == user)
+                    //    .Select(kh => new KhachHangDTO
+                    //    {
+                    //        MaKH = kh.MaKH,
+                    //        HoTen = kh.HoTen,
+                    //        NgaySinh = kh.NgaySinh,
+                    //        GioiTinh = kh.GioiTinh,
+                    //        CCCD = kh.CCCD,
+                    //        DiaChi = kh.DiaChi,
+                    //        SDT = kh.SDT,
+                    //        Email = kh.Email,
+                    //        SoDu = kh.SoDu + soTien,
+                    //        username = kh.username
+                    //    })
+                    //    .FirstOrDefault();
+
+                    var khachHang = userDbContext.KhachHang
+                        .FirstOrDefault(d => d.username == user);
+
+                    khachHang.SoDu = khachHang.SoDu + soTien;
+
+                    userDbContext.SaveChanges();
+
+                    return Ok("Nạp tiền thành công");
+
+                    //if (khachHang != null)
+                    //{
+                    //    return Ok(khachHang);
+                    //}
+                    //else
+                    //{
+                    //    return NotFound("Không có thông tin về khách hàng này trong hệ thống.");
+                    //}
+                }
+                else
+                {
+                    return BadRequest("Không có quyền truy cập danh sách khách hàng");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Lỗi trong quá trình xử lý: {ex.Message}");
+            }
+        }
     }
 }

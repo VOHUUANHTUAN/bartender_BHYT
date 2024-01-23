@@ -595,18 +595,6 @@ namespace BaoHiemYTe.Controllers
         {
             try
             {
-                //// Lấy thông tin MaKH từ bảng KhachHang
-                //var maKH = userDbContext.KhachHang
-                //    .Where(u => u.username == username)
-                //    .Select(u => u.MaKH)
-                //    .FirstOrDefault();
-
-                //if (maKH == 0)
-                //{
-                //    return NotFound($"Không tìm thấy thông tin khách hàng của người dùng {username}");
-                //}
-
-                // Lấy danh sách MaDonDK từ bảng DonDangKy
                 var maDonDKs = userDbContext.DonDangKy
                     .Select(d => d.MaDonDK)
                     .ToList();

@@ -34,6 +34,8 @@ import { getUserInfoByToken } from "./api/connect";
 import { useSnackbar } from "./context/SnackbarContext";
 import HistoryRegister from "./views/user/historyRegister/index.js";
 import HistoryPay from "./views/user/historyPay/index.js";
+import CustomerRecharge from "./views/user/customerRecharge/index.js";
+
 
 
 const AuthGuard = ({ component: Component, loginRequired }) => {
@@ -162,6 +164,11 @@ const RouterCustom = () => {
             component: <HistoryPay />,
             loginRequired: true,
         },
+        {
+            path: ROUTERS.USER.CUSTOMERRECHARGE,
+            component: <CustomerRecharge />,
+            loginRequired: true,
+        },
     ];
 
     return (
@@ -208,6 +215,10 @@ const RouterCustom = () => {
                 />
                 <Route path="pay/detailPaid/:id" element={<PaidDetail />} />
                 <Route path="pay/detailUnpaid/:id" element={<UnPaidDetail />} />
+                <Route
+                    path="historyRegister/historyDetail/:id"
+                    element={<historyDetail />}
+                />
             </Routes>
         </MasterLayout>
     );

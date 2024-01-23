@@ -1,9 +1,11 @@
 import React, { memo, useState, useEffect } from "react";
 import { getLichSuDaThanhToan, getAllLichSuDaThanhToan, NV_getInfoCustomer } from "../../../api/connect";
-import { Container, Paper, Typography, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import { Container, Paper, Typography, FormControl, InputLabel, Select, MenuItem, Grid, Button } from "@mui/material";
 import Box from "@mui/material/Box";
 import dayjs from "dayjs";
 import { DataGrid } from "@mui/x-data-grid";
+import { useNavigate } from "react-router-dom";
+
 
 
 
@@ -13,6 +15,8 @@ const HistoryPay = () => {
     const [users, setUsers] = useState([]);     //gọi api lấy danh sách người dùng
     const [now_user, setNow_User] = useState("Tất cả")      //lấy ra người dùng hiện tại đang chọn
     const [hoadons, setHoaDons] = useState([])
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         // Nếu đang chọn "Tất cả" thì gọi api lấy tất cả các hóa đơn thanh toán của tất cả khách hàng
@@ -57,23 +61,10 @@ const HistoryPay = () => {
             minimumFractionDigits: 0,
         });
         return {
-            // id: index + 1,
-            // tenGoiBH: row.tenGoiBH,
-            // thoiGianDK: dayjs(row.thoiGianDK).format(
-            //     "HH:mm:ss DD/MM/YYYY"
-            // ),
-            // thoiGianBD: dayjs(row.thoiGianBD).format(
-            //     "HH:mm:ss DD/MM/YYYY"
-            // ),
-            // thoiGianHetHan: dayjs(row.thoiGianHetHan).format(
-            //     "HH:mm:ss DD/MM/YYYY"
-            // ),
-            // soKyHanThanhToan: row.soKyHanThanhToan,
-            // tongGia: numberFormat.format(row.tongGia),
             id: index + 1,
             maHD: row.maHD,
             thoiGianHetHan: dayjs(row.thoiGianHetHan).format(
-                "HH:mm:ss DD/MM/YYYY"
+                "DD/MM/YYYY"
             ),
             hanKy: row.hanKy,
             tinhTrangThanhToan: row.tinhTrangThanhToan,
@@ -90,7 +81,7 @@ const HistoryPay = () => {
         { field: "id", headerName: "STT", flex: 1 },
         {
             field: "maHD",
-            headerName: "Hợp Đồng",
+            headerName: "Hóa Đơn",
             minWidth: 50,
             flex: 1,
         },
@@ -138,18 +129,22 @@ const HistoryPay = () => {
         },
     ];
 
+    const troVe = () => {
+        navigate(`/staff`);
+    }
+
     return (<>
-        <FormControl 
+        <FormControl
             style={{ margin: "20px 40px" }}
+            sx={{ m: 1, minWidth: 125 }}
         >
-            <InputLabel id="demo-simple-select-label" fullWidth >Mã khách hàng</InputLabel>
+            <InputLabel id="demo-simple-select-label"  >Mã khách hàng</InputLabel>
             <Select
-                labelId="demo-simple-select-label"
+                labelId="demo-simple-select-autowidth-label"
                 id="demo-simple-select"
                 value={now_user}
                 label="Age"
                 onChange={(event) => setNow_User(event.target.value)}
-                
             >
                 <MenuItem value={"Tất cả"}>Tất cả</MenuItem>
                 {users.map((user, index) => (
@@ -179,6 +174,9 @@ const HistoryPay = () => {
                 </div>
             </Paper>
         </Container>
+        <Grid item xs={6} >
+            <Button variant="contained" style={{ marginLeft: "350px", marginBottom: "25px", backgroundColor: 'rgb(25, 118, 210)' }} onClick={troVe}>Trở về</Button>
+        </Grid>
     </>
     );
 };

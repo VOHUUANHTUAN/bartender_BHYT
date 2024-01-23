@@ -23,5 +23,6 @@ export const ROUTERS = {
         INFOCUSTOMER: "infoCustomer",
         FINANCIALREPORT: "financialReport",
         HISTORYPAY: "HistoryPay",
+        CUSTOMERRECHARGE: "customerRecharge",
     },
 };
