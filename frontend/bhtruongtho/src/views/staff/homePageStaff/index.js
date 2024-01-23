@@ -12,12 +12,6 @@ const HomePageStaff = () => {
             color: "#FFB6C1",
             address: ROUTERS.USER.DONDANGKY,
         },
-        {
-            title: "Lịch sử giao dịch",
-            count: 5,
-            color: "#98FB98",
-            address: ROUTERS.USER.TRANSACTION,
-        },
 
         {
             title: "Quản lý gói bảo hiểm",

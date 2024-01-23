@@ -8,23 +8,22 @@ import ProductPage from "./views/user/productPage/index.js";
 import Login from "./views/user/loginPage";
 import Register from "./views/user/registerPage/index.js";
 import RequestInvoicePage from "./views/user/requestInvoicePage";
-import HomePageStaff from "./views/user/homePageStaff";
+import HomePageStaff from "./views/staff/homePageStaff";
 import ChangePassword from "./views/user/ChangePasswordPage";
 import { useUser } from "../src/context/UserContext.js";
 import InsuranceRegistration from "./views/user/InsuranceRegistration";
-import ListDonDangKy from "./views/user/registrationForm/index.js";
-import DonDangKyDetail from "./views/user/registrationForm/regisdetail.js";
+import ListDonDangKy from "./views/staff/registrationForm/index.js";
+import DonDangKyDetail from "./views/staff/registrationForm/regisdetail.js";
 import Profile from "./views/user/profilePage/index.js";
 import Pay from "./views/user/payPage/index.js";
 import PaidDetail from "./views/user/payPage/paidDetail.js";
 import UnPaidDetail from "./views/user/payPage/unpaidDetail.js";
-import InfoCustomer from "./views/user/infoCustomer";
-import FinancialReport from "./views/user/financialReport";
+import InfoCustomer from "./views/staff/infoCustomer/index.js";
+import FinancialReport from "./views/staff/financialReport/index.js";
 import InsurancePack from "./views/staff/insurancePackManagement/index.js";
 import InsPackDetailPage from "./views/staff/insurancePackManagement/insPackMDetail.js";
 import AddInsPack from "./views/staff/insurancePackManagement/addInsPack.js";
-import InfoCustomerDetail from "./views/user/infoCustomer/detail.js";
-
+import InfoCustomerDetail from "./views/staff/infoCustomer/detail.js";
 
 import ListYeuCauHoanTra from "./views/user/CapNhatYeuCauHoanTra/index.js";
 import YeuCauHoanTraDetail from "./views/user/CapNhatYeuCauHoanTra/detailycht.js";
@@ -210,27 +209,27 @@ const RouterCustom = () => {
                     element={<ProductDetailPage />}
                 />
                 <Route
-                    path="registrationForms/detail/:id"
-                    element={<DonDangKyDetail />}
-                />
-                <Route
                     path="InsuranceRegistration/:id"
                     element={<InsuranceRegistration />}
-                />
-                <Route
-                    path="InfoCustomer/detail/:id"
-                    element={<InfoCustomerDetail />}
-                />
-                <Route
-                    path="requestrefund/detail/:id"
-                    element={<YeuCauHoanTraDetail />}
-                />
+                />{" "}
                 <Route
                     path="invoiceHistory/detail/:id"
                     element={<InvoiceHistoryDetail />}
+                />{" "}
+                <Route
+                    path="staff/registrationForms/detail/:id"
+                    element={<DonDangKyDetail />}
                 />
                 <Route
-                    path="insurancePackManagement/detail/:id"
+                    path="staff/InfoCustomer/detail/:id"
+                    element={<InfoCustomerDetail />}
+                />
+                <Route
+                    path="staff/requestrefund/detail/:id"
+                    element={<YeuCauHoanTraDetail />}
+                />
+                <Route
+                    path="staff/insurancePackManagement/detail/:id"
                     element={<InsPackDetailPage />}
                 />
                 <Route path="pay/detailPaid/:id" element={<PaidDetail />} />

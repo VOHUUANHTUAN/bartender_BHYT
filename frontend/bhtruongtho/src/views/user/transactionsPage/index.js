@@ -82,7 +82,7 @@ const BillList = () => {
             field: "thoiGianThanhToan",
             headerName: "Thời Gian Thanh Toán",
             minWidth: 200,
-            flex: 2,
+            flex: 3,
         },
         {
             field: "loaiHoaDon",
@@ -120,12 +120,12 @@ const BillList = () => {
         } else if (loaiHoaDon === "Hoàn trả") {
             console.log("chuyển đến chi tiết hoá đơn Hoàn trả ", maHD);
             // Thực hiện logic chuyển hướng cho chi tiết hoàn trả
-            // navigate(`/requestrefund/detail/${maHD}`);
+            navigate(`/requestrefund/detail/${maHD}`);
         }
     };
 
     return (
-        <Container component="main" maxWidth="xl">
+        <Container component="main" maxWidth="md">
             <Paper
                 elevation={3}
                 style={{ padding: "20px", margin: "30px 0px " }}

@@ -17,11 +17,11 @@ export const ROUTERS = {
         INVOICEHISTORYDETAILPAGE: "invoiceHistory/detail",
 
         STAFF: "staff",
-        DONDANGKY: "registrationForms",
-        TRANSACTION: "transactions",
-        ADDINSPACK: "insurancePackManagement/add",
-        INSURANCEPACKM: "insurancePackManagement",
-        INFOCUSTOMER: "infoCustomer",
-        FINANCIALREPORT: "financialReport",
+        DONDANGKY: "staff/registrationForms",
+        TRANSACTION: "staff/transactions",
+        ADDINSPACK: "staff/insurancePackManagement/add",
+        INSURANCEPACKM: "staff/insurancePackManagement",
+        INFOCUSTOMER: "staff/infoCustomer",
+        FINANCIALREPORT: "staff/financialReport",
     },
 };

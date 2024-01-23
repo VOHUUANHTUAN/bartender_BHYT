@@ -1,33 +1,45 @@
-import React, { memo, useState, useEffect } from 'react';
-import { getKhachHangInformationByID } from '../../../api/connect';
-import { useParams, useNavigate } from 'react-router-dom';
-import { Container, Paper, Typography, TextField, Grid, FormControl, InputLabel, Select, MenuItem, Button } from '@mui/material';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import React, { memo, useState, useEffect } from "react";
+import { getKhachHangInformationByID } from "../../../api/connect";
+import { useParams, useNavigate } from "react-router-dom";
+import {
+    Container,
+    Paper,
+    Typography,
+    TextField,
+    Grid,
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem,
+    Button,
+} from "@mui/material";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-
-
 
 const DetailCustomer = () => {
     const { id } = useParams(); // Sử dụng destructuring để lấy id từ params
     const [dataKhachHang, setDataKhachHang] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [username, setUsername] = useState('');
-    const [hoTen, setHoTen] = useState('');
-    const [CCCD, setCCCD] = useState('');
-    const [gioiTinh, setGioiTinh] = useState('');
+    const [username, setUsername] = useState("");
+    const [hoTen, setHoTen] = useState("");
+    const [CCCD, setCCCD] = useState("");
+    const [gioiTinh, setGioiTinh] = useState("");
     const [ngaySinh, setNgaySinh] = useState(null);
-    const [diaChi, setDiaChi] = useState('');
-    const [email, setEmail] = useState('');
-    const [soDienThoai, setSoDienThoai] = useState('');
-    const [soDu, setSoDu] = useState('');
+    const [diaChi, setDiaChi] = useState("");
+    const [email, setEmail] = useState("");
+    const [soDienThoai, setSoDienThoai] = useState("");
+    const [soDu, setSoDu] = useState("");
     const navigate = useNavigate();
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const khachHangData = await getKhachHangInformationByID(localStorage.getItem("token"), id);
+                const khachHangData = await getKhachHangInformationByID(
+                    localStorage.getItem("token"),
+                    id
+                );
                 setDataKhachHang(khachHangData);
             } catch (error) {
                 setError(error);
@@ -40,14 +52,14 @@ const DetailCustomer = () => {
     }, [id]); // Thêm id vào dependency array để useEffect được gọi lại khi id thay đổi
     useEffect(() => {
         if (dataKhachHang) {
-            setUsername(dataKhachHang.username || '');
-            setHoTen(dataKhachHang.hoTen || '');
-            setCCCD(dataKhachHang.cccd || '');
-            setGioiTinh(dataKhachHang.gioiTinh || '');
+            setUsername(dataKhachHang.username || "");
+            setHoTen(dataKhachHang.hoTen || "");
+            setCCCD(dataKhachHang.cccd || "");
+            setGioiTinh(dataKhachHang.gioiTinh || "");
             setNgaySinh(dayjs(dataKhachHang.ngaySinh) || null);
-            setDiaChi(dataKhachHang.diaChi || '');
-            setEmail(dataKhachHang.email || '');
-            setSoDienThoai(dataKhachHang.soDienThoai || '');
+            setDiaChi(dataKhachHang.diaChi || "");
+            setEmail(dataKhachHang.email || "");
+            setSoDienThoai(dataKhachHang.soDienThoai || "");
             setSoDu(formatCurrency(dataKhachHang.soDu) || "");
         }
     }, [dataKhachHang]);
@@ -67,10 +79,12 @@ const DetailCustomer = () => {
         return <div>Error: {error.message}</div>;
     }
 
-
     return (
         <Container component="main" maxWidth="md">
-            <Paper elevation={3} style={{ padding: "20px", margin: "30px 0px " }}>
+            <Paper
+                elevation={3}
+                style={{ padding: "20px", margin: "30px 0px " }}
+            >
                 <Typography component="h1" variant="h5">
                     Thông tin cá nhân
                 </Typography>
@@ -85,7 +99,6 @@ const DetailCustomer = () => {
                         }}
                         value={username}
                     />
-
                     <Grid container spacing={2}>
                         <Grid item xs={6}>
                             <TextField
@@ -124,7 +137,8 @@ const DetailCustomer = () => {
                                     id="gioiTinh"
                                     value={gioiTinh}
                                     label="Giới tính"
-                                    disabled                                >
+                                    disabled
+                                >
                                     <MenuItem value="Nam">Nam</MenuItem>
                                     <MenuItem value="Nữ">Nữ</MenuItem>
                                     {/* Add more options as needed */}
@@ -164,7 +178,8 @@ const DetailCustomer = () => {
                             fullWidth
                             required
                             value={diaChi}
-                            disabled />
+                            disabled
+                        />
                         <TextField
                             label="Email"
                             variant="outlined"
@@ -172,7 +187,8 @@ const DetailCustomer = () => {
                             fullWidth
                             required
                             value={email}
-                            disabled />
+                            disabled
+                        />
                         <Grid container spacing={2}>
                             <Grid item xs={6}>
                                 <TextField
@@ -182,7 +198,8 @@ const DetailCustomer = () => {
                                     fullWidth
                                     required
                                     value={soDienThoai}
-                                    disabled />
+                                    disabled
+                                />
                             </Grid>
                             <Grid item xs={6}>
                                 <TextField
@@ -197,15 +214,16 @@ const DetailCustomer = () => {
                                 />
                             </Grid>
                         </Grid>
-                    </Grid>                    <Button
+                    </Grid>{" "}
+                    <Button
                         variant="contained"
                         color="primary"
                         fullWidth
                         style={{ marginTop: "20px" }}
                         onClick={() => navigate(-1)} // Navigate back to previous page
-
                     >
-                        quay lại                    </Button>
+                        quay lại{" "}
+                    </Button>
                 </form>
             </Paper>
         </Container>

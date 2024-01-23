@@ -30,26 +30,15 @@ const CustomerBillList = () => {
     const handleViewDetail = (maHD) => {
         navigate(`/invoiceHistory/detail/${maHD}`);
     };
+    const formatCurrency = (amount) => {
+        const formattedAmount = new Intl.NumberFormat("vi-VN", {
+            style: "currency",
+            currency: "VND",
+        }).format(amount);
 
+        return formattedAmount;
+    };
     const rows = billList.map((row, index) => {
-        const isHoaDonThanhToan = row.loaiHoaDon === "Thanh toán";
-        const isHoaDonHoanTra = row.loaiHoaDon === "Hoàn trả";
-
-        // Kiểm tra nếu giá trị soTien tồn tại trước khi sử dụng
-        const formattedSoTien = row.soTien
-            ? isHoaDonThanhToan
-                ? `- ${row.soTien.toLocaleString()}`
-                : isHoaDonHoanTra
-                ? `+ ${row.soTien.toLocaleString()}`
-                : row.soTien.toLocaleString()
-            : "N/A"; // hoặc giá trị mặc định khác tùy thuộc vào yêu cầu của bạn
-
-        const textColor = isHoaDonThanhToan
-            ? "red"
-            : isHoaDonHoanTra
-            ? "green"
-            : "black";
-
         return {
             id: index + 1,
             maDonDK: row.maDonDK,
@@ -58,14 +47,12 @@ const CustomerBillList = () => {
                 "HH:mm:ss DD/MM/YYYY"
             ),
             loaiHoaDon: row.loaiHoaDon,
-            formattedSoTien, // Include formatted amount in rows
-            textColor,
             maGoiBH: row.goiBaoHiem.maGoiBH,
             tenGoiBH: row.goiBaoHiem.tenGoiBH,
-            thoiGianDK: row.thoiGianDK, //dayjs(row.thoiGianDK).format("HH:mm:ss DD/MM/YYYY"),
-            thoiGianBD: row.thoiGianBD, //dayjs(row.thoiGianBD).format("DD/MM/YYYY"),
+            thoiGianDK: dayjs(row.thoiGianDK).format("DD/MM/YYYY HH:mm:ss"),
+            thoiGianBD: dayjs(row.thoiGianBD).format("DD/MM/YYYY"),
             thoiGianHetHan: dayjs(row.thoiGianHetHan).format("DD/MM/YYYY"),
-            tongGia: row.tongGia,
+            tongGia: formatCurrency(row.tongGia),
             tinhTrang: row.tinhTrang,
         };
     });
@@ -106,7 +93,7 @@ const CustomerBillList = () => {
             field: "tongGia",
             headerName: "Tổng Giá",
             type: "number",
-            minWidth: 90,
+            minWidth: 100,
             flex: 1,
         },
         {
@@ -146,12 +133,14 @@ const CustomerBillList = () => {
                     <Typography component="h1" variant="h5">
                         Lịch sử đăng ký
                     </Typography>
-                    <Box sx={{ height: 500, width: "100%", flexGrow: 1 }}>
+                    <Box sx={{ height: 600, width: "100%", flexGrow: 1 }}>
                         <DataGrid
                             rows={rows}
                             columns={columns}
                             pageSize={5}
                             autoWidth
+                            hideFooterPagination
+                            hideFooterSelectedRowCount
                             disableRowSelectionOnClick
                             getRowId={(row) => row.id}
                         />
