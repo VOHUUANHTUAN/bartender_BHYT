@@ -97,9 +97,17 @@ a {
     }
 }
 @include Responsive($WIDE-MOBILE){
+    .col-sm-3{
+        flex: 0 0 25%;
+        max-width: 25%;  
+    }
     .col-sm-6 {
         flex: 0 0 50%;
         max-width: 50%;   
+    }
+    .col-sm-9{
+        flex: 0 0 75%;
+        max-width: 75%;  
     }
     .col-sm-12 {
         flex: 0 0 100%;
@@ -107,7 +115,19 @@ a {
     }
 }
 @include Responsive($SMALL-DEVICE){
-    .col-xs-12 {
+    .col-sx-3{
+        flex: 0 0 25%;
+        max-width: 25%;  
+    }
+    .col-sx-6 {
+        flex: 0 0 50%;
+        max-width: 50%;   
+    }
+    .col-sx-9{
+        flex: 0 0 75%;
+        max-width: 75%;  
+    }
+    .col-sx-12 {
         flex: 0 0 100%;
         max-width: 100%;   
     }
