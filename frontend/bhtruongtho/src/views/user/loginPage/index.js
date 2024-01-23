@@ -96,7 +96,7 @@ const Login = () => {
                 elevation={3}
                 style={{ padding: "20px", margin: "50px 0px 50px 0px" }}
             >
-                <h2>Login</h2>
+                <h2>Đăng nhập</h2>
                 <form onSubmit={handleSubmit}>
                     <TextField
                         label="Username"
@@ -155,7 +155,7 @@ const Login = () => {
                         fullWidth
                         style={{ marginTop: "20px" }}
                     >
-                        Login
+                        Đăng nhập
                     </Button>
                     <Grid
                         container
