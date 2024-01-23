@@ -11,6 +11,7 @@ import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import Tooltip from "@mui/material/Tooltip";
 import { useNavigate } from "react-router-dom";
+import HistoryIcon from '@mui/icons-material/History';
 
 const InfoCustomer = () => {
 	const navigate = useNavigate();
@@ -98,6 +99,13 @@ const InfoCustomer = () => {
 		console.log(rowData.id);
 		navigate(`/infoCustomer/Recharge/${maKH}`);
 	};
+
+	const handlePayClick =(rowData) => {
+		console.log("User: ", rowData.id);
+		const maKH = rowData.id;
+		console.log("User: ",rowData.id);
+		navigate(`/infoCustomer/historyPay/${maKH}`);
+	};
 	const columns = [
 		{ field: "maKH", headerName: "Mã KH", width: 100 },
 		{ field: "hoTen", headerName: "Họ và tên", width: 220 },
@@ -139,6 +147,13 @@ const InfoCustomer = () => {
 							onClick={() => handleCreditCardClick(params.row)}
 						>
 							<CreditCardIcon />
+						</IconButton>
+					</Tooltip>
+					<Tooltip title="Lịch sử thanh toán">
+						<IconButton
+							onClick={() => handlePayClick(params.row)}
+						>
+							<HistoryIcon />
 						</IconButton>
 					</Tooltip>
 				</div>

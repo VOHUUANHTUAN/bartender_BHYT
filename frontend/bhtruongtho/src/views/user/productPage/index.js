@@ -43,9 +43,8 @@ const ProductPage = () => {
                             {displayedGoiBHs.map((goiBH, goiBHKey) => (
                                 <li
                                     key={startIndex + goiBHKey}
-                                    className={`card__container ${
-                                        goiBHKey === 0 ? "active" : ""
-                                    }`}
+                                    className={`card__container ${goiBHKey === 0 ? "active" : ""
+                                        }`}
                                 >
                                     <div className="img-container">
                                         <img src="" alt=""></img>
@@ -68,7 +67,7 @@ const ProductPage = () => {
                                         <p>{goiBH.motaGoiBH}</p>
                                         <p>Giá: {formatCurrency(goiBH.gia)}</p>
                                         <p>Tỉ lệ hoàn tiền: {goiBH.tiLeHoanTien}%</p>
-
+                                    </div>
                                     <div className="card__btn">
                                         <Link to={`detail/${goiBH.maGoiBH}`}>
                                             <p>Xem thêm</p>

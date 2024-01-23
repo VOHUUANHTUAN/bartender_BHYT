@@ -155,12 +155,12 @@ const DetailPage = () => {
     };
 
 
-    const handleCloseSnackbar = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-        setSnackbarOpen(false);
-    };
+    // const handleCloseSnackbar = (event, reason) => {
+    //     if (reason === 'clickaway') {
+    //         return;
+    //     }
+    //     setSnackbarOpen(false);
+    // };
     return (
         <div className="container__body">
             {loading ? (
