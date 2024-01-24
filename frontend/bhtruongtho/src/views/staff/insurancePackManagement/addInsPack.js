@@ -55,15 +55,15 @@ const AddInsPack = () => {
       [fieldName]: e.target.value,
     }));
     //regex cho ten
-    if (e.target.name === "Ten") {
-      const tenRegex = /^[a-zA-Z0-9\s&.'-]{3,255}$/;
-      setTenError(!tenRegex.test(e.target.value));
-    }
-    //regex cho mo ta goi bao hiem
-    if (e.target.name === "MoTa") {
-      const moTaRegex = /^[a-zA-Z0-9\s&.'-]{3,255}$/;
-      setMoTaError(!moTaRegex.test(e.target.value));
-    }
+    // if (e.target.name === "Ten") {
+    //   const tenRegex = /^[\p{L}\s&.'-]{3,255}$/;
+    //   setTenError(!tenRegex.test(e.target.value));
+    // }
+    // //regex cho mo ta goi bao hiem
+    // if (e.target.name === "Mota") {
+    //   const moTaRegex = /^[a-zA-Z0-9\s&.'-]{3,255}$/;
+    //   setMoTaError(!moTaRegex.test(e.target.value));
+    // }
     //regex cho số tiền
     if (e.target.name === "Gia") {
       const giaRegex = /^\d+(\.\d{1,2})?$/;
@@ -148,11 +148,11 @@ const AddInsPack = () => {
       }
 
       //thông báo thành công
-      openSnackbar(responseData)
+      openSnackbar(responseData, 'success')
     } catch (error) {
       // Xử lý các lỗi khác (ví dụ: mất kết nối)
       //thông báo lỗi
-      openSnackbar(error.response.data);
+      openSnackbar(error.response.data, 'error');
     } finally {
       setLoading(false);
     }
@@ -176,22 +176,22 @@ const AddInsPack = () => {
     Gia: 'Giá',
     DoTuoi: 'Độ Tuổi',
     TiLeHoanTien: 'Tỉ Lệ Hoàn Tiền',
-    ThoiHanBaoVe: 'Thời Hạn Bảo Vệ',
+    ThoiHanBaoVe: 'Thời Hạn Bảo Vệ (năm)',
 
   };
   //thông báo lỗi
-  const [tenError, setTenError] = useState(false);
-  const [moTaError, setMoTaError] = useState(false);
+  // const [tenError, setTenError] = useState(false);
+  // const [moTaError, setMoTaError] = useState(false);
   const [giaError, setGiaError] = useState(false);
   const [tiLeHoanTienError, setTiLeHoanTienError] = useState(false);
   const [thoiHanBaoVeError, setThoiHanBaoVeError] = useState(false);
 
   const getError = (fieldName) => {
     switch (fieldName) {
-      case "Ten":
-        return tenError;
-      case "MoTa":
-        return moTaError;
+      // case "Ten":
+      //   return tenError;
+      // case "Mota":
+      //   return moTaError;
       case "Gia":
         return giaError;
       case "TiLeHoanTien":
@@ -207,7 +207,7 @@ const AddInsPack = () => {
     switch (fieldName) {
       case "Ten":
         return "Tên không hợp lệ"; // Replace with the actual error message
-      case "MoTa":
+      case "Mota":
         return "Mô tả chứa kí tự không hợp lệ"; // Replace with the actual error message
       case "Gia":
         return "Giá tiền chỉ chứa số"; // Replace with the actual error message
@@ -237,7 +237,8 @@ const AddInsPack = () => {
     if (!formData.ThoiHanBaoVe) {
       return "Thời hạn không được để trống";
     }
-    if (tenError || moTaError || giaError || tiLeHoanTienError || thoiHanBaoVeError) {
+     if (//tenError || moTaError || 
+      giaError || tiLeHoanTienError || thoiHanBaoVeError) {
       return "Thông tin chưa hợp lệ";
     }
     return null; // Validation passed

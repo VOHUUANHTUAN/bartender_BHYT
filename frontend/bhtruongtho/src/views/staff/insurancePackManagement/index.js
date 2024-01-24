@@ -111,9 +111,11 @@ const InsurancePack = () => {
       />
       <div>
         {selectedId.length > 0 && (
-          <Button component={Link} to={`detail/${selectedId}`} variant="contained" color="primary">
+          <div style={{ display: 'flex', marginTop: '20px' }}>
+          <Button component={Link} to={`detail/${selectedId}`} variant="outlined" color="primary">
             Xem chi tiết
-          </Button>)}
+          </Button>
+          </div>)}
       </div>
     </Box>
     </div>

@@ -64,24 +64,7 @@ const ProductPage = () => {
                                         <p>Giá: {formatCurrency(goiBH.gia)}</p>
                                         <p>Tỉ lệ hoàn tiền: {goiBH.tiLeHoanTien}%</p>
                                     </div>
-
-                                        <img src="" alt=""></img>
-                                    </div>
-                                   <div className="card__content">
-                                        <div className="card__title">
-                                            <h3> {goiBH.tenGoiBH}</h3>
-                                        </div>
-                                        <div className="card__body">
-                                            <p>{goiBH.motaGoiBH}</p>
-                                            <p>
-                                                Giá: {formatCurrency(goiBH.gia)}
-                                            </p>
-                                            <p>
-                                                Tỉ lệ hoàn tiền:{" "}
-                                                {goiBH.tiLeHoanTien}%
-                                            </p>
-                                        </div>
-                                    </div>
+                                                                       
                                     <div className="card__btn">
                                         <Link to={`detail/${goiBH.maGoiBH}`}>
                                             <p>Xem thêm</p>
