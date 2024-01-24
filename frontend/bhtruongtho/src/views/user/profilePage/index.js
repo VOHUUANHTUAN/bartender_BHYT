@@ -155,14 +155,17 @@ const ChangeInformation = () => {
         }
 
         // Kiểm tra tên không được trống
-        if (!hoTen) {
-            return "Tên không được để trống";
-        } // Kiểm tra tên không được trống
+        const nameRegex = /^[a-zA-Z]+$/;
+        if (!nameRegex.test(hoTen)) {
+            return "Định dạng họ tên không đúng";
+        }
         if (!gioiTinh) {
             return "Giới tính không được để trống";
         }
-        if (!ngaySinh) {
-            return "Ngày sinh không được để trống";
+        const currentDate = dayjs();
+        const birthDate = dayjs(ngaySinh);
+        if (!birthDate.isValid() || birthDate.isAfter(currentDate)) {
+            return "Ngày sinh phải nhỏ hơn ngày hiện tại";
         }
 
         // Nếu tất cả định dạng đều đúng, trả về true
@@ -184,7 +187,9 @@ const ChangeInformation = () => {
                         variant="outlined"
                         margin="normal"
                         fullWidth
-                        disabled
+                        InputProps={{
+                            readOnly: true,
+                        }}
                         value={username}
                     />
 
