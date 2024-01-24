@@ -19,7 +19,7 @@ import {
     InputLabel,
 } from "@mui/material";
 import dayjs from "dayjs";
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { SettingsAccessibilityOutlined } from "@mui/icons-material";
@@ -155,14 +155,17 @@ const ChangeInformation = () => {
         }
 
         // Kiểm tra tên không được trống
-        if (!hoTen) {
-            return "Tên không được để trống";
-        } // Kiểm tra tên không được trống
+        const nameRegex = /^[a-zA-Z]+$/;
+        if (!nameRegex.test(hoTen)) {
+            return "Định dạng họ tên không đúng";
+        }
         if (!gioiTinh) {
             return "Giới tính không được để trống";
         }
-        if (!ngaySinh) {
-            return "Ngày sinh không được để trống";
+        const currentDate = dayjs();
+        const birthDate = dayjs(ngaySinh);
+        if (!birthDate.isValid() || birthDate.isAfter(currentDate)) {
+            return "Ngày sinh phải nhỏ hơn ngày hiện tại";
         }
 
         // Nếu tất cả định dạng đều đúng, trả về true
@@ -184,7 +187,9 @@ const ChangeInformation = () => {
                         variant="outlined"
                         margin="normal"
                         fullWidth
-                        disabled
+                        InputProps={{
+                            readOnly: true,
+                        }}
                         value={username}
                     />
 
@@ -237,8 +242,13 @@ const ChangeInformation = () => {
                             </FormControl>
                         </Grid>
                         <Grid item xs={6}>
-                            <FormControl fullWidth style={{ marginTop: "15px" }}>
-                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <FormControl
+                                fullWidth
+                                style={{ marginTop: "15px" }}
+                            >
+                                <LocalizationProvider
+                                    dateAdapter={AdapterDayjs}
+                                >
                                     <DatePicker
                                         label="Ngày sinh"
                                         value={ngaySinh}
@@ -256,7 +266,6 @@ const ChangeInformation = () => {
                                 </LocalizationProvider>
                             </FormControl>
                         </Grid>
-
                     </Grid>
                     <TextField
                         label="Địa chỉ"

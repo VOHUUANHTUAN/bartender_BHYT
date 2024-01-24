@@ -324,6 +324,24 @@ namespace BaoHiemYTe.Controllers
                 try
                 {
                     await _dbContext.SaveChangesAsync();
+                    if (updateDto.TinhTrang == "Chờ thanh toán")
+                    {
+                        var invoices = updateDto.DS_HoaDonThanhToanDK.Select(b => new HoaDonThanhToanDK
+                        {
+                            SoTien = b.SoTien,
+                            ThoiGianHetHan = b.ThoiGianHetHan,
+                            HanKy = b.HanKy,
+                            TinhTrangThanhToan = b.TinhTrangThanhToan,
+                            TienPhat = 0,
+                            LiDoPhat = null,
+                            TongTien = b.SoTien,
+                            ThoiGianThanhToan = null,
+                            MaDonDK = id, // Link the invoice to the DonDangKy
+                        }).ToList();
+
+                        _dbContext.HoaDonThanhToanDK.AddRange(invoices);
+                        await _dbContext.SaveChangesAsync();
+                    }
                     transaction.Commit();
                 }
                 catch (DbUpdateConcurrencyException)

@@ -20,15 +20,21 @@ const HomePageStaff = () => {
             address: ROUTERS.USER.INSURANCEPACKM,
         },
         {
+            title: "Yêu cầu hoàn trả",
+            count: 5,
+            color: "#E0F4FF",
+            address: ROUTERS.USER.YEUCAUHOANTRA,
+        },
+        {
             title: "Thông tin khách hàng",
             count: 7,
-            color: "#4CB9E7",
+            color: "#E0F4FF",
             address: ROUTERS.USER.INFOCUSTOMER,
         },
         {
             title: "Báo cáo tài chính",
             count: 12,
-            color: "#E0F4FF",
+            color: "#4CB9E7",
             address: ROUTERS.USER.FINANCIALREPORT,
         },
     ];

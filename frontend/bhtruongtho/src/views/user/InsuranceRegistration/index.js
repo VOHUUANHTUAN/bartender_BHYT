@@ -147,7 +147,7 @@ const InsuranceRegistration = () => {
                 .format("YYYY-MM-DD"),
             TinhTrang: "Chờ duyệt",
             TongGia: calculateTotalAmount(),
-            SoKyHanThanhToan: selectedPackage.paymentFrequency,
+            SoKyHanThanhToan: duration * paymentFrequency,
             benh: selectedBenhs,
         };
         console.log(data_DonDangKy);

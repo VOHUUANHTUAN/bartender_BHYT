@@ -121,7 +121,7 @@ const RegistrationDetail = () => {
                                 {" "}
                                 <TextField
                                     style={{ marginTop: "20px" }}
-                                    label="Thời gian bắt đầu"
+                                    label="Thời gian hết hạn"
                                     value={dayjs(
                                         registrationDetail.thoiGianHetHan
                                     ).format("DD/MM/YYYY")}

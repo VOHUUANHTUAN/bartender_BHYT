@@ -283,7 +283,7 @@ const Header = () => {
                                                             <ReceiptIcon fontSize="small" />
                                                         </ListItemIcon>
                                                         <Link to="/pay">
-                                                            Hóa đơn đăng ký
+                                                            Thanh toán hoá đơn
                                                         </Link>
                                                     </MenuItem>
                                                     <MenuItem
