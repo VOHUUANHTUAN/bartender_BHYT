@@ -7,7 +7,6 @@ export const ROUTERS = {
         REGISTER: "register",
         CHANGEPASSWORD: "changepassword",
         REQUESTINVOICE: "requestinvoice",
-        YEUCAUHOANTRA: "requestrefund",
         PROFILE: "profile",
         INSURANCEREGISTRATION: "InsuranceRegistration",
         DONDANGKY: "registrationForms",
@@ -17,6 +16,7 @@ export const ROUTERS = {
         INVOICEHISTORYDETAILPAGE: "invoiceHistory/detail",
 
         STAFF: "staff",
+        YEUCAUHOANTRA: "staff/requestrefund",
         DONDANGKY: "staff/registrationForms",
         TRANSACTION: "staff/transactions",
         ADDINSPACK: "staff/insurancePackManagement/add",

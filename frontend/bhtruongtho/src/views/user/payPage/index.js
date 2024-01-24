@@ -54,7 +54,14 @@ const Pay = () => {
     // Số thứ tự cho đơn yêu cầu
     let idCounter1 = 1; // Initialize a counter for Tab 1
     let idCounter2 = 1; // Initialize a counter for Tab 2
+    const formatCurrency = (amount) => {
+        const formattedAmount = new Intl.NumberFormat("vi-VN", {
+            style: "currency",
+            currency: "VND",
+        }).format(amount);
 
+        return formattedAmount;
+    };
     useEffect(() => {
         const fetchChuaThanhToan = async () => {
             try {
@@ -79,9 +86,9 @@ const Pay = () => {
                         hanKy: row.hanKy,
                         thoiGianHetHan: formatDateTime(row.thoiGianHetHan),
                         tinhTrangThanhToan: row.tinhTrangThanhToan,
-                        soTien: row.soTien,
-                        tienPhat: row.tienPhat,
-                        tongTien: row.tongTien,
+                        soTien: formatCurrency(row.soTien),
+                        tienPhat: formatCurrency(row.tienPhat),
+                        tongTien: formatCurrency(row.tongTien),
                         maHD: row.maHD,
                     }))
                 );
@@ -133,7 +140,6 @@ const Pay = () => {
                 );
             } catch (error) {
                 try {
-                    
                 } catch {
                     openSnackbar(
                         "Có lỗi xảy ra khi kết nối với máy chủ",
@@ -301,6 +307,8 @@ const Pay = () => {
                                     columns={columnsChuaThanhToan}
                                     pageSize={5}
                                     disableRowSelectionOnClick
+                                    hideFooterPagination
+                                    hideFooterSelectedRowCount
                                     getRowId={(row) => row.id}
                                 />
                             </Box>
@@ -315,6 +323,8 @@ const Pay = () => {
                                     columns={columnsDaThanhToan}
                                     pageSize={5}
                                     disableRowSelectionOnClick
+                                    hideFooterPagination
+                                    hideFooterSelectedRowCount
                                     getRowId={(row) => row.id}
                                 />
                             </Box>
