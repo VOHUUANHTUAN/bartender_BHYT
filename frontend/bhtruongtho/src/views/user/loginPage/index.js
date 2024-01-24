@@ -72,13 +72,15 @@ const Login = () => {
 
                 console.log("Login successful.");
 
-                openSnackbar("Đăng nhập thành công");
+                openSnackbar("Đăng nhập thành công", "success");
                 if (res.role === "Nhân viên") {
                     navigate("/staff");
-                    console.log(res.role);
                     return;
                 }
-
+                if (res.role === "Admin") {
+                    navigate("/admin");
+                    return;
+                }
                 navigate("/");
             }
         } catch (error) {

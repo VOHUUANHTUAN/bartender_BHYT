@@ -14,6 +14,7 @@ import {
     Input,
     FormLabel,
 } from "@mui/material";
+import dayjs from "dayjs";
 import { useSnackbar } from "../../../context/SnackbarContext";
 
 const DetailPage = () => {
@@ -107,6 +108,7 @@ const DetailPage = () => {
         fetchUserData();
     }, []); // Thêm snackbarOpen vào dependencies
     const updateStatus_accept = async () => {
+        console.log(donDangKy);
         console.log("donDangKy.tinhTrang:", donDangKy.tinhTrang);
 
         try {
@@ -114,7 +116,7 @@ const DetailPage = () => {
                 await putDonDangKyByID(
                     params.id,
                     {
-                        tinhTrang: "Đã kích hoạt",
+                        tinhTrang: "Chờ thanh toán",
                         maNV,
                         diaChi,
                         thoiGianDuyet,
@@ -122,9 +124,16 @@ const DetailPage = () => {
                         hoTen,
                         sdt,
                         liDoTuChoi: "",
+                        DS_HoaDonThanhToanDK: calculatePaymentDetails(
+                            donDangKy.thoiGianBD,
+                            donDangKy.thoiGianHetHan,
+                            donDangKy.tongGia,
+                            donDangKy.soKyHanThanhToan
+                        ),
                     },
                     localStorage.getItem("token")
                 );
+
                 openSnackbar("Cập nhật thành công!", "success");
             } else {
                 openSnackbar("Trạng thái này không thể kích hoạt", "warning");
@@ -136,6 +145,38 @@ const DetailPage = () => {
     };
     const toggleDenialReasonInput = () => {
         setShowDenialReasonInput(!showDenialReasonInput);
+    };
+
+    const calculatePaymentDetails = (
+        startDate,
+        endDate,
+        totalAmount,
+        totalPayments
+    ) => {
+        const startDate_ = dayjs(startDate);
+        const endDate_ = dayjs(endDate);
+
+        const totalMonths = endDate_.diff(startDate_, "month");
+        const paymentDetails = [];
+        const monthsInYear = 12;
+        for (let i = 1; i <= totalPayments; i++) {
+            const hanKy = `${i}/${totalPayments}`;
+            // Calculate the expiration time for each term
+            const expirationTime = dayjs(startDate)
+                .add(i * (totalMonths / totalPayments), "month")
+                .format();
+
+            const paymentDetail = {
+                SoTien: totalAmount / totalPayments,
+                HanKy: hanKy,
+                TinhTrangThanhToan: "Chưa thanh toán",
+                ThoiGianHetHan: expirationTime,
+            };
+
+            paymentDetails.push(paymentDetail);
+        }
+
+        return paymentDetails;
     };
 
     const updateStatus_denied = async () => {
@@ -178,7 +219,6 @@ const DetailPage = () => {
             openSnackbar("Có lỗi xảy ra khi cập nhật!", "error");
         }
     };
-
 
     return (
         <div className="container__body">
@@ -279,12 +319,9 @@ const DetailPage = () => {
                             >
                                 <Typography variant="body1">
                                     Thời gian đăng ký:{" "}
-                                    {new Date(
-                                        donDangKy.thoiGianDK
-                                    ).toLocaleTimeString()}{" "}
-                                    {new Date(
-                                        donDangKy.thoiGianDK
-                                    ).toLocaleDateString()}
+                                    {dayjs(donDangKy.thoiGianDK).format(
+                                        "DD/MM/YYYY HH:mm:ss"
+                                    )}
                                 </Typography>
                             </div>
 
@@ -299,13 +336,9 @@ const DetailPage = () => {
                                 <Typography variant="body1">
                                     Thời gian bắt đầu:{" "}
                                     {donDangKy.thoiGianBD
-                                        ? new Date(
-                                              donDangKy.thoiGianBD
-                                          ).toLocaleTimeString() +
-                                          " " +
-                                          new Date(
-                                              donDangKy.thoiGianBD
-                                          ).toLocaleDateString()
+                                        ? dayjs(donDangKy.thoiGianBD).format(
+                                              "DD/MM/YYYY"
+                                          )
                                         : "Chưa kích hoạt"}
                                 </Typography>
                             </div>
@@ -321,13 +354,9 @@ const DetailPage = () => {
                                 <Typography variant="body1">
                                     Thời gian hết hạn:{" "}
                                     {donDangKy.thoiGianHetHan
-                                        ? new Date(
+                                        ? dayjs(
                                               donDangKy.thoiGianHetHan
-                                          ).toLocaleTimeString() +
-                                          " " +
-                                          new Date(
-                                              donDangKy.thoiGianHetHan
-                                          ).toLocaleDateString()
+                                          ).format("DD/MM/YYYY")
                                         : "Chưa kích hoạt"}
                                 </Typography>
                             </div>

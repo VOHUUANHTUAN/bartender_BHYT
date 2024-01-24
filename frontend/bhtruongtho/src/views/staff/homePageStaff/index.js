@@ -9,32 +9,32 @@ const HomePageStaff = () => {
         {
             title: "Đơn đăng ký",
             count: 10,
-            color: "#FFB6C1",
+            color: "#DCF2F1",
             address: ROUTERS.USER.DONDANGKY,
-        },
-        {
-            title: "Lịch sử giao dịch",
-            count: 5,
-            color: "#98FB98",
-            address: ROUTERS.USER.TRANSACTION,
         },
 
         {
             title: "Quản lý gói bảo hiểm",
             count: 15,
-            color: "#FFD700",
+            color: "#6DB9EF",
             address: ROUTERS.USER.INSURANCEPACKM,
+        },
+        {
+            title: "Yêu cầu hoàn trả",
+            count: 5,
+            color: "#E0F4FF",
+            address: ROUTERS.USER.YEUCAUHOANTRA,
         },
         {
             title: "Thông tin khách hàng",
             count: 7,
-            color: "#AFEEEE",
+            color: "#E0F4FF",
             address: ROUTERS.USER.INFOCUSTOMER,
         },
         {
             title: "Báo cáo tài chính",
             count: 12,
-            color: "#FFA07A",
+            color: "#4CB9E7",
             address: ROUTERS.USER.FINANCIALREPORT,
         },
     ];
@@ -42,7 +42,7 @@ const HomePageStaff = () => {
     return (
         <Container maxWidth="md" sx={{ marginTop: 5 }}>
             <Typography variant="h3" align="center" gutterBottom>
-                Staff Home Page
+                Trang chủ nhân viên
             </Typography>
             <Grid container spacing={2}>
                 {data.map((item, index) => (
@@ -70,7 +70,7 @@ const HomePageStaff = () => {
                                 fullWidth
                                 sx={{ marginTop: 2 }}
                             >
-                                View Details
+                                Xem chi tiết
                             </Button>
                         </Paper>
                     </Grid>

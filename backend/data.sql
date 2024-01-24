@@ -12,13 +12,13 @@ go
 --select *from HoaDonThanhToanDK where MaHD='7'
 --select *from DonDangKy 
 --select *from khachhang
+insert into Users values('admin','123456',N'Admin',0)
 insert into Users values('khachhang','123456',N'Khách hàng',0)
 insert into Users values('anhtuan','123456',N'Khách hàng',0)
 insert into Users values('thuha','123456',N'Khách hàng',0)
 insert into Users values('quyetvang','123456',N'Khách hàng',0)
 insert into Users values('baochau','123456',N'Khách hàng',0)
 insert into Users values('minhtien','123456',N'Khách hàng',0)
-insert into Users values('admin','123',N'Nhân viên',0)
 insert into Users values('nhanvien','123',N'Nhân viên',0)
 
 INSERT INTO KhachHang (HoTen, NgaySinh, GioiTinh, CCCD, DiaChi, SDT, Email, SoDu, username)

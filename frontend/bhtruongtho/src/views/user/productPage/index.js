@@ -6,7 +6,9 @@ import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 
 const importAll = (r) => r.keys().map(r);
-const images = importAll(require.context('../../../images/goibaohiem', false, /\.(png|jpe?g|svg)$/));
+const images = importAll(
+    require.context("../../../images/goibaohiem", false, /\.(png|jpe?g|svg)$/)
+);
 
 const ProductPage = () => {
     const [goiBHs, setgoiBHs] = useState([]);
@@ -47,24 +49,38 @@ const ProductPage = () => {
                             {displayedGoiBHs.map((goiBH, goiBHKey) => (
                                 <li
                                     key={startIndex + goiBHKey}
-                                    className={`card__container ${goiBHKey === 0 ? "active" : ""
-                                        }`}
+                                    className={`card__container ${
+                                        goiBHKey === 0 ? "active" : ""
+                                    }`}
                                 >
                                     <div className="img-container">
-                                    <img src={images[(startIndex + goiBHKey) % images.length]} alt={`Gói Bảo Hiểm ${startIndex + goiBHKey + 1}`}></img>
-                                </div>
+                                        <img
+                                            src={
+                                                images[
+                                                    (startIndex + goiBHKey) %
+                                                        images.length
+                                                ]
+                                            }
+                                            alt={`Gói Bảo Hiểm ${
+                                                startIndex + goiBHKey + 1
+                                            }`}
+                                        ></img>
+                                    </div>
                                     <div className="card__content">
                                         <div className="card__title">
                                             <h3> {goiBH.tenGoiBH}</h3>
-                                        </div>                           
+                                        </div>
                                     </div>
 
                                     <div className="card__body">
                                         <p>{goiBH.motaGoiBH}</p>
                                         <p>Giá: {formatCurrency(goiBH.gia)}</p>
-                                        <p>Tỉ lệ hoàn tiền: {goiBH.tiLeHoanTien}%</p>
+                                        <p>
+                                            Tỉ lệ hoàn tiền:{" "}
+                                            {goiBH.tiLeHoanTien}%
+                                        </p>
                                     </div>
-                                                                       
+
                                     <div className="card__btn">
                                         <Link to={`detail/${goiBH.maGoiBH}`}>
                                             <p>Xem thêm</p>

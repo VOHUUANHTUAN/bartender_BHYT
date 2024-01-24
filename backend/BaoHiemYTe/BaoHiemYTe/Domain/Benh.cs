@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-
 namespace BaoHiemYTe.Domain
 {
     public class Benh

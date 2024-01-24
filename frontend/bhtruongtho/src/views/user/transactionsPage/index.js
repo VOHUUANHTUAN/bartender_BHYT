@@ -32,16 +32,23 @@ const BillList = () => {
         };
         fetchBillList();
     }, []);
+    const formatCurrency = (amount) => {
+        const formattedAmount = new Intl.NumberFormat("vi-VN", {
+            style: "currency",
+            currency: "VND",
+        }).format(amount);
 
+        return formattedAmount;
+    };
     const rows = billList.map((row, index) => {
         const isHoaDonThanhToan = row.loaiHoaDon === "Thanh toán";
         const isHoaDonHoanTra = row.loaiHoaDon === "Hoàn trả";
 
         const formattedSoTien = isHoaDonThanhToan
-            ? `- ${row.soTien.toLocaleString()}`
+            ? `- ${formatCurrency(row.soTien)}`
             : isHoaDonHoanTra
-            ? `+ ${row.soTien.toLocaleString()}`
-            : row.soTien.toLocaleString();
+            ? `+ ${formatCurrency(row.soTien)}`
+            : formatCurrency(row.soTien);
 
         const textColor = isHoaDonThanhToan
             ? "red"
@@ -54,7 +61,7 @@ const BillList = () => {
             maHD: row.maHD,
             soTien: row.soTien,
             thoiGianThanhToan: dayjs(row.thoiGianThanhToan).format(
-                "HH:mm:ss DD/MM/YYYY"
+                "DD/MM/YYYY HH:mm:ss"
             ),
             maDon: row.maDon,
             loaiHoaDon: row.loaiHoaDon,
@@ -82,7 +89,7 @@ const BillList = () => {
             field: "thoiGianThanhToan",
             headerName: "Thời Gian Thanh Toán",
             minWidth: 200,
-            flex: 2,
+            flex: 3,
         },
         {
             field: "loaiHoaDon",
@@ -120,12 +127,12 @@ const BillList = () => {
         } else if (loaiHoaDon === "Hoàn trả") {
             console.log("chuyển đến chi tiết hoá đơn Hoàn trả ", maHD);
             // Thực hiện logic chuyển hướng cho chi tiết hoàn trả
-            // navigate(`/requestrefund/detail/${maHD}`);
+            navigate(`/requestrefund/detail/${maHD}`);
         }
     };
 
     return (
-        <Container component="main" maxWidth="xl">
+        <Container component="main" maxWidth="md">
             <Paper
                 elevation={3}
                 style={{ padding: "20px", margin: "30px 0px " }}
