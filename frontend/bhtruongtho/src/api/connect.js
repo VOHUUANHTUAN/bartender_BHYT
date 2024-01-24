@@ -32,6 +32,7 @@ const END_POINT = {
     GETSOTIENKHAM: "GetSoTienKham",
     RECHARGE: "KhachHang/NapTien",
     HOADONNAPTIEN: "NhanVien/GetHoaDonNapTien",
+    LICHSUTHANHTOAN: "HoaDonThanhToanDK/LichSuThanhToan",
 };
 
 export const getGoiBHAPI = () => {
@@ -177,6 +178,29 @@ export const getNhanVienByID = (ID, token) => {
             Authorization: `Bearer ${token}`,
         },
     });
+};
+// Import axiosClient và END_POINT từ nơi khác trong code của bạn
+
+export const postNhanVien = (data, token) => {
+    return axiosClient.post(
+        `${END_POINT.NHANVIEN}`,
+        data,
+        {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        }
+    );
+};
+export const getAllNhanVien = (token) => {
+    return axiosClient.get(
+        `${END_POINT.NHANVIEN}`,
+        {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        }
+    );
 };
 
 export const putDonDangKyByID = async (ID, Data, token) => {
@@ -395,6 +419,17 @@ export const napTien = (token, maKH, soTien) => {
         {
             headers: {
                 Authorization: `Bearer ${token}`,
+            },
+        }
+    );
+};
+
+export const getLichSuThanhToan = (maKH, token) => {
+    return axiosClient.get(
+        `${END_POINT.LICHSUTHANHTOAN}/${maKH}`,
+        {
+            headers: {
+                Authorization: `Bearer ${ token }`,
             },
         }
     );
