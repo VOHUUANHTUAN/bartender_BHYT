@@ -25,8 +25,45 @@ const AddEmployeeForm = () => {
         }));
     };
 
+    const validateForm = () => {
+        const { hoTen, sdt, email, password } = employeeData;
+
+        // Kiểm tra tên không được trống
+        const nameRegex = /^[a-zA-Z]+$/;
+        if (!nameRegex.test(hoTen)) {
+            openSnackbar("Định dạng họ tên không đúng", "warning");
+            return false;
+        }
+
+        // Kiểm tra định dạng số điện thoại
+        const phoneRegex = /^[0-9]{10}$/;
+        if (!phoneRegex.test(sdt)) {
+            openSnackbar("Định dạng số điện thoại không đúng", "warning");
+            return false;
+        }
+
+        // Kiểm tra định dạng email
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            openSnackbar("Định dạng email không đúng", "warning");
+            return false;
+        }
+
+        // Kiểm tra định dạng mật khẩu
+        if (!isValidPassword(password)) {
+            openSnackbar("Mật khẩu không đúng định dạng. Yêu cầu ít nhất 8 ký tự đặc biệt, có ít nhất một ký tự hoa, một ký tự thường và một số.", "warning");
+            return false;
+        }
+
+        return true;
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (!validateForm()) {
+            return;
+        }
 
         try {
             const response = await postNhanVien(
@@ -40,8 +77,22 @@ const AddEmployeeForm = () => {
                 openSnackbar("Đăng kí nhân viên không thành công", "error");
             }
         } catch (error) {
-            openSnackbar("Lỗi kết nối với server", "error");
+            try {
+                openSnackbar(error.response.data, "warning");
+            } catch {
+                openSnackbar(
+                    "Có lỗi xảy ra khi kết nối với máy chủ",
+                    "error"
+                );
+            }
         }
+    };
+
+    const isValidPassword = (newPassword) => {
+        // Add your password validation logic here
+        // Example: at least 8 characters, one uppercase, one lowercase, one number
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+        return passwordRegex.test(newPassword);
     };
 
     return (

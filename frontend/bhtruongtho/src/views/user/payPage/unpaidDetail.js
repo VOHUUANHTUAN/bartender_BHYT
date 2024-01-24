@@ -26,7 +26,6 @@ const UnPaidDetail = () => {
     const [showDetails, setShowDetails] = useState(false);
     const [soDu, setSoDu] = useState(null);
     const { openSnackbar } = useSnackbar();
-    const [snackbarMessage, setSnackbarMessage] = useState("");
     const [showReason, setShowReason] = useState(false);
 
     function formatDateTime(dateTimeString) {
