@@ -32,16 +32,23 @@ const BillList = () => {
         };
         fetchBillList();
     }, []);
+    const formatCurrency = (amount) => {
+        const formattedAmount = new Intl.NumberFormat("vi-VN", {
+            style: "currency",
+            currency: "VND",
+        }).format(amount);
 
+        return formattedAmount;
+    };
     const rows = billList.map((row, index) => {
         const isHoaDonThanhToan = row.loaiHoaDon === "Thanh toán";
         const isHoaDonHoanTra = row.loaiHoaDon === "Hoàn trả";
 
         const formattedSoTien = isHoaDonThanhToan
-            ? `- ${row.soTien.toLocaleString()}`
+            ? `- ${formatCurrency(row.soTien)}`
             : isHoaDonHoanTra
-            ? `+ ${row.soTien.toLocaleString()}`
-            : row.soTien.toLocaleString();
+            ? `+ ${formatCurrency(row.soTien)}`
+            : formatCurrency(row.soTien);
 
         const textColor = isHoaDonThanhToan
             ? "red"

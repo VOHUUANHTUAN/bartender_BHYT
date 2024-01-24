@@ -11,6 +11,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import InputAdornment from "@mui/material/InputAdornment";
 import { getHoaDonDKDaThanhToanDetail } from "../../../api/connect";
 import { useNavigate } from "react-router-dom";
+import dayjs from "dayjs";
 const PaidDetail = () => {
     const params = useParams();
     const [detail, setDetail] = useState(null);
@@ -28,6 +29,14 @@ const PaidDetail = () => {
         const formattedTime = `${hours}:${minutes}`;
         return `${formattedDate} ${formattedTime}`;
     }
+    const formatCurrency = (amount) => {
+        const formattedAmount = new Intl.NumberFormat("vi-VN", {
+            style: "currency",
+            currency: "VND",
+        }).format(amount);
+
+        return formattedAmount;
+    };
     useEffect(() => {
         const fetchDetail = async () => {
             try {
@@ -110,7 +119,9 @@ const PaidDetail = () => {
                                     <Grid item xs={4}>
                                         <TextField
                                             label="Giá gói"
-                                            value={`${detail.gia} VND`}
+                                            value={`${formatCurrency(
+                                                detail.gia
+                                            )}`}
                                             fullWidth
                                             InputProps={{
                                                 readOnly: true,
@@ -164,9 +175,9 @@ const PaidDetail = () => {
                                     <Grid item xs={4}>
                                         <TextField
                                             label="Thời gian bắt đầu"
-                                            value={formatDateTime(
+                                            value={dayjs(
                                                 detail.thoiGianBD
-                                            )}
+                                            ).format("DD/MM/YYYY")}
                                             fullWidth
                                             InputProps={{
                                                 readOnly: true,
@@ -177,9 +188,9 @@ const PaidDetail = () => {
                                     <Grid item xs={4}>
                                         <TextField
                                             label="Thời gian hết hạn"
-                                            value={formatDateTime(
+                                            value={dayjs(
                                                 detail.thoiGianHetHan
-                                            )}
+                                            ).format("DD/MM/YYYY")}
                                             fullWidth
                                             InputProps={{
                                                 readOnly: true,
@@ -203,7 +214,9 @@ const PaidDetail = () => {
                                     <Grid item xs={4}>
                                         <TextField
                                             label="Tổng giá đơn"
-                                            value={detail.tongGia}
+                                            value={formatCurrency(
+                                                detail.tongGia
+                                            )}
                                             fullWidth
                                             InputProps={{
                                                 readOnly: true,
@@ -261,7 +274,7 @@ const PaidDetail = () => {
                         />
                         <TextField
                             label="Số tiền thanh toán"
-                            value={`${detail.soTien} VND`}
+                            value={`${formatCurrency(detail.soTien)}`}
                             fullWidth
                             InputProps={{
                                 readOnly: true,
@@ -271,7 +284,7 @@ const PaidDetail = () => {
                         {/* Thêm điều kiện để hiển thị "Lí do phạt" khi bấm vào "Tiền phạt" */}
                         <TextField
                             label="Tiền phạt"
-                            value={`${detail.tienPhat || 0} VND`}
+                            value={`${formatCurrency(detail.tienPhat || 0)} `}
                             fullWidth
                             InputProps={{
                                 readOnly: true,
@@ -325,7 +338,7 @@ const PaidDetail = () => {
                         {/* Điều kiện màu xanh lá cho "Tổng tiền" */}
                         <TextField
                             label="Tổng tiền"
-                            value={`${detail.tongTien || 0} VND`}
+                            value={`${formatCurrency(detail.tongTien || 0)} `}
                             fullWidth
                             InputProps={{
                                 readOnly: true,

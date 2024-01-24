@@ -1,4 +1,6 @@
-﻿namespace BaoHiemYTe.DTOs
+﻿using BaoHiemYTe.Domain;
+
+namespace BaoHiemYTe.DTOs
 {
     public class DonDangKyUpdateDto
     {
@@ -14,6 +16,7 @@
         public string Email { get; set; }
         public string HoTen { get; set; }
         public string SDT { get; set; }
+        public List<HoaDonThanhToanDKDTO>? DS_HoaDonThanhToanDK { get; set; }  // Danh sách id bệnh
 
         // Add more properties as needed for updating NhanVien
     }

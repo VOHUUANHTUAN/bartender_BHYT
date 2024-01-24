@@ -17,6 +17,7 @@ import {
     getKhachHangInformation,
     postUpdateHoaDon,
 } from "../../../api/connect";
+import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 const UnPaidDetail = () => {
     const params = useParams();
@@ -55,7 +56,14 @@ const UnPaidDetail = () => {
 
         fetchDetail();
     }, [params.id]);
+    const formatCurrency = (amount) => {
+        const formattedAmount = new Intl.NumberFormat("vi-VN", {
+            style: "currency",
+            currency: "VND",
+        }).format(amount);
 
+        return formattedAmount;
+    };
     useEffect(() => {
         const fetchSoDu = async () => {
             try {
@@ -63,8 +71,6 @@ const UnPaidDetail = () => {
                     localStorage.getItem("token")
                 );
                 setSoDu(infoKH.soDu);
-              
-               
             } catch (error) {
                 setError(error);
                 openSnackbar("Lấy thông tin thấy bại", "error");
@@ -104,7 +110,10 @@ const UnPaidDetail = () => {
                 navigate("/pay");
             }
         } catch (error) {
-            openSnackbar(error.response?.data || "Error during payment", "error");
+            openSnackbar(
+                error.response?.data || "Error during payment",
+                "error"
+            );
             setError(error);
         }
     };
@@ -132,7 +141,7 @@ const UnPaidDetail = () => {
                                     fontWeight: "bold",
                                 }}
                             >
-                                Số dư: {soDu} VNĐ
+                                Số dư: {formatCurrency(soDu)}
                             </Typography>
                         )}
                     </Grid>
@@ -184,7 +193,9 @@ const UnPaidDetail = () => {
                                     <Grid item xs={4}>
                                         <TextField
                                             label="Giá gói"
-                                            value={`${detail.gia} VND`}
+                                            value={`${formatCurrency(
+                                                detail.gia
+                                            )} `}
                                             fullWidth
                                             InputProps={{
                                                 readOnly: true,
@@ -238,9 +249,9 @@ const UnPaidDetail = () => {
                                     <Grid item xs={4}>
                                         <TextField
                                             label="Thời gian bắt đầu"
-                                            value={formatDateTime(
+                                            value={dayjs(
                                                 detail.thoiGianBD
-                                            )}
+                                            ).format("DD/MM/YYYY")}
                                             fullWidth
                                             InputProps={{
                                                 readOnly: true,
@@ -251,9 +262,9 @@ const UnPaidDetail = () => {
                                     <Grid item xs={4}>
                                         <TextField
                                             label="Thời gian hết hạn"
-                                            value={formatDateTime(
+                                            value={dayjs(
                                                 detail.thoiGianHetHan
-                                            )}
+                                            ).format("DD/MM/YYYY")}
                                             fullWidth
                                             InputProps={{
                                                 readOnly: true,
@@ -277,7 +288,9 @@ const UnPaidDetail = () => {
                                     <Grid item xs={4}>
                                         <TextField
                                             label="Tổng giá đơn"
-                                            value={`${detail.tongGia} VND`}
+                                            value={`${formatCurrency(
+                                                detail.tongGia
+                                            )}`}
                                             fullWidth
                                             InputProps={{
                                                 readOnly: true,
@@ -337,7 +350,7 @@ const UnPaidDetail = () => {
                         />
                         <TextField
                             label="Số tiền thanh toán"
-                            value={`${detail.soTien} VND`}
+                            value={`${formatCurrency(detail.soTien)}`}
                             fullWidth
                             InputProps={{
                                 readOnly: true,
@@ -347,7 +360,7 @@ const UnPaidDetail = () => {
                         {/* Thêm điều kiện để hiển thị "Lí do phạt" khi bấm vào "Tiền phạt" */}
                         <TextField
                             label="Tiền phạt"
-                            value={`${detail.tienPhat || 0} VND`}
+                            value={`${formatCurrency(detail.tienPhat || 0)}`}
                             fullWidth
                             InputProps={{
                                 readOnly: true,
@@ -401,7 +414,7 @@ const UnPaidDetail = () => {
                         {/* Điều kiện màu xanh lá cho "Tổng tiền" */}
                         <TextField
                             label="Tổng tiền"
-                            value={`${detail.tongTien || 0} VND`}
+                            value={`${formatCurrency(detail.tongTien || 0)}`}
                             fullWidth
                             InputProps={{
                                 readOnly: true,
