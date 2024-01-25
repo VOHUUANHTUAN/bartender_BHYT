@@ -58,6 +58,14 @@ a {
         flex: 0 0 50%;
         max-width: 50%;   
     }
+    .col-xl-9 {
+        flex: 0 0 75%;
+        max-width: 75%;  
+    }
+    .col-xl-12{
+        flex: 0 0 100%;
+        max-width: 100%;  
+    }
 }
 @include Responsive($MEDIUM-DEVICE){
     .col-lg-3 {
