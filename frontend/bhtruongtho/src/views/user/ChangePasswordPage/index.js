@@ -1,9 +1,8 @@
+import { Button, Container, Paper, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { changePasswordAPI } from "../../../api/connect";
-import { useUser } from "../../../context/UserContext";
-import { Container, Paper, TextField, Button, Typography } from "@mui/material";
 import { useSnackbar } from "../../../context/SnackbarContext";
-import MuiAlert from "@mui/material/Alert";
+import { useUser } from "../../../context/UserContext";
 
 const ChangePasswordForm = () => {
     const { user } = useUser();
@@ -28,14 +27,16 @@ const ChangePasswordForm = () => {
         e.preventDefault();
 
         if (!isValidPassword(newPassword)) {
-            openSnackbar("Mật khẩu không đúng định dạng. Yêu cầu ít nhất 8 ký tự đặc biệt, có ít nhất một ký tự hoa, một ký tự thường và một số.", "warning");
+            openSnackbar(
+                "Mật khẩu không đúng định dạng. Yêu cầu ít nhất 8 ký tự đặc biệt, có ít nhất một ký tự hoa, một ký tự thường và một số.",
+                "warning"
+            );
             return;
         }
         if (isButtonDisabled) {
             openSnackbar("Mật khẩu không trùng khớp", "warning");
             return;
         }
-
 
         setLoading(true);
 

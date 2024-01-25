@@ -14,11 +14,11 @@ export const ROUTERS = {
         PAY: "pay",
         INVOICEHISTORYPAGE: "invoiceHistory",
         INVOICEHISTORYDETAILPAGE: "invoiceHistory/detail",
+        TRANSACTION: "transactions",
 
         STAFF: "staff",
         YEUCAUHOANTRA: "staff/requestrefund",
         DONDANGKY: "staff/registrationForms",
-        TRANSACTION: "staff/transactions",
         ADDINSPACK: "staff/insurancePackManagement/add",
         INSURANCEPACKM: "staff/insurancePackManagement",
         INFOCUSTOMER: "staff/infoCustomer",

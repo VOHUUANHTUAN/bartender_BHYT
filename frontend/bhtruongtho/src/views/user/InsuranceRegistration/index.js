@@ -1,36 +1,34 @@
-import React, { useState, useEffect } from "react";
-import { useParams, Link, Form } from "react-router-dom";
 import {
-    Container,
-    Paper,
-    Typography,
-    TextField,
     Button,
+    Container,
     FormControl,
+    Grid,
     InputLabel,
     MenuItem,
+    Paper,
     Select,
-    Grid,
-    TableContainer,
     Table,
-    TableHead,
     TableBody,
-    TableRow,
     TableCell,
-    Checkbox,
-    Snackbar,
+    TableContainer,
+    TableHead,
+    TableRow,
+    TextField,
+    Typography,
 } from "@mui/material";
-import { ROUTERS } from "../../../utils/router";
 import dayjs from "dayjs";
+import React, { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import { ROUTERS } from "../../../utils/router";
 // Import only the necessary API function
-import {
-    getGoiBHByMaGBH,
-    getBenhByMaGBH,
-    KH_post_DonDangKy,
-} from "../../../api/connect";
+import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { LocalizationProvider } from "@mui/x-date-pickers";
+import {
+    KH_post_DonDangKy,
+    getBenhByMaGBH,
+    getGoiBHByMaGBH,
+} from "../../../api/connect";
 import { useSnackbar } from "../../../context/SnackbarContext";
 
 const InsuranceRegistration = () => {

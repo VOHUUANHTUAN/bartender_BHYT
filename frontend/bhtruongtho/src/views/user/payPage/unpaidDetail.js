@@ -1,33 +1,29 @@
-import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import TextField from "@mui/material/TextField";
-import Container from "@mui/material/Container";
-import Paper from "@mui/material/Paper";
-import Typography from "@mui/material/Typography";
-import Grid from "@mui/material/Grid";
-import Button from "@mui/material/Button";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import PaymentIcon from "@mui/icons-material/Payment"; // Import PaymentIcon from Material-UI
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import PaymentIcon from "@mui/icons-material/Payment"; // Import PaymentIcon from Material-UI
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import Grid from "@mui/material/Grid";
 import InputAdornment from "@mui/material/InputAdornment";
-import InfoIcon from "@mui/icons-material/Info"; // Import InfoIcon
-import { useSnackbar } from "../../../context/SnackbarContext";
+import Paper from "@mui/material/Paper";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import dayjs from "dayjs";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import {
     getHoaDonDKDaThanhToanDetail,
     getKhachHangInformation,
     postUpdateHoaDon,
 } from "../../../api/connect";
-import dayjs from "dayjs";
-import { useNavigate } from "react-router-dom";
+import { useSnackbar } from "../../../context/SnackbarContext";
 const UnPaidDetail = () => {
     const params = useParams();
     const [detail, setDetail] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
     const [showDetails, setShowDetails] = useState(false);
     const [soDu, setSoDu] = useState(null);
     const { openSnackbar } = useSnackbar();
-    const [snackbarMessage, setSnackbarMessage] = useState("");
     const [showReason, setShowReason] = useState(false);
 
     function formatDateTime(dateTimeString) {
@@ -48,7 +44,6 @@ const UnPaidDetail = () => {
                 setDetail(HD);
             } catch (error) {
                 openSnackbar("Lấy thông tin thấy bại", "error");
-                setError(error);
             } finally {
                 setLoading(false);
             }
@@ -72,7 +67,6 @@ const UnPaidDetail = () => {
                 );
                 setSoDu(infoKH.soDu);
             } catch (error) {
-                setError(error);
                 openSnackbar("Lấy thông tin thấy bại", "error");
             } finally {
                 setLoading(false);
@@ -102,7 +96,7 @@ const UnPaidDetail = () => {
             );
 
             if (userConfirmed) {
-                const response = await postUpdateHoaDon(
+                await postUpdateHoaDon(
                     localStorage.getItem("token"),
                     detail.maHD
                 );
@@ -114,7 +108,6 @@ const UnPaidDetail = () => {
                 error.response?.data || "Error during payment",
                 "error"
             );
-            setError(error);
         }
     };
 

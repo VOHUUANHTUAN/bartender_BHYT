@@ -32,6 +32,7 @@ const END_POINT = {
     GETSOTIENKHAM: "GetSoTienKham",
     RECHARGE: "KhachHang/NapTien",
     HOADONNAPTIEN: "NhanVien/GetHoaDonNapTien",
+    THONGTINTRANGCHUSTAFF: "NhanVien/ThongTinTongHop",
     LICHSUTHANHTOAN: "HoaDonThanhToanDK/LichSuThanhToan",
 };
 
@@ -59,6 +60,14 @@ export const KhachHang_DangKyTaiKhoan = (khachHangData) => {
 //Hàm lấy thông tin đăng nhập của user
 export const getUserInfoByToken = (token) => {
     return axiosClient.get(`${END_POINT.info}`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+};
+//Hàm lấy thông tin đăng nhập của user
+export const getStaffHompageInfo = (token) => {
+    return axiosClient.get(`${END_POINT.THONGTINTRANGCHUSTAFF}`, {
         headers: {
             Authorization: `Bearer ${token}`,
         },
