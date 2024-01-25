@@ -102,31 +102,44 @@ const ListYeuCauHoanTra = () => {
     ];
 
     return (
-        <Box sx={{ padding: "100px", height: 800, width: "100%" }}>
-            <DataGrid
-                rows={yeuCauHoanTraList}
-                columns={columns}
-                pageSize={5}
-                onRowSelectionModelChange={(newRowSelectionModel) => {
-                    setSelectedId(newRowSelectionModel);
-                }}
-                rowSelectionModel={selectedId}
-                showFooter={false}
-                hideFooterSelectedRowCount
-                hideFooterPagination
-            />
-            <div>
-                <Button
-                    component={Link}
-                    to={`detail/${selectedId}`}
-                    variant="contained"
-                    color="primary"
-                    style={{ marginTop: "10px" }}
-                >
-                    Xem
-                </Button>
-            </div>
-        </Box>
+        <>
+            {user && user.role == "Nhân viên" ? (
+                <>
+                    <Box sx={{ padding: "100px", height: 800, width: "100%" }}>
+                        <DataGrid
+                            rows={yeuCauHoanTraList}
+                            columns={columns}
+                            pageSize={5}
+                            onRowSelectionModelChange={(
+                                newRowSelectionModel
+                            ) => {
+                                setSelectedId(newRowSelectionModel);
+                            }}
+                            rowSelectionModel={selectedId}
+                            showFooter={false}
+                            hideFooterSelectedRowCount
+                            hideFooterPagination
+                        />
+                        <div>
+                            <Button
+                                component={Link}
+                                to={`detail/${selectedId}`}
+                                variant="contained"
+                                color="primary"
+                                style={{ marginTop: "10px" }}
+                            >
+                                Xem
+                            </Button>
+                        </div>
+                    </Box>{" "}
+                </>
+            ) : (
+                <>
+                    <h2>404 - Page Not Found</h2>
+                    <p>The requested page does not exist.</p>
+                </>
+            )}
+        </>
     );
 };
 

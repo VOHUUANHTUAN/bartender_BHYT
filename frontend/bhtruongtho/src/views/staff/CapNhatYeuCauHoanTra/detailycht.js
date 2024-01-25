@@ -28,6 +28,7 @@ import { useSnackbar } from "../../../context/SnackbarContext";
 const DetailPage = () => {
     const [yeuCauHoanTra, setYeuCauHoanTra] = useState({});
     const { openSnackbar } = useSnackbar();
+    const { user } = useUser();
 
     const [maNV, setMaNV] = useState("");
     const [nhanVien, setNhanVien] = useState("");
@@ -147,76 +148,104 @@ const DetailPage = () => {
     };
 
     return (
-        <div className="container__body">
-            <Grid container spacing={3}>
-                <Grid item xs={12}>
-                    <Paper style={{ margin: "20px" }}>
-                        <TableContainer
-                            component={Paper}
-                            style={{
-                                borderCollapse: "collapse",
-                                border: "1px solid #ddd",
-                                padding: "20px",
-                            }}
-                        >
-                            <Typography
-                                variant="h5"
-                                gutterBottom
-                                style={{ color: "rgb(25, 118, 210)" }}
-                            >
-                                Yêu cầu hoàn trả{" "}
-                            </Typography>
-                            <Table>
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell>
-                                            <strong>Thuộc Tính</strong>
-                                        </TableCell>
-                                        <TableCell>Giá Trị</TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {Object.entries(yeuCauHoanTra).map(
-                                        ([key, value]) => (
-                                            <TableRow key={key}>
-                                                <TableCell>
-                                                    {allrows[key]}
-                                                </TableCell>
-                                                <TableCell>
-                                                    {key === "thoiGianDuyet" ||
-                                                    key === "thoiGianTao"
-                                                        ? formatDate(value)
-                                                        : key ===
-                                                              "soTienHoanTra" ||
-                                                          key === "soTienDaKham"
-                                                        ? formatCurrency(value)
-                                                        : value}
-                                                </TableCell>
-                                            </TableRow>
-                                        )
-                                    )}
-
-                                    <TableRow>
-                                        <TableCell
-                                            style={{ textAlign: "left" }}
+        <>
+            {user && user.role == "Nhân viên" ? (
+                <>
+                    <div className="container__body">
+                        <Grid container spacing={3}>
+                            <Grid item xs={12}>
+                                <Paper style={{ margin: "20px" }}>
+                                    <TableContainer
+                                        component={Paper}
+                                        style={{
+                                            borderCollapse: "collapse",
+                                            border: "1px solid #ddd",
+                                            padding: "20px",
+                                        }}
+                                    >
+                                        <Typography
+                                            variant="h5"
+                                            gutterBottom
+                                            style={{
+                                                color: "rgb(25, 118, 210)",
+                                            }}
                                         >
-                                            <Button
-                                                variant="contained"
-                                                color="primary"
-                                                onClick={updateStatus}
-                                            >
-                                                Duyệt
-                                            </Button>
-                                        </TableCell>
-                                        <TableCell></TableCell>
-                                    </TableRow>
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                    </Paper>
-                </Grid>
-            </Grid>
-        </div>
+                                            Yêu cầu hoàn trả{" "}
+                                        </Typography>
+                                        <Table>
+                                            <TableHead>
+                                                <TableRow>
+                                                    <TableCell>
+                                                        <strong>
+                                                            Thuộc Tính
+                                                        </strong>
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        Giá Trị
+                                                    </TableCell>
+                                                </TableRow>
+                                            </TableHead>
+                                            <TableBody>
+                                                {Object.entries(
+                                                    yeuCauHoanTra
+                                                ).map(([key, value]) => (
+                                                    <TableRow key={key}>
+                                                        <TableCell>
+                                                            {allrows[key]}
+                                                        </TableCell>
+                                                        <TableCell>
+                                                            {key ===
+                                                                "thoiGianDuyet" ||
+                                                            key ===
+                                                                "thoiGianTao"
+                                                                ? formatDate(
+                                                                      value
+                                                                  )
+                                                                : key ===
+                                                                      "soTienHoanTra" ||
+                                                                  key ===
+                                                                      "soTienDaKham"
+                                                                ? formatCurrency(
+                                                                      value
+                                                                  )
+                                                                : value}
+                                                        </TableCell>
+                                                    </TableRow>
+                                                ))}
+
+                                                <TableRow>
+                                                    <TableCell
+                                                        style={{
+                                                            textAlign: "left",
+                                                        }}
+                                                    >
+                                                        <Button
+                                                            variant="contained"
+                                                            color="primary"
+                                                            onClick={
+                                                                updateStatus
+                                                            }
+                                                        >
+                                                            Duyệt
+                                                        </Button>
+                                                    </TableCell>
+                                                    <TableCell></TableCell>
+                                                </TableRow>
+                                            </TableBody>
+                                        </Table>
+                                    </TableContainer>
+                                </Paper>
+                            </Grid>
+                        </Grid>
+                    </div>{" "}
+                </>
+            ) : (
+                <>
+                    <h2>404 - Page Not Found</h2>
+                    <p>The requested page does not exist.</p>
+                </>
+            )}
+        </>
     );
 };
 
