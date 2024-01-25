@@ -5,7 +5,7 @@ import {
     getAllYeuCauHoanTraBYID,
     getUserInfoByToken,
 } from "../../../api/connect";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useUser } from "../../../context/UserContext";
 import {
     Grid,
@@ -24,17 +24,22 @@ import {
 import MuiAlert from "@mui/material/Alert";
 import dayjs from "dayjs";
 import { useSnackbar } from "../../../context/SnackbarContext";
+import { ROUTERS } from "../../../utils/router";
 
 const DetailPage = () => {
+    const [loading, setLoading] = useState(true);
     const [yeuCauHoanTra, setYeuCauHoanTra] = useState({});
+    const [soTienHoanTra, setSoTienHoanTra] = useState("");
     const { openSnackbar } = useSnackbar();
 
+    const [selectedStatus, setSelectedStatus] = useState("");
     const [maNV, setMaNV] = useState("");
     const [nhanVien, setNhanVien] = useState("");
     const [thoiGianDuyet, setThoiGianDuyet] = useState("");
     const today = new Date();
 
     const params = useParams();
+    const { user } = useUser();
 
     const [currentuser, setCurrentuser] = useState({});
     const formatDate = (date) =>
@@ -57,6 +62,7 @@ const DetailPage = () => {
             } catch (error) {
                 console.error("Error fetching Nhan Vien data:", error);
             } finally {
+                setLoading(false);
             }
         };
 
@@ -79,6 +85,7 @@ const DetailPage = () => {
             } catch (error) {
                 console.error("Error fetching Nhan Vien data:", error);
             } finally {
+                setLoading(false);
             }
         };
 
@@ -124,6 +131,7 @@ const DetailPage = () => {
             } catch (error) {
                 console.error("Error fetching Yeu Cau Hoan Tra data:", error);
             } finally {
+                setLoading(false);
             }
         };
 
@@ -198,17 +206,30 @@ const DetailPage = () => {
 
                                     <TableRow>
                                         <TableCell
-                                            style={{ textAlign: "left" }}
+                                            style={{
+                                                textAlign: "left",
+                                                display: "flex",
+                                                justifyContent: "space-between",
+                                            }}
                                         >
                                             <Button
-                                                variant="contained"
-                                                color="primary"
+                                                variant="outlined"
+                                                component={Link}
+                                                to={`../${ROUTERS.USER.YEUCAUHOANTRA}`}
+                                            >
+                                                Quay lại
+                                            </Button>
+                                        </TableCell>
+                                        <TableCell
+                                            style={{ textAlign: "right" }}
+                                        >
+                                            <Button
+                                                variant="outlined"
                                                 onClick={updateStatus}
                                             >
                                                 Duyệt
                                             </Button>
                                         </TableCell>
-                                        <TableCell></TableCell>
                                     </TableRow>
                                 </TableBody>
                             </Table>

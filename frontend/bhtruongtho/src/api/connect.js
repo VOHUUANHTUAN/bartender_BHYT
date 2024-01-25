@@ -99,8 +99,12 @@ export const updateKhachHangInformation = (token, khachHangData) => {
     });
 };
 
-export const getGoiBHByMaGBH = (MaGBH) => {
-    return axiosClient.get(`${END_POINT.GOIBAOHIEM}/${MaGBH}`);
+export const getGoiBHByMaGBH = (MaGBH, token) => {
+    return axiosClient.get(`${END_POINT.GOIBAOHIEM}/${MaGBH}`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
 };
 
 export const getBenhByMaGBH = (MaGBH) => {

@@ -350,7 +350,7 @@ const RequestInvoice = () => {
                                     Error={invoiceCodeError}
                                     helperText={
                                         invoiceCodeError &&
-                                        "Mã hóa đơn bắt đầu bằng chữ cái hoặc số và có ít nhất 6 kí tự"
+                                        "Mã hóa đơn không chứa khoảng trắng và các kí tự đặc biệt trừ _@#&-"
                                     }
                                 />
                                 <FormControl style={{ width: "100%" }}>

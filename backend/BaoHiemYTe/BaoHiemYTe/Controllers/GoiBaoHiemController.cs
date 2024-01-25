@@ -52,7 +52,19 @@ namespace BaoHiemYTe.Controllers
         [Route("{id}")]
         public IActionResult GetGoiBHById(int id)
         {
-            var goiBH = userDbContext.GoiBaoHiem.FirstOrDefault(x => x.MaGoiBH == id && x.TinhTrang == "Đang cung cấp");
+            var goiBH = userDbContext.GoiBaoHiem.FirstOrDefault(x => x.MaGoiBH == id);
+            
+
+            var username = _tokenService.GetUsernameFromToken(HttpContext.Request);
+            if (string.IsNullOrEmpty(username))
+            {
+                goiBH = userDbContext.GoiBaoHiem.FirstOrDefault(x => x.MaGoiBH == id && x.TinhTrang == "Đang cung cấp");
+            }
+            var role = _tokenService.GetRoleFromToken(HttpContext.Request);
+            if (role != "Nhân viên")
+            {
+                goiBH = userDbContext.GoiBaoHiem.FirstOrDefault(x => x.MaGoiBH == id && x.TinhTrang == "Đang cung cấp");
+            }
             if (goiBH == null)
             {
                 return NotFound();

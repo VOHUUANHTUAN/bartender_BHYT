@@ -5,6 +5,7 @@ import React, { memo, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getHoaDonNapTien, napTien } from "../../../api/connect";
 import { useSnackbar } from "../../../context/SnackbarContext";
+import { useUser } from "../../../context/UserContext";
 
 const Recharge = () => {
     const { openSnackbar } = useSnackbar();
@@ -17,6 +18,7 @@ const Recharge = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [soTienError, setSoTienError] = useState(null); // Trạng thái để theo dõi lỗi về số tiền
+    const { user } = useUser();
 
     const handleChangeTab = (event, newValue) => {
         setValue(newValue);
@@ -136,103 +138,118 @@ const Recharge = () => {
     ];
 
     return (
-        <Container
-            component="main"
-            maxWidth="md"
-            style={{
-                display: "flex",
-                flexDirection: "column",
-                height: "100vh",
-            }}
-        >
-            <Paper
-                elevation={3}
-                style={{
-                    padding: "20px",
-                    marginTop: "120px",
-                    marginBottom: "100px",
-                }}
-            >
-                <div>
-                    <Tabs value={value} onChange={handleChangeTab}>
-                        <Tab label="Nạp tiền" />
-                        <Tab label="Lịch sử" />
-                    </Tabs>
-
-                    {value === 0 && (
-                        <div
+        <>
+            {user && user.role == "Nhân viên" ? (
+                <>
+                    <Container
+                        component="main"
+                        maxWidth="md"
+                        style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            height: "100vh",
+                        }}
+                    >
+                        <Paper
+                            elevation={3}
                             style={{
-                                marginTop: "20px",
-                                display: "flex",
-                                flexDirection: "column",
+                                padding: "20px",
+                                marginTop: "120px",
+                                marginBottom: "100px",
                             }}
                         >
-                            <TextField
-                                label="Mã KH"
-                                variant="outlined"
-                                fullWidth
-                                value={maKH}
-                                InputProps={{
-                                    readOnly: true,
-                                }}
-                                style={{ marginBottom: "10px" }}
-                            />
-                            <TextField
-                                label="Số tiền"
-                                variant="outlined"
-                                fullWidth
-                                type="number"
-                                value={soTien}
-                                onChange={handleSoTienChange}
-                                error={!!soTienError}
-                                helperText={soTienError}
-                                style={{ marginBottom: "10px" }}
-                            />
-                            <div
-                                style={{
-                                    display: "flex",
-                                    justifyContent: "space-between",
-                                    marginTop: "10px",
-                                }}
-                            >
-                                <Button
-                                    variant="outlined"
-                                    color="primary"
-                                    onClick={() => navigate(-1)}
-                                    disabled={loading}
-                                    style={{ width: "48%" }}
-                                >
-                                    Quay lại
-                                </Button>
-                                <Button
-                                    variant="contained"
-                                    color="primary"
-                                    onClick={handleRecharge}
-                                    disabled={loading || !!soTienError}
-                                    style={{ width: "48%" }}
-                                >
-                                    Nạp tiền
-                                </Button>
-                            </div>
-                        </div>
-                    )}
+                            <div>
+                                <Tabs value={value} onChange={handleChangeTab}>
+                                    <Tab label="Nạp tiền" />
+                                    <Tab label="Lịch sử" />
+                                </Tabs>
 
-                    {value === 1 && (
-                        <div style={{ marginTop: "20px" }}>
-                            <Box sx={{ height: 400, width: "100%" }}>
-                                <DataGrid
-                                    rows={rows}
-                                    columns={columns}
-                                    pageSize={5}
-                                    disableRowSelectionOnClick
-                                    getRowId={(row) => row.maHD}
-                                />
-                            </Box>
-                        </div>
-                    )}
-                </div>
-            </Paper>
-        </Container>
+                                {value === 0 && (
+                                    <div
+                                        style={{
+                                            marginTop: "20px",
+                                            display: "flex",
+                                            flexDirection: "column",
+                                        }}
+                                    >
+                                        <TextField
+                                            label="Mã KH"
+                                            variant="outlined"
+                                            fullWidth
+                                            value={maKH}
+                                            InputProps={{
+                                                readOnly: true,
+                                            }}
+                                            style={{ marginBottom: "10px" }}
+                                        />
+                                        <TextField
+                                            label="Số tiền"
+                                            variant="outlined"
+                                            fullWidth
+                                            type="number"
+                                            value={soTien}
+                                            onChange={handleSoTienChange}
+                                            error={!!soTienError}
+                                            helperText={soTienError}
+                                            style={{ marginBottom: "10px" }}
+                                        />
+                                        <div
+                                            style={{
+                                                display: "flex",
+                                                justifyContent: "space-between",
+                                                marginTop: "10px",
+                                            }}
+                                        >
+                                            <Button
+                                                variant="outlined"
+                                                color="primary"
+                                                onClick={() => navigate(-1)}
+                                                disabled={loading}
+                                                style={{ width: "48%" }}
+                                            >
+                                                Quay lại
+                                            </Button>
+                                            <Button
+                                                variant="contained"
+                                                color="primary"
+                                                onClick={handleRecharge}
+                                                disabled={
+                                                    loading || !!soTienError
+                                                }
+                                                style={{ width: "48%" }}
+                                            >
+                                                Nạp tiền
+                                            </Button>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {value === 1 && (
+                                    <div style={{ marginTop: "20px" }}>
+                                        <Box
+                                            sx={{ height: 400, width: "100%" }}
+                                        >
+                                            <DataGrid
+                                                rows={rows}
+                                                columns={columns}
+                                                pageSize={5}
+                                                disableRowSelectionOnClick
+                                                getRowId={(row) => row.maHD}
+                                            />
+                                        </Box>
+                                    </div>
+                                )}
+                            </div>
+                        </Paper>
+                    </Container>{" "}
+                </>
+            ) : (
+                <>
+                    <h2>404 - Page Not Found</h2>
+                    <p>The requested page does not exist.</p>
+                </>
+            )}
+        </>
     );
 };
 

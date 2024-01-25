@@ -203,7 +203,7 @@ const InsuranceRegistration = () => {
         <Container component="main" maxWidth="md">
             <Paper
                 elevation={3}
-                style={{ padding: "20px", margin: "150px 0px 20px 0px" }}
+                style={{ padding: "20px", margin: "50px 0px 20px 0px" }}
             >
                 <Typography component="h1" variant="h5">
                     Đăng ký gói bảo hiểm
