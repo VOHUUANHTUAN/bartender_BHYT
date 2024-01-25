@@ -18,9 +18,8 @@ import Autocomplete from "@mui/material/Autocomplete";
 import { ROUTERS } from "../../../utils/router";
 import { Link } from "react-router-dom";
 import { Container, Paper, TextField, Button, Typography } from "@mui/material";
-import React from "react";
-
 import { useSnackbar } from "../../../context/SnackbarContext";
+import { useUser } from "../../../context/UserContext";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${theme.palette.mode === "light" ? "head" : "body"}`]: {
@@ -46,6 +45,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const AddInsPack = () => {
+    const { user } = useUser();
     //user context
     const { openSnackbar } = useSnackbar();
     //error và loading
