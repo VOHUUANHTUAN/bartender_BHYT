@@ -96,23 +96,23 @@ const Recharge = () => {
         setSoTien(inputValue);
     };
 
-    const fetchHistory = async () => {
-        try {
-            setLoading(true);
-            const x = await getHoaDonNapTien(localStorage.getItem("token"));
-            setHoaDon(x);
-            console.log("Thông tin hóa đơn:", x);
-        } catch (error) {
-            try {
-                openSnackbar(error.response.data, "error");
-            } catch {
-                openSnackbar("Có lỗi xảy ra khi kết nối với máy chủ", "error");
-            }
-            setError(error);
-        } finally {
-            setLoading(false);
-        }
-    };
+	const fetchHistory = async () => {
+		try {
+			setLoading(true);
+			const x = await getHoaDonNapTien(localStorage.getItem("token"));
+			setHoaDon(x);
+			console.log("Thông tin hóa đơn:", x);
+		} catch (error) {
+			try {
+				
+			} catch {
+				openSnackbar("Có lỗi xảy ra khi kết nối với máy chủ", "error");
+			} 
+		} 
+		finally {
+			setLoading(false);
+		}
+	};
 
     // Đổ dữ liệu vào rows trong DataGrid
     const rows = hoaDon.map((row) => ({
