@@ -14,7 +14,6 @@ import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import TrendingDownIcon from "@mui/icons-material/TrendingDown";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import { useSnackbar } from "../../../context/SnackbarContext";
-
 const FinancialReport = () => {
 	const [error, setError] = useState(null);
 	const [loading, setLoading] = useState(false);

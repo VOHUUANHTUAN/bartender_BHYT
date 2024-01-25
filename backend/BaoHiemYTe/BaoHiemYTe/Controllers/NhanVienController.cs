@@ -120,10 +120,25 @@ namespace BaoHiemYTe.Controllers
                 {
                     return Unauthorized("Unauthorized: Token is missing or invalid");
                 }
-                   var role = tokenService.GetRoleFromToken(HttpContext.Request);
+
+                var role = tokenService.GetRoleFromToken(HttpContext.Request);
                 if (role != "Admin")
                 {
                     return Unauthorized("Unauthorized: Chỉ có Admin mới có quyền tạo nhân viên");
+                }
+
+                // Kiểm tra xem username đã tồn tại chưa
+                var existingUser = userDbContext.Users.FirstOrDefault(u => u.username == newNhanVienDTO.Username);
+                if (existingUser != null)
+                {
+                    return BadRequest("Username đã tồn tại. Vui lòng chọn username khác.");
+                }
+
+                // Kiểm tra xem Email đã tồn tại chưa
+                var existingEmail = userDbContext.NhanVien.FirstOrDefault(nv => nv.Email == newNhanVienDTO.Email);
+                if (existingEmail != null)
+                {
+                    return BadRequest("Email đã tồn tại. Vui lòng sử dụng Email khác.");
                 }
 
                 // Tạo mới tài khoản người dùng
@@ -171,7 +186,8 @@ namespace BaoHiemYTe.Controllers
             }
         }
 
-    
+
+
         [HttpGet("GetHoaDonNapTien")]
         public IActionResult GetHoaDonNapTien()
         {
