@@ -102,12 +102,12 @@ const Recharge = () => {
 			console.log("Thông tin hóa đơn:", x);
 		} catch (error) {
 			try {
-				openSnackbar(error.response.data, "error");
+				
 			} catch {
 				openSnackbar("Có lỗi xảy ra khi kết nối với máy chủ", "error");
-			}
-			setError(error);
-		} finally {
+			} 
+		} 
+		finally {
 			setLoading(false);
 		}
 	};

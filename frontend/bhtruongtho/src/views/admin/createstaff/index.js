@@ -26,35 +26,42 @@ const AddEmployeeForm = () => {
     };
 
     const validateForm = () => {
-        const { hoTen, sdt, email, password } = employeeData;
-
+        const { hoTen, sdt, email, password, username } = employeeData;
+    
         // Kiểm tra tên không được trống
         const nameRegex = /^[a-zA-Z]+$/;
         if (!nameRegex.test(hoTen)) {
             openSnackbar("Định dạng họ tên không đúng", "warning");
             return false;
         }
-
+    
         // Kiểm tra định dạng số điện thoại
         const phoneRegex = /^[0-9]{10}$/;
         if (!phoneRegex.test(sdt)) {
             openSnackbar("Định dạng số điện thoại không đúng", "warning");
             return false;
         }
-
+    
         // Kiểm tra định dạng email
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
             openSnackbar("Định dạng email không đúng", "warning");
             return false;
         }
-
+    
         // Kiểm tra định dạng mật khẩu
         if (!isValidPassword(password)) {
             openSnackbar("Mật khẩu không đúng định dạng. Yêu cầu ít nhất 8 ký tự đặc biệt, có ít nhất một ký tự hoa, một ký tự thường và một số.", "warning");
             return false;
         }
-
+    
+        // Kiểm tra định dạng username
+        const usernameRegex = /^[a-zA-Z0-9_@#&]+$/;
+        if (!usernameRegex.test(username)) {
+            openSnackbar("Username chỉ được chứa chữ cái và số, dấu _ @ # &", "warning");
+            return false;
+        }
+    
         return true;
     };
 
@@ -72,9 +79,9 @@ const AddEmployeeForm = () => {
             );
             console.log(response);
             if (response) {
-                openSnackbar("Đăng kí nhân viên thành công", "success");
+                openSnackbar("Thêm nhân viên thành công", "success");
             } else {
-                openSnackbar("Đăng kí nhân viên không thành công", "error");
+                openSnackbar("Thêm nhân viên không thành công", "error");
             }
         } catch (error) {
             try {
