@@ -1,10 +1,11 @@
-import React, { memo, useState, useEffect } from "react";
-import { getLichSuThanhToan } from "../../../api/connect";
-import { Container, Paper, Typography, Grid, Button } from "@mui/material";
+import { Button, Container, Grid, Paper, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
-import dayjs from "dayjs";
 import { DataGrid } from "@mui/x-data-grid";
-import { useParams, useNavigate } from "react-router-dom";
+import dayjs from "dayjs";
+import React, { memo, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { getLichSuThanhToan } from "../../../api/connect";
+import { useUser } from "../../../context/UserContext";
 
 const HistoryPay = () => {
     const params = useParams();
@@ -13,6 +14,7 @@ const HistoryPay = () => {
     const [hoadons, setHoaDons] = useState([]);
     const [maKH, setMaKH] = useState(params.id);
     const navigate = useNavigate();
+    const { user } = useUser();
 
     useEffect(() => {
         const fetchDataByUser = async () => {
@@ -132,44 +134,59 @@ const HistoryPay = () => {
 
     return (
         <>
-            <Container component="main" maxWidth="xl">
-                <Paper
-                    elevation={3}
-                    style={{ padding: "20px", margin: "30px 0px " }}
-                >
-                    <div style={{ padding: "20px", marginTop: "20px" }}>
-                        <Typography component="h1" variant="h5">
-                            Lịch sử thanh toán
-                        </Typography>
-                        <Box sx={{ height: 600, width: "100%", flexGrow: 1 }}>
-                            <DataGrid
-                                rows={rows}
-                                columns={columns}
-                                initialState={{
-                                    pagination: {
-                                        paginationModel: {
-                                            pageSize: 10,
-                                        },
-                                    },
-                                }}
-                                autoWidth
-                                disableRowSelectionOnClick
-                                pageSizeOptions={[10]}
-                                getRowId={(row) => row.id}
-                            />
-                        </Box>
-                    </div>{" "}
-                    <Grid item xs={6} textAlign="center">
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={troVe}
+            {user && user.role == "Nhân viên" ? (
+                <>
+                    <Container component="main" maxWidth="xl">
+                        <Paper
+                            elevation={3}
+                            style={{ padding: "20px", margin: "30px 0px " }}
                         >
-                            Quay lại
-                        </Button>
-                    </Grid>
-                </Paper>
-            </Container>
+                            <div style={{ padding: "20px", marginTop: "20px" }}>
+                                <Typography component="h1" variant="h5">
+                                    Lịch sử thanh toán
+                                </Typography>
+                                <Box
+                                    sx={{
+                                        height: 600,
+                                        width: "100%",
+                                        flexGrow: 1,
+                                    }}
+                                >
+                                    <DataGrid
+                                        rows={rows}
+                                        columns={columns}
+                                        initialState={{
+                                            pagination: {
+                                                paginationModel: {
+                                                    pageSize: 10,
+                                                },
+                                            },
+                                        }}
+                                        autoWidth
+                                        disableRowSelectionOnClick
+                                        pageSizeOptions={[10]}
+                                        getRowId={(row) => row.id}
+                                    />
+                                </Box>
+                            </div>{" "}
+                            <Grid item xs={6} textAlign="center">
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={troVe}
+                                >
+                                    Quay lại
+                                </Button>
+                            </Grid>
+                        </Paper>
+                    </Container>
+                </>
+            ) : (
+                <>
+                    <h2>404 - Page Not Found</h2>
+                    <p>The requested page does not exist.</p>
+                </>
+            )}
         </>
     );
 };

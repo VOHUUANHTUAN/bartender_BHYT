@@ -31,8 +31,8 @@ import HomePageAdmin from "./views/admin/homePage/index.js";
 
 import CheckOnStaff from "./views/admin/checkOnStaff/index.js";
 
-import ListYeuCauHoanTra from "./views/user/CapNhatYeuCauHoanTra/index.js";
-import YeuCauHoanTraDetail from "./views/user/CapNhatYeuCauHoanTra/detailycht.js";
+import ListYeuCauHoanTra from "./views/staff/requestRefund/index.js";
+import YeuCauHoanTraDetail from "./views/staff/requestRefund/detailycht.js";
 import Transactions from "./views/user/transactionsPage";
 import InvoiceHistory from "./views/user/InvoiceHistoryPage/index.js";
 import InvoiceHistoryDetail from "./views/user/InvoiceHistoryPage/detail.js";

@@ -1,39 +1,21 @@
-import React, { memo, useState, useEffect } from "react";
-import {
-    getHoaDonDKbyTinhTrang,
-    phatThanhToanTreHan,
-} from "../../../api/connect";
-import { useUser } from "../../../context/UserContext";
-import {
-    Container,
-    Paper,
-    TextField,
-    Typography,
-    Select,
-    MenuItem,
-    FormControl,
-    InputLabel,
-    InputAdornment,
-    Tabs,
-    Tab,
-} from "@mui/material";
-import Box from "@mui/material/Box";
-import { DataGrid } from "@mui/x-data-grid";
-import Button from "@mui/material/Button";
 import PaymentIcon from "@mui/icons-material/Payment";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import { Container, Paper, Tab, Tabs } from "@mui/material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import { DataGrid } from "@mui/x-data-grid";
+import React, { memo, useEffect, useState } from "react";
+import { getHoaDonDKbyTinhTrang } from "../../../api/connect";
+import { useUser } from "../../../context/UserContext";
 // Import useNavigate
-import { useSnackbar } from "../../../context/SnackbarContext";
 import { useNavigate } from "react-router-dom";
+import { useSnackbar } from "../../../context/SnackbarContext";
 const Pay = () => {
     const { openSnackbar } = useSnackbar();
     // Sử dụng useNavigate để chuyển hướng
     const navigate = useNavigate();
     //user context
-    const { user } = useUser();
     //error và loading
-    const [error, setError] = useState(null);
-    const [loading, setLoading] = useState(false);
     const [value, setValue] = useState(0);
     const [rows1, setRows1] = useState([]); // State để lưu dữ liệu từ API
     const [rows2, setRows2] = useState([]); // State để lưu dữ liệu từ API
@@ -54,11 +36,17 @@ const Pay = () => {
     // Số thứ tự cho đơn yêu cầu
     let idCounter1 = 1; // Initialize a counter for Tab 1
     let idCounter2 = 1; // Initialize a counter for Tab 2
+    const formatCurrency = (amount) => {
+        const formattedAmount = new Intl.NumberFormat("vi-VN", {
+            style: "currency",
+            currency: "VND",
+        }).format(amount);
 
+        return formattedAmount;
+    };
     useEffect(() => {
         const fetchChuaThanhToan = async () => {
             try {
-                setLoading(true);
                 // Gọi API phatThanhToanTreHan trước
                 // const phatThanhToanTreHanResult = await phatThanhToanTreHan(
                 // 	localStorage.getItem("token")
@@ -79,9 +67,9 @@ const Pay = () => {
                         hanKy: row.hanKy,
                         thoiGianHetHan: formatDateTime(row.thoiGianHetHan),
                         tinhTrangThanhToan: row.tinhTrangThanhToan,
-                        soTien: row.soTien,
-                        tienPhat: row.tienPhat,
-                        tongTien: row.tongTien,
+                        soTien: formatCurrency(row.soTien),
+                        tienPhat: formatCurrency(row.tienPhat),
+                        tongTien: formatCurrency(row.tongTien),
                         maHD: row.maHD,
                     }))
                 );
@@ -93,10 +81,7 @@ const Pay = () => {
                         "error"
                     );
                 }
-
-                setError(error);
             } finally {
-                setLoading(false);
             }
         };
 
@@ -108,8 +93,6 @@ const Pay = () => {
     useEffect(() => {
         const fetchDaThanhToan = async () => {
             try {
-                setLoading(true);
-
                 const hoadonTT = await getHoaDonDKbyTinhTrang(
                     localStorage.getItem("token"),
                     "Đã thanh toán"
@@ -133,17 +116,13 @@ const Pay = () => {
                 );
             } catch (error) {
                 try {
-                    
                 } catch {
                     openSnackbar(
                         "Có lỗi xảy ra khi kết nối với máy chủ",
                         "error"
                     );
                 }
-
-                setError(error);
             } finally {
-                setLoading(false);
             }
         };
 
@@ -301,6 +280,8 @@ const Pay = () => {
                                     columns={columnsChuaThanhToan}
                                     pageSize={5}
                                     disableRowSelectionOnClick
+                                    hideFooterPagination
+                                    hideFooterSelectedRowCount
                                     getRowId={(row) => row.id}
                                 />
                             </Box>
@@ -315,6 +296,8 @@ const Pay = () => {
                                     columns={columnsDaThanhToan}
                                     pageSize={5}
                                     disableRowSelectionOnClick
+                                    hideFooterPagination
+                                    hideFooterSelectedRowCount
                                     getRowId={(row) => row.id}
                                 />
                             </Box>

@@ -1,10 +1,9 @@
+import { Button, Container, Paper, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
-import { Container, Paper, TextField, Button, Typography } from "@mui/material";
 import { KhachHang_DangKyTaiKhoan } from "../../../api/connect";
 // import { Link } from "react-router-dom";
-import { Link, Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useSnackbar } from "../../../context/SnackbarContext";
-import bcrypt from "bcryptjs";
 
 const Register = () => {
     const { openSnackbar } = useSnackbar();

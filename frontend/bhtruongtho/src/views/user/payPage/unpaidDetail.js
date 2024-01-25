@@ -1,32 +1,29 @@
-import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import TextField from "@mui/material/TextField";
-import Container from "@mui/material/Container";
-import Paper from "@mui/material/Paper";
-import Typography from "@mui/material/Typography";
-import Grid from "@mui/material/Grid";
-import Button from "@mui/material/Button";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import PaymentIcon from "@mui/icons-material/Payment"; // Import PaymentIcon from Material-UI
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import PaymentIcon from "@mui/icons-material/Payment"; // Import PaymentIcon from Material-UI
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import Grid from "@mui/material/Grid";
 import InputAdornment from "@mui/material/InputAdornment";
-import InfoIcon from "@mui/icons-material/Info"; // Import InfoIcon
-import { useSnackbar } from "../../../context/SnackbarContext";
+import Paper from "@mui/material/Paper";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import dayjs from "dayjs";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import {
     getHoaDonDKDaThanhToanDetail,
     getKhachHangInformation,
     postUpdateHoaDon,
 } from "../../../api/connect";
-import { useNavigate } from "react-router-dom";
+import { useSnackbar } from "../../../context/SnackbarContext";
 const UnPaidDetail = () => {
     const params = useParams();
     const [detail, setDetail] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
     const [showDetails, setShowDetails] = useState(false);
     const [soDu, setSoDu] = useState(null);
     const { openSnackbar } = useSnackbar();
-    const [snackbarMessage, setSnackbarMessage] = useState("");
     const [showReason, setShowReason] = useState(false);
 
     function formatDateTime(dateTimeString) {
@@ -47,7 +44,6 @@ const UnPaidDetail = () => {
                 setDetail(HD);
             } catch (error) {
                 openSnackbar("Lấy thông tin thấy bại", "error");
-                setError(error);
             } finally {
                 setLoading(false);
             }
@@ -55,7 +51,14 @@ const UnPaidDetail = () => {
 
         fetchDetail();
     }, [params.id]);
+    const formatCurrency = (amount) => {
+        const formattedAmount = new Intl.NumberFormat("vi-VN", {
+            style: "currency",
+            currency: "VND",
+        }).format(amount);
 
+        return formattedAmount;
+    };
     useEffect(() => {
         const fetchSoDu = async () => {
             try {
@@ -63,10 +66,7 @@ const UnPaidDetail = () => {
                     localStorage.getItem("token")
                 );
                 setSoDu(infoKH.soDu);
-              
-               
             } catch (error) {
-                setError(error);
                 openSnackbar("Lấy thông tin thấy bại", "error");
             } finally {
                 setLoading(false);
@@ -96,7 +96,7 @@ const UnPaidDetail = () => {
             );
 
             if (userConfirmed) {
-                const response = await postUpdateHoaDon(
+                await postUpdateHoaDon(
                     localStorage.getItem("token"),
                     detail.maHD
                 );
@@ -104,8 +104,10 @@ const UnPaidDetail = () => {
                 navigate("/pay");
             }
         } catch (error) {
-            openSnackbar(error.response?.data || "Error during payment", "error");
-            setError(error);
+            openSnackbar(
+                error.response?.data || "Error during payment",
+                "error"
+            );
         }
     };
 
@@ -132,7 +134,7 @@ const UnPaidDetail = () => {
                                     fontWeight: "bold",
                                 }}
                             >
-                                Số dư: {soDu} VNĐ
+                                Số dư: {formatCurrency(soDu)}
                             </Typography>
                         )}
                     </Grid>
@@ -184,7 +186,9 @@ const UnPaidDetail = () => {
                                     <Grid item xs={4}>
                                         <TextField
                                             label="Giá gói"
-                                            value={`${detail.gia} VND`}
+                                            value={`${formatCurrency(
+                                                detail.gia
+                                            )} `}
                                             fullWidth
                                             InputProps={{
                                                 readOnly: true,
@@ -238,9 +242,9 @@ const UnPaidDetail = () => {
                                     <Grid item xs={4}>
                                         <TextField
                                             label="Thời gian bắt đầu"
-                                            value={formatDateTime(
+                                            value={dayjs(
                                                 detail.thoiGianBD
-                                            )}
+                                            ).format("DD/MM/YYYY")}
                                             fullWidth
                                             InputProps={{
                                                 readOnly: true,
@@ -251,9 +255,9 @@ const UnPaidDetail = () => {
                                     <Grid item xs={4}>
                                         <TextField
                                             label="Thời gian hết hạn"
-                                            value={formatDateTime(
+                                            value={dayjs(
                                                 detail.thoiGianHetHan
-                                            )}
+                                            ).format("DD/MM/YYYY")}
                                             fullWidth
                                             InputProps={{
                                                 readOnly: true,
@@ -277,7 +281,9 @@ const UnPaidDetail = () => {
                                     <Grid item xs={4}>
                                         <TextField
                                             label="Tổng giá đơn"
-                                            value={`${detail.tongGia} VND`}
+                                            value={`${formatCurrency(
+                                                detail.tongGia
+                                            )}`}
                                             fullWidth
                                             InputProps={{
                                                 readOnly: true,
@@ -337,7 +343,7 @@ const UnPaidDetail = () => {
                         />
                         <TextField
                             label="Số tiền thanh toán"
-                            value={`${detail.soTien} VND`}
+                            value={`${formatCurrency(detail.soTien)}`}
                             fullWidth
                             InputProps={{
                                 readOnly: true,
@@ -347,7 +353,7 @@ const UnPaidDetail = () => {
                         {/* Thêm điều kiện để hiển thị "Lí do phạt" khi bấm vào "Tiền phạt" */}
                         <TextField
                             label="Tiền phạt"
-                            value={`${detail.tienPhat || 0} VND`}
+                            value={`${formatCurrency(detail.tienPhat || 0)}`}
                             fullWidth
                             InputProps={{
                                 readOnly: true,
@@ -401,7 +407,7 @@ const UnPaidDetail = () => {
                         {/* Điều kiện màu xanh lá cho "Tổng tiền" */}
                         <TextField
                             label="Tổng tiền"
-                            value={`${detail.tongTien || 0} VND`}
+                            value={`${formatCurrency(detail.tongTien || 0)}`}
                             fullWidth
                             InputProps={{
                                 readOnly: true,

@@ -1,19 +1,25 @@
-import React, { memo, useState, useEffect } from "react";
+import { Button, Container, Paper } from "@mui/material";
 import Box from "@mui/material/Box";
-import { DataGrid } from "@mui/x-data-grid";
 import { Link } from "react-router-dom";
 import dayjs from "dayjs";
-import { Container, Paper, Typography, Button } from "@mui/material";
+import { Typography } from "@mui/material";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { useSnackbar } from "../../../context/SnackbarContext";
+import React, { memo, useEffect, useState } from "react";
 
 import { getDonDangKyList } from "../../../api/connect";
-
 import "./style.scss";
+import { useUser } from "../../../context/UserContext";
 
 const ListDonDangKy = () => {
     const [loading, setLoading] = useState(true);
     const [donDangKyList, setDonDangKyList] = useState([]);
     const [selectedIds, setSelectedIds] = useState([]);
+
+    const { openSnackbar } = useSnackbar();
+
     const [error, setError] = useState(null); // New state for handling errors
+    const { user } = useUser();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -23,8 +29,7 @@ const ListDonDangKy = () => {
                 );
                 setDonDangKyList(data);
             } catch (error) {
-                console.error("Error fetching data:", error);
-                setError("Error fetching data. Please try again."); // Set error state
+                openSnackbar("Lỗi trong quá trình lấy dữ liệu", "error");
             } finally {
                 setLoading(false);
             }
@@ -49,7 +54,7 @@ const ListDonDangKy = () => {
         id: index + 1,
         maDonDK: item.maDonDK,
         maGoiBH: item.maGoiBH,
-        thoiGianDK: formatDate(item.thoiGianDK),
+        thoiGianDK: dayjs(item.thoiGianDK).format("DD/MM/YYYY HH:mm:ss"),
         thoiGianBD: formatDate(item.thoiGianBD),
         thoiGianHetHan: formatDate(item.thoiGianHetHan),
         thoiGianDuyet: item.thoiGianDuyet ? formatDate(item.thoiGianDuyet) : "",
@@ -62,26 +67,52 @@ const ListDonDangKy = () => {
     }));
 
     const columns = [
-        { field: "id", headerName: "ID", width: 70 },
-        { field: "maDonDK", headerName: "Mã Đơn ", width: 70 },
-        { field: "maGoiBH", headerName: "Mã Gói BH", width: 80 },
-        { field: "thoiGianDK", headerName: "Thời Gian Đăng Kí", width: 130 },
-        { field: "thoiGianBD", headerName: "Thời Gian Bắt Đầu", width: 130 },
+        { field: "id", headerName: "ID", minWidth: 70, flex: 1 },
+        { field: "maDonDK", headerName: "Mã Đơn ", minWidth: 100, flex: 1 },
+        { field: "maGoiBH", headerName: "Mã Gói BH", minWidth: 80, flex: 1 },
+        {
+            field: "thoiGianDK",
+            headerName: "Thời Gian Đăng Kí",
+            minWidth: 180,
+            flex: 1,
+        },
+        {
+            field: "thoiGianBD",
+            headerName: "Thời Gian Bắt Đầu",
+            minWidth: 130,
+            flex: 1,
+        },
         {
             field: "thoiGianHetHan",
             headerName: "Thời Gian Hết Hạn",
-            width: 130,
+            minWidth: 130,
+            flex: 1,
         },
-        { field: "thoiGianDuyet", headerName: "Thời Gian Duyệt", width: 120 },
-        { field: "soKyHanThanhToan", headerName: "Số kỳ hạn", width: 160 },
-        { field: "tongGia", headerName: "Tổng Giá" },
-        { field: "maKH", headerName: "Mã KH", width: 80 },
-        { field: "maNV", headerName: "Mã NV", width: 80 },
-        { field: "liDoTuChoi", headerName: "Lí do từ chối", width: 100 },
+        {
+            field: "thoiGianDuyet",
+            headerName: "Thời Gian Duyệt",
+            minWidth: 120,
+            flex: 1,
+        },
+        {
+            field: "soKyHanThanhToan",
+            headerName: "Số kỳ hạn",
+            minWidth: 100,
+            flex: 1,
+        },
+        { field: "tongGia", headerName: "Tổng Giá", minWidth: 120, flex: 1 },
+        { field: "maKH", headerName: "Mã KH", minWidth: 75, flex: 1 },
+        { field: "maNV", headerName: "Mã NV", minWidth: 75, flex: 1 },
+        {
+            field: "liDoTuChoi",
+            headerName: "Lí do từ chối",
+            minWidth: 100,
+            flex: 1,
+        },
         {
             field: "tinhTrang",
             headerName: "Tình Trạng",
-            width: 160,
+            minWidth: 160,
             cellClassName: (params) =>
                 `status-cell ${params.value.replace(/\s/g, "").toLowerCase()}`,
             renderCell: (params) => (
@@ -97,48 +128,85 @@ const ListDonDangKy = () => {
     ];
 
     return (
-        <Container component="main" maxWidth="xl">
-            <Paper
-                elevation={3}
-                style={{
-                    padding: "20px 20px 70px 20px ",
-                    margin: "30px 0px 100px 0px",
-                }}
-            >
-                <Box
-                    sx={{
-                        height: 700,
-                        width: "100%",
-                        flexGrow: 1,
-                    }}
-                >
-                    <DataGrid
-                        rows={rows}
-                        columns={columns}
-                        pageSize={5}
-                        hideFooterPagination
-                        hideFooterSelectedRowCount
-                        onRowSelectionModelChange={(newRowSelectionModel) => {
-                            setSelectedIds(newRowSelectionModel);
-                        }}
-                        rowSelectionModel={selectedIds}
-                    />
-                    <div>
-                        {selectedIds.length > 0 && (
-                            <Button
-                                component={Link}
-                                to={`detail/${selectedIds[0]}`}
-                                variant="contained"
-                                color="primary"
-                                style={{ marginTop: "10px" }}
-                            >
-                                Xem
-                            </Button>
-                        )}
-                    </div>
-                </Box>
-            </Paper>
-        </Container>
+        <>
+            {user && user.role == "Nhân viên" ? (
+                <>
+                    <Container component="main" maxWidth="xl">
+                        <Paper
+                            elevation={3}
+                            style={{
+                                padding: "20px",
+                                marginTop: "40px",
+                                marginBottom: "100px",
+                            }}
+                        >
+                            <div>
+                                <Box>
+                                    <div
+                                        style={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                            marginBottom: "16px",
+                                        }}
+                                    >
+                                        <Typography component="h1" variant="h5">
+                                            Danh sách đơn đăng kí
+                                        </Typography>
+                                    </div>
+                                    <DataGrid
+                                        rows={rows}
+                                        columns={columns}
+                                        slots={{ toolbar: GridToolbar }}
+                                        slotProps={{
+                                            toolbar: {
+                                                showQuickFilter: true,
+                                            },
+                                        }}
+                                        initialState={{
+                                            pagination: {
+                                                paginationModel: {
+                                                    pageSize: 10,
+                                                },
+                                            },
+                                        }}
+                                        pageSizeOptions={[10]}
+                                        hideFooterSelectedRowCount
+                                        onRowSelectionModelChange={(
+                                            newRowSelectionModel
+                                        ) => {
+                                            setSelectedIds(
+                                                newRowSelectionModel
+                                            );
+                                        }}
+                                        rowSelectionModel={selectedIds}
+                                    />
+                                    <div
+                                        style={{
+                                            display: "flex",
+                                            marginTop: "20px",
+                                        }}
+                                    >
+                                        <Button
+                                            component={Link}
+                                            to={`detail/${selectedIds}`}
+                                            variant="outlined"
+                                            color="primary"
+                                        >
+                                            Xem chi tiết
+                                        </Button>
+                                    </div>
+                                </Box>
+                            </div>
+                        </Paper>
+                    </Container>
+                </>
+            ) : (
+                <>
+                    <h2>404 - Page Not Found</h2>
+                    <p>The requested page does not exist.</p>
+                </>
+            )}
+        </>
     );
 };
 
