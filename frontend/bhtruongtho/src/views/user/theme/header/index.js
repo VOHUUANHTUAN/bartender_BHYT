@@ -116,7 +116,7 @@ const Header = () => {
                         </div>
                         {shouldShowLayoutStaff && shouldShowLayoutAdmin ? (
                             <>
-                                <div className="col-xl-6 col-lg-6 col-md-9 col-sm-12">
+                                <div className="col-xl-6 col-lg-6 col-md-6 col-sm-12">
                                     <nav className="header_menu">
                                         <ul>
                                             {menus?.map((menu, menuKey) => (
@@ -137,7 +137,7 @@ const Header = () => {
                                         </ul>
                                     </nav>
                                 </div>
-                                <div className="col-xl-3 col-lg-3 col-md-12 col-sm-12 header_top_right">
+                                <div className="col-xl-3 col-lg-3 col-md-3 col-sm-12 header_top_right">
                                     {/* <span>Đăng ký tư vấn</span> */}
                                     <ul>
                                         {localStorage.getItem("token") ? (
@@ -342,7 +342,7 @@ const Header = () => {
                                 </div>{" "}
                             </>
                         ) : (
-                            <div className="col-xl-9 col-lg-9 col-md-9 col-sm-9 header_top_right">
+                            <div className="col-xl-9 col-lg-9 col-md-9 col-sm-3 header_top_right">
                                 {/* <span>Đăng ký tư vấn</span> */}
                                 <ul>
                                     {localStorage.getItem("token") ? (
