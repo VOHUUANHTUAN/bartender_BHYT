@@ -1,34 +1,32 @@
-import React, { memo, useEffect, useState } from "react";
 import {
-    updateKhachHangInformation,
-    getKhachHangInformation,
-    getUserInfoByToken,
-} from "../../../api/connect";
-import { useNavigate, Link } from "react-router-dom";
-import { useUser } from "../../../context/UserContext";
-import {
-    Typography,
-    Container,
-    TextField,
     Button,
+    Container,
+    FormControl,
+    Grid,
+    InputLabel,
+    MenuItem,
     Paper,
     Select,
-    MenuItem,
-    Grid,
-    FormControl,
-    InputLabel,
+    TextField,
+    Typography,
 } from "@mui/material";
-import dayjs from "dayjs";
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers";
-import { SettingsAccessibilityOutlined } from "@mui/icons-material";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import dayjs from "dayjs";
+import React, { useEffect, useState } from "react";
+import {
+    getKhachHangInformation,
+    getUserInfoByToken,
+    updateKhachHangInformation,
+} from "../../../api/connect";
 import { useSnackbar } from "../../../context/SnackbarContext";
+import { useUser } from "../../../context/UserContext";
 
 // ... (imports)
 
 const ChangeInformation = () => {
-    const { user, login, setUser } = useUser(); // Assuming this provides the user data
+    const { login } = useUser(); // Assuming this provides the user data
     const { openSnackbar } = useSnackbar();
     // Initialize SoDu and username from user data
     const [soDu, setSoDu] = useState(0);
@@ -155,14 +153,17 @@ const ChangeInformation = () => {
         }
 
         // Kiểm tra tên không được trống
-        if (!hoTen) {
-            return "Tên không được để trống";
-        } // Kiểm tra tên không được trống
+        const nameRegex = /^[a-zA-Z]+$/;
+        if (!nameRegex.test(hoTen)) {
+            return "Định dạng họ tên không đúng";
+        }
         if (!gioiTinh) {
             return "Giới tính không được để trống";
         }
-        if (!ngaySinh) {
-            return "Ngày sinh không được để trống";
+        const currentDate = dayjs();
+        const birthDate = dayjs(ngaySinh);
+        if (!birthDate.isValid() || birthDate.isAfter(currentDate)) {
+            return "Ngày sinh phải nhỏ hơn ngày hiện tại";
         }
 
         // Nếu tất cả định dạng đều đúng, trả về true
@@ -184,7 +185,9 @@ const ChangeInformation = () => {
                         variant="outlined"
                         margin="normal"
                         fullWidth
-                        disabled
+                        InputProps={{
+                            readOnly: true,
+                        }}
                         value={username}
                     />
 
@@ -237,8 +240,13 @@ const ChangeInformation = () => {
                             </FormControl>
                         </Grid>
                         <Grid item xs={6}>
-                            <FormControl fullWidth style={{ marginTop: "15px" }}>
-                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <FormControl
+                                fullWidth
+                                style={{ marginTop: "15px" }}
+                            >
+                                <LocalizationProvider
+                                    dateAdapter={AdapterDayjs}
+                                >
                                     <DatePicker
                                         label="Ngày sinh"
                                         value={ngaySinh}
@@ -256,7 +264,6 @@ const ChangeInformation = () => {
                                 </LocalizationProvider>
                             </FormControl>
                         </Grid>
-
                     </Grid>
                     <TextField
                         label="Địa chỉ"

@@ -32,6 +32,7 @@ const END_POINT = {
     GETSOTIENKHAM: "GetSoTienKham",
     RECHARGE: "KhachHang/NapTien",
     HOADONNAPTIEN: "NhanVien/GetHoaDonNapTien",
+    THONGTINTRANGCHUSTAFF: "NhanVien/ThongTinTongHop",
     LICHSUTHANHTOAN: "HoaDonThanhToanDK/LichSuThanhToan",
 };
 
@@ -59,6 +60,14 @@ export const KhachHang_DangKyTaiKhoan = (khachHangData) => {
 //Hàm lấy thông tin đăng nhập của user
 export const getUserInfoByToken = (token) => {
     return axiosClient.get(`${END_POINT.info}`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+};
+//Hàm lấy thông tin đăng nhập của user
+export const getStaffHompageInfo = (token) => {
+    return axiosClient.get(`${END_POINT.THONGTINTRANGCHUSTAFF}`, {
         headers: {
             Authorization: `Bearer ${token}`,
         },
@@ -182,29 +191,23 @@ export const getNhanVienByID = (ID, token) => {
 // Import axiosClient và END_POINT từ nơi khác trong code của bạn
 
 export const postNhanVien = (data, token) => {
-    return axiosClient.post(
-        `${END_POINT.NHANVIEN}`,
-        data,
-        {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        }
-    );
+    return axiosClient.post(`${END_POINT.NHANVIEN}`, data, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
 };
 export const getAllNhanVien = (token) => {
-    return axiosClient.get(
-        `${END_POINT.NHANVIEN}`,
-        {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        }
-    );
+    return axiosClient.get(`${END_POINT.NHANVIEN}`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
 };
 
 export const putDonDangKyByID = async (ID, Data, token) => {
     try {
+        console.log(Data);
         const response = await axiosClient.put(
             `${END_POINT.DONDANGKY}/${ID}`,
             Data,
@@ -403,7 +406,6 @@ export const getGoiBHByNV = (token) => {
     });
 };
 
-
 export const getHoaDonNapTien = (token) => {
     return axiosClient.get(`${END_POINT.HOADONNAPTIEN}`, {
         headers: {
@@ -425,12 +427,9 @@ export const napTien = (token, maKH, soTien) => {
 };
 
 export const getLichSuThanhToan = (maKH, token) => {
-    return axiosClient.get(
-        `${END_POINT.LICHSUTHANHTOAN}/${maKH}`,
-        {
-            headers: {
-                Authorization: `Bearer ${ token }`,
-            },
-        }
-    );
+    return axiosClient.get(`${END_POINT.LICHSUTHANHTOAN}/${maKH}`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
 };

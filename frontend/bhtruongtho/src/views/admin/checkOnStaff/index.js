@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { getAllNhanVien } from "../../../api/connect";
+import { Button, Container, Paper, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import Box from "@mui/material/Box";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Container, Paper, Typography, Button } from "@mui/material";
+import { getAllNhanVien } from "../../../api/connect";
 
 const NhanVienList = () => {
     const [nhanVienList, setNhanVienList] = useState([]);

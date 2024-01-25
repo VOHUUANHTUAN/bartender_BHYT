@@ -1,20 +1,20 @@
-import React, { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
 import {
-    Container,
-    Paper,
-    TextField,
-    TableContainer,
-    Table,
-    TableHead,
-    TableBody,
-    TableRow,
-    Typography,
-    Grid,
-    TableCell,
     Button,
+    Container,
+    Grid,
+    Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    TextField,
+    Typography,
 } from "@mui/material";
 import dayjs from "dayjs";
+import React, { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import { getDonDangKyByID } from "../../../api/connect";
 import { ROUTERS } from "../../../utils/router";
 
@@ -121,7 +121,7 @@ const RegistrationDetail = () => {
                                 {" "}
                                 <TextField
                                     style={{ marginTop: "20px" }}
-                                    label="Thời gian bắt đầu"
+                                    label="Thời gian hết hạn"
                                     value={dayjs(
                                         registrationDetail.thoiGianHetHan
                                     ).format("DD/MM/YYYY")}

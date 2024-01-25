@@ -1,37 +1,58 @@
-import React from "react";
+import { Button, Container, Grid, Paper, Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Container, Typography, Paper, Grid, Button } from "@mui/material";
 import { ROUTERS } from "../../../utils/router";
 
+import { getStaffHompageInfo } from "../../../api/connect";
 const HomePageStaff = () => {
     // Giả sử bạn có dữ liệu về số lượng đơn vị với địa chỉ tương ứng
+    const [count, setCount] = useState([]);
+
     const data = [
         {
             title: "Đơn đăng ký",
-            count: 10,
+            count: count.donDangKyChuaDuyet,
             color: "#DCF2F1",
             address: ROUTERS.USER.DONDANGKY,
         },
 
         {
             title: "Quản lý gói bảo hiểm",
-            count: 15,
+            count: count.goiBaoHiemDangCungCap,
             color: "#6DB9EF",
             address: ROUTERS.USER.INSURANCEPACKM,
         },
         {
+            title: "Yêu cầu hoàn trả",
+            count: count.yeuCauHoanTraChuaDuyet,
+            color: "#E0F4FF",
+            address: ROUTERS.USER.YEUCAUHOANTRA,
+        },
+        {
             title: "Thông tin khách hàng",
-            count: 7,
-            color: "#4CB9E7",
+            count: count.khachHangTinhTrang1,
+            color: "#E0F4FF",
             address: ROUTERS.USER.INFOCUSTOMER,
         },
         {
             title: "Báo cáo tài chính",
             count: 12,
-            color: "#E0F4FF",
+            color: "#4CB9E7",
             address: ROUTERS.USER.FINANCIALREPORT,
         },
     ];
+    const fetchData = async () => {
+        try {
+            const response = await getStaffHompageInfo(
+                localStorage.getItem("token")
+            );
+            console.log(response);
+            setCount(response);
+        } catch (error) {}
+    };
+    useEffect(() => {
+        fetchData();
+    }, []);
 
     return (
         <Container maxWidth="md" sx={{ marginTop: 5 }}>

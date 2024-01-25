@@ -1,156 +1,196 @@
-import React, { memo, useState, useEffect } from 'react';
-import { getBenhByMaGBH, updateInsPack, getGoiBHByMaGBH } from "../../../api/connect";
-import { useParams } from 'react-router-dom';
-import { useUser } from "../../../context/UserContext";
-import { ROUTERS } from "../../../utils/router";
-import { Link } from 'react-router-dom';
+import { Button, Container, Paper, Snackbar, Typography } from "@mui/material";
+import Grid from "@mui/material/Grid";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import React, { memo, useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import {
-  Container,
-  Paper,
-  Button,
-  Typography,
-  Snackbar,
-} from "@mui/material";
-import Grid from '@mui/material/Grid';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
-
+    getBenhByMaGBH,
+    getGoiBHByMaGBH,
+    updateInsPack,
+} from "../../../api/connect";
+import { ROUTERS } from "../../../utils/router";
 
 const InsPackDetailPage = () => {
+    const params = useParams();
+    //error và loading
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
+    //khai báo các biến
+    const [dataGoiBH, setDataGoiBH] = useState(null);
+    const [dataBenhByGBH, setDataBenhByGBH] = useState([]);
 
+    //thông báo lỗi
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState("");
 
-  const params = useParams();
-  //error và loading
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
-  //khai báo các biến
-  const [dataGoiBH, setDataGoiBH] = useState(null);
-  const [dataBenhByGBH, setDataBenhByGBH] = useState([]);
-
-  //thông báo lỗi
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
-
-  //handle tab thông báo
-  const handleSnackbarClose = () => {
-    setSnackbarOpen(false);
-  };
-  //handle cho nút Tạo yêu cầu
-  const handleVoHieuKichHoat = async() => {
-    try {
-   //goi api thay doi tinh trang goi bao hiem
-      const responseData = await updateInsPack(localStorage.getItem("token"), params.id);
-      setSnackbarMessage(responseData);
-      setSnackbarOpen(true);
-    } catch (error) {
-      // Xử lý các lỗi khác (ví dụ: mất kết nối)
-      //thông báo lỗi
-      setSnackbarMessage(error.response.data);
-      setSnackbarOpen(true);
-  } finally {
-      setLoading(false);
-  }
-  };
-  //xử lý gọi api
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        //API cho tab1
-        // Gọi API để lấy dữ liệu về gói Bảo hiểm
-        const goiBHData = await getGoiBHByMaGBH(params.id);
-        setDataGoiBH(goiBHData);
-
-        // Gọi API để lấy dữ liệu về bệnh dựa trên mã gói Bảo hiểm
-        const benhData = await getBenhByMaGBH(params.id);
-        setDataBenhByGBH(benhData);
-
-      } catch (error) {
-        setError(error);
-      } finally {
-        setLoading(false);
-      }
+    //handle tab thông báo
+    const handleSnackbarClose = () => {
+        setSnackbarOpen(false);
     };
-    fetchData();
-  }, [dataGoiBH]); //những thuộc tính nếu thay đôi sẽ gọi lại useEffect
+    //handle cho nút Tạo yêu cầu
+    const handleVoHieuKichHoat = async () => {
+        try {
+            //goi api thay doi tinh trang goi bao hiem
+            const responseData = await updateInsPack(
+                localStorage.getItem("token"),
+                params.id
+            );
+            setSnackbarMessage(responseData);
+            setSnackbarOpen(true);
+        } catch (error) {
+            // Xử lý các lỗi khác (ví dụ: mất kết nối)
+            //thông báo lỗi
+            setSnackbarMessage(error.response.data);
+            setSnackbarOpen(true);
+        } finally {
+            setLoading(false);
+        }
+    };
+    //xử lý gọi api
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                setLoading(true);
+                //API cho tab1
+                // Gọi API để lấy dữ liệu về gói Bảo hiểm
+                const goiBHData = await getGoiBHByMaGBH(params.id);
+                setDataGoiBH(goiBHData);
 
-  const formatCurrency = (amount) => {
-    const formattedAmount = new Intl.NumberFormat("vi-VN", {
-        style: "currency",
-        currency: "VND",
-    }).format(amount);
+                // Gọi API để lấy dữ liệu về bệnh dựa trên mã gói Bảo hiểm
+                const benhData = await getBenhByMaGBH(params.id);
+                setDataBenhByGBH(benhData);
+            } catch (error) {
+                setError(error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchData();
+    }, [dataGoiBH]); //những thuộc tính nếu thay đôi sẽ gọi lại useEffect
 
-    return formattedAmount;
-};
-  return (
-    <Container component="main" maxWidth="lg">
-      <Paper
-        elevation={3}
-        style={{ padding: "20px", marginTop: "40px", marginBottom: "100px" }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
-          <Typography component="h1" variant="h5" color="primary">
-            Chi tiết gói bảo hiểm
-          </Typography>
-        </div>
-        <div>
-          {/* <Grid container spacing={2}> */}
-          <Grid item xs={12} sm={5}>
-            {dataGoiBH ? (
-              <Paper elevation={3} style={{ padding: 16}}>
-                <Typography variant="h5" gutterBottom>
-                  {dataGoiBH.tenGoiBH}
-                </Typography>
-                <Typography>Mô tả: {dataGoiBH.motaGoiBH}</Typography>
-                <Typography>Giá: {formatCurrency(dataGoiBH.gia)} </Typography>
-                <Typography>Độ tuổi: {dataGoiBH.doTuoi}</Typography>
-                <Typography>Tỉ lệ hoàn tiền: {dataGoiBH.tiLeHoanTien}%</Typography>
-                <Typography>Thời hạn bảo vệ: {dataGoiBH.thoiHanBaoVe} năm</Typography>
-                <Typography>Tình trạng: {dataGoiBH.tinhTrang}</Typography>
-              </Paper>
-            ) : (
-              <Typography variant="body1">Loading...</Typography>
-            )}
+    const formatCurrency = (amount) => {
+        const formattedAmount = new Intl.NumberFormat("vi-VN", {
+            style: "currency",
+            currency: "VND",
+        }).format(amount);
 
-            {dataGoiBH && (
-              <>
-                <Paper elevation={3} style={{ marginTop: 16, padding: 16 }}>
-                  <Typography variant="h5" gutterBottom>
-                    Bệnh được áp dụng hoàn tiền
-                  </Typography>
-                  <List>
-                    {dataBenhByGBH.map((benhItem, index) => (
-                      <ListItem key={index}>
-                        <ListItemText primary={`${benhItem.tenBenh}`} />
-                      </ListItem>
-                    ))}
-                  </List>
-                </Paper>
-
-                <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
-                  <Button variant="outlined" onClick={handleVoHieuKichHoat} style={{ marginRight: '10px' }}>
-                      {dataGoiBH.tinhTrang === 'Đang cung cấp' ? 'Vô hiệu gói bảo hiểm' : 'Kích hoạt gói bảo hiểm'}
-                  </Button>
-                  <Button variant="outlined" component={Link} to={`../${ROUTERS.USER.INSURANCEPACKM}`}>
-                    Quay lại
-                  </Button>
+        return formattedAmount;
+    };
+    return (
+        <Container component="main" maxWidth="lg">
+            <Paper
+                elevation={3}
+                style={{
+                    padding: "20px",
+                    marginTop: "40px",
+                    marginBottom: "100px",
+                }}
+            >
+                <div
+                    style={{
+                        display: "flex",
+                        alignItems: "center",
+                        marginBottom: "16px",
+                    }}
+                >
+                    <Typography component="h1" variant="h5" color="primary">
+                        Chi tiết gói bảo hiểm
+                    </Typography>
                 </div>
-              </>
-            )}
-          </Grid>
-        </div>
+                <div>
+                    {/* <Grid container spacing={2}> */}
+                    <Grid item xs={12} sm={5}>
+                        {dataGoiBH ? (
+                            <Paper elevation={3} style={{ padding: 16 }}>
+                                <Typography variant="h5" gutterBottom>
+                                    {dataGoiBH.tenGoiBH}
+                                </Typography>
+                                <Typography>
+                                    Mô tả: {dataGoiBH.motaGoiBH}
+                                </Typography>
+                                <Typography>
+                                    Giá: {formatCurrency(dataGoiBH.gia)}{" "}
+                                </Typography>
+                                <Typography>
+                                    Độ tuổi: {dataGoiBH.doTuoi}
+                                </Typography>
+                                <Typography>
+                                    Tỉ lệ hoàn tiền: {dataGoiBH.tiLeHoanTien}%
+                                </Typography>
+                                <Typography>
+                                    Thời hạn bảo vệ: {dataGoiBH.thoiHanBaoVe}{" "}
+                                    năm
+                                </Typography>
+                                <Typography>
+                                    Tình trạng: {dataGoiBH.tinhTrang}
+                                </Typography>
+                            </Paper>
+                        ) : (
+                            <Typography variant="body1">Loading...</Typography>
+                        )}
 
-      </Paper>
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={2000}
-        onClose={handleSnackbarClose}
-        message={snackbarMessage}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-      />
-    </Container>
-  );
+                        {dataGoiBH && (
+                            <>
+                                <Paper
+                                    elevation={3}
+                                    style={{ marginTop: 16, padding: 16 }}
+                                >
+                                    <Typography variant="h5" gutterBottom>
+                                        Bệnh được áp dụng hoàn tiền
+                                    </Typography>
+                                    <List>
+                                        {dataBenhByGBH.map(
+                                            (benhItem, index) => (
+                                                <ListItem key={index}>
+                                                    <ListItemText
+                                                        primary={`${benhItem.tenBenh}`}
+                                                    />
+                                                </ListItem>
+                                            )
+                                        )}
+                                    </List>
+                                </Paper>
+
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        marginTop: "20px",
+                                    }}
+                                >
+                                    <Button
+                                        variant="outlined"
+                                        onClick={handleVoHieuKichHoat}
+                                        style={{ marginRight: "10px" }}
+                                    >
+                                        {dataGoiBH.tinhTrang === "Đang cung cấp"
+                                            ? "Vô hiệu gói bảo hiểm"
+                                            : "Kích hoạt gói bảo hiểm"}
+                                    </Button>
+                                    <Button
+                                        variant="outlined"
+                                        component={Link}
+                                        to={`../${ROUTERS.USER.INSURANCEPACKM}`}
+                                    >
+                                        Quay lại
+                                    </Button>
+                                </div>
+                            </>
+                        )}
+                    </Grid>
+                </div>
+            </Paper>
+            <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={2000}
+                onClose={handleSnackbarClose}
+                message={snackbarMessage}
+                anchorOrigin={{ vertical: "top", horizontal: "right" }}
+            />
+        </Container>
+    );
 };
 
 export default memo(InsPackDetailPage);

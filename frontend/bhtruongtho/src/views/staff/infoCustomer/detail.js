@@ -1,22 +1,22 @@
-import React, { memo, useState, useEffect } from "react";
-import { getKhachHangInformationByID } from "../../../api/connect";
-import { useParams, useNavigate } from "react-router-dom";
 import {
-    Container,
-    Paper,
-    Typography,
-    TextField,
-    Grid,
-    FormControl,
-    InputLabel,
-    Select,
-    MenuItem,
     Button,
+    Container,
+    FormControl,
+    Grid,
+    InputLabel,
+    MenuItem,
+    Paper,
+    Select,
+    TextField,
+    Typography,
 } from "@mui/material";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import dayjs from "dayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import dayjs from "dayjs";
+import React, { memo, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { getKhachHangInformationByID } from "../../../api/connect";
 
 const DetailCustomer = () => {
     const { id } = useParams(); // Sử dụng destructuring để lấy id từ params

@@ -1,20 +1,20 @@
-import React, { memo, useState, useEffect } from "react";
+import {
+    Button,
+    FormLabel,
+    Grid,
+    Input,
+    Paper,
+    Typography,
+} from "@mui/material";
+import dayjs from "dayjs";
+import React, { memo, useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import {
     getDonDangKyByID,
     getNhanVienByID,
-    putDonDangKyByID,
     getUserInfoByToken,
+    putDonDangKyByID,
 } from "../../../api/connect";
-import { useParams } from "react-router-dom";
-import {
-    Grid,
-    Paper,
-    Typography,
-    Button,
-    Input,
-    FormLabel,
-} from "@mui/material";
-import dayjs from "dayjs";
 import { useSnackbar } from "../../../context/SnackbarContext";
 
 const DetailPage = () => {
@@ -108,6 +108,7 @@ const DetailPage = () => {
         fetchUserData();
     }, []); // Thêm snackbarOpen vào dependencies
     const updateStatus_accept = async () => {
+        console.log(donDangKy);
         console.log("donDangKy.tinhTrang:", donDangKy.tinhTrang);
 
         try {
@@ -115,7 +116,7 @@ const DetailPage = () => {
                 await putDonDangKyByID(
                     params.id,
                     {
-                        tinhTrang: "Đã kích hoạt",
+                        tinhTrang: "Chờ thanh toán",
                         maNV,
                         diaChi,
                         thoiGianDuyet,
@@ -123,9 +124,16 @@ const DetailPage = () => {
                         hoTen,
                         sdt,
                         liDoTuChoi: "",
+                        DS_HoaDonThanhToanDK: calculatePaymentDetails(
+                            donDangKy.thoiGianBD,
+                            donDangKy.thoiGianHetHan,
+                            donDangKy.tongGia,
+                            donDangKy.soKyHanThanhToan
+                        ),
                     },
                     localStorage.getItem("token")
                 );
+
                 openSnackbar("Cập nhật thành công!", "success");
             } else {
                 openSnackbar("Trạng thái này không thể kích hoạt", "warning");
@@ -137,6 +145,38 @@ const DetailPage = () => {
     };
     const toggleDenialReasonInput = () => {
         setShowDenialReasonInput(!showDenialReasonInput);
+    };
+
+    const calculatePaymentDetails = (
+        startDate,
+        endDate,
+        totalAmount,
+        totalPayments
+    ) => {
+        const startDate_ = dayjs(startDate);
+        const endDate_ = dayjs(endDate);
+
+        const totalMonths = endDate_.diff(startDate_, "month");
+        const paymentDetails = [];
+        const monthsInYear = 12;
+        for (let i = 1; i <= totalPayments; i++) {
+            const hanKy = `${i}/${totalPayments}`;
+            // Calculate the expiration time for each term
+            const expirationTime = dayjs(startDate)
+                .add(i * (totalMonths / totalPayments), "month")
+                .format();
+
+            const paymentDetail = {
+                SoTien: totalAmount / totalPayments,
+                HanKy: hanKy,
+                TinhTrangThanhToan: "Chưa thanh toán",
+                ThoiGianHetHan: expirationTime,
+            };
+
+            paymentDetails.push(paymentDetail);
+        }
+
+        return paymentDetails;
     };
 
     const updateStatus_denied = async () => {

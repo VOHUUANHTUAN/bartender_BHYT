@@ -1,9 +1,9 @@
-import React, { memo, useState, useEffect } from "react";
+import { Button, Container, Paper } from "@mui/material";
 import Box from "@mui/material/Box";
 import { DataGrid } from "@mui/x-data-grid";
-import { Link } from "react-router-dom";
 import dayjs from "dayjs";
-import { Container, Paper, Typography, Button } from "@mui/material";
+import React, { memo, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 import { getDonDangKyList } from "../../../api/connect";
 
@@ -49,7 +49,7 @@ const ListDonDangKy = () => {
         id: index + 1,
         maDonDK: item.maDonDK,
         maGoiBH: item.maGoiBH,
-        thoiGianDK: formatDate(item.thoiGianDK),
+        thoiGianDK: dayjs(item.thoiGianDK).format("DD/MM/YYYY HH:mm:ss"),
         thoiGianBD: formatDate(item.thoiGianBD),
         thoiGianHetHan: formatDate(item.thoiGianHetHan),
         thoiGianDuyet: item.thoiGianDuyet ? formatDate(item.thoiGianDuyet) : "",
@@ -62,26 +62,52 @@ const ListDonDangKy = () => {
     }));
 
     const columns = [
-        { field: "id", headerName: "ID", width: 70 },
-        { field: "maDonDK", headerName: "Mã Đơn ", width: 70 },
-        { field: "maGoiBH", headerName: "Mã Gói BH", width: 80 },
-        { field: "thoiGianDK", headerName: "Thời Gian Đăng Kí", width: 130 },
-        { field: "thoiGianBD", headerName: "Thời Gian Bắt Đầu", width: 130 },
+        { field: "id", headerName: "ID", minWidth: 70, flex: 1 },
+        { field: "maDonDK", headerName: "Mã Đơn ", minWidth: 100, flex: 1 },
+        { field: "maGoiBH", headerName: "Mã Gói BH", minWidth: 80, flex: 1 },
+        {
+            field: "thoiGianDK",
+            headerName: "Thời Gian Đăng Kí",
+            minWidth: 180,
+            flex: 1,
+        },
+        {
+            field: "thoiGianBD",
+            headerName: "Thời Gian Bắt Đầu",
+            minWidth: 130,
+            flex: 1,
+        },
         {
             field: "thoiGianHetHan",
             headerName: "Thời Gian Hết Hạn",
-            width: 130,
+            minWidth: 130,
+            flex: 1,
         },
-        { field: "thoiGianDuyet", headerName: "Thời Gian Duyệt", width: 120 },
-        { field: "soKyHanThanhToan", headerName: "Số kỳ hạn", width: 160 },
-        { field: "tongGia", headerName: "Tổng Giá" },
-        { field: "maKH", headerName: "Mã KH", width: 80 },
-        { field: "maNV", headerName: "Mã NV", width: 80 },
-        { field: "liDoTuChoi", headerName: "Lí do từ chối", width: 100 },
+        {
+            field: "thoiGianDuyet",
+            headerName: "Thời Gian Duyệt",
+            minWidth: 120,
+            flex: 1,
+        },
+        {
+            field: "soKyHanThanhToan",
+            headerName: "Số kỳ hạn",
+            minWidth: 160,
+            flex: 1,
+        },
+        { field: "tongGia", headerName: "Tổng Giá", minWidth: 120, flex: 1 },
+        { field: "maKH", headerName: "Mã KH", minWidth: 80, flex: 1 },
+        { field: "maNV", headerName: "Mã NV", minWidth: 80, flex: 1 },
+        {
+            field: "liDoTuChoi",
+            headerName: "Lí do từ chối",
+            minWidth: 100,
+            flex: 1,
+        },
         {
             field: "tinhTrang",
             headerName: "Tình Trạng",
-            width: 160,
+            minWidth: 160,
             cellClassName: (params) =>
                 `status-cell ${params.value.replace(/\s/g, "").toLowerCase()}`,
             renderCell: (params) => (
