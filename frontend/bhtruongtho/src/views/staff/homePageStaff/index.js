@@ -9,7 +9,7 @@ const HomePageStaff = () => {
     // Giả sử bạn có dữ liệu về số lượng đơn vị với địa chỉ tương ứng
     const [count, setCount] = useState([]);
     const [total, setTotal] = useState([]);
-    const { user, login } = useUser();
+    const { user } = useUser();
 
     const fetchData = async () => {
         try {
