@@ -3,11 +3,11 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import { Container, Paper, Tab, Tabs } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import { DataGrid } from "@mui/x-data-grid";
 import React, { memo, useEffect, useState } from "react";
 import { getHoaDonDKbyTinhTrang } from "../../../api/connect";
 import { useUser } from "../../../context/UserContext";
 // Import useNavigate
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { useNavigate } from "react-router-dom";
 import { useSnackbar } from "../../../context/SnackbarContext";
 const Pay = () => {
@@ -262,7 +262,7 @@ const Pay = () => {
                 elevation={3}
                 style={{
                     padding: "20px",
-                    marginTop: "120px",
+                    marginTop: "50px",
                     marginBottom: "100px",
                 }}
             >
@@ -274,14 +274,25 @@ const Pay = () => {
 
                     {value === 0 && (
                         <div style={{ padding: "20px", marginTop: "20px" }}>
-                            <Box sx={{ height: 400, width: "100%" }}>
+                            <Box sx={{ height: 600, width: "100%" }}>
                                 <DataGrid
                                     rows={rows1}
                                     columns={columnsChuaThanhToan}
-                                    pageSize={5}
+                                    slots={{ toolbar: GridToolbar }}
+                                    slotProps={{
+                                        toolbar: {
+                                            showQuickFilter: true,
+                                        },
+                                    }}
+                                    initialState={{
+                                        pagination: {
+                                            paginationModel: {
+                                                pageSize: 8,
+                                            },
+                                        },
+                                    }}
+                                    pageSizeOptions={[8]}
                                     disableRowSelectionOnClick
-                                    hideFooterPagination
-                                    hideFooterSelectedRowCount
                                     getRowId={(row) => row.id}
                                 />
                             </Box>
@@ -290,11 +301,11 @@ const Pay = () => {
 
                     {value === 1 && (
                         <div style={{ padding: "20px", marginTop: "20px" }}>
-                            <Box sx={{ height: 400, width: "100%" }}>
+                            <Box sx={{ height: 600, width: "100%" }}>
                                 <DataGrid
                                     rows={rows2}
                                     columns={columnsDaThanhToan}
-                                    pageSize={5}
+                                    pageSize={8}
                                     disableRowSelectionOnClick
                                     hideFooterPagination
                                     hideFooterSelectedRowCount

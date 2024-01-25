@@ -24,7 +24,7 @@ namespace BaoHiemYTe.Controllers
             var token = new JwtSecurityToken(
                 claims: new[] { new Claim(ClaimTypes.Name, username),new Claim(ClaimTypes.Role, role) },
 
-                expires: DateTime.UtcNow.AddHours(1),
+                expires: DateTime.UtcNow.AddMonths(1),
                 signingCredentials: creds
             );
 

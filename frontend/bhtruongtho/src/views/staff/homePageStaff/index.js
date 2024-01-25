@@ -52,14 +52,14 @@ const HomePageStaff = () => {
         {
             title: "Đơn đăng ký",
             count: count.donDangKyChuaDuyet,
-            color: "#DCF2F1",
+            color: "#E0F4FF",
             address: ROUTERS.USER.DONDANGKY,
         },
 
         {
             title: "Quản lý gói bảo hiểm",
             count: count.goiBaoHiemDangCungCap,
-            color: "#6DB9EF",
+            color: "#E0F4FF",
             address: ROUTERS.USER.INSURANCEPACKM,
         },
         {
@@ -77,7 +77,7 @@ const HomePageStaff = () => {
         {
             title: "Báo cáo tài chính",
             count: "ㅤ",
-            color: "#4CB9E7",
+            color: "#E0F4FF",
             address: ROUTERS.USER.FINANCIALREPORT,
         },
     ];

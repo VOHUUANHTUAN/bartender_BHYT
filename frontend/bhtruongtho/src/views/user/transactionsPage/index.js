@@ -29,7 +29,6 @@ const BillList = () => {
             style: "currency",
             currency: "VND",
         }).format(amount);
-
         return formattedAmount;
     };
     const rows = billList.map((row, index) => {
