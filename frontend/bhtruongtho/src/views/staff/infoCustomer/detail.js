@@ -1,3 +1,9 @@
+import React, { memo, useEffect, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { getKhachHangInformationByID } from "../../../api/connect";
+
+import { ROUTERS } from "../../../utils/router";
+
 import {
     Button,
     Container,
@@ -13,11 +19,6 @@ import {
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import dayjs from "dayjs";
-import React, { memo, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { getKhachHangInformationByID } from "../../../api/connect";
-import { useUser } from "../../../context/UserContext";
 
 const DetailCustomer = () => {
     const { id } = useParams(); // Sử dụng destructuring để lấy id từ params
@@ -34,6 +35,7 @@ const DetailCustomer = () => {
     const [soDienThoai, setSoDienThoai] = useState("");
     const [soDu, setSoDu] = useState("");
     const navigate = useNavigate();
+    const { openSnackbar } = useSnackbar();
     const { user } = useUser();
 
     useEffect(() => {
@@ -45,7 +47,7 @@ const DetailCustomer = () => {
                 );
                 setDataKhachHang(khachHangData);
             } catch (error) {
-                setError(error);
+                openSnackbar("Lỗi trong quá trình lấy dữ liệu", "error");
             } finally {
                 setLoading(false);
             }
@@ -62,7 +64,7 @@ const DetailCustomer = () => {
             setNgaySinh(dayjs(dataKhachHang.ngaySinh) || null);
             setDiaChi(dataKhachHang.diaChi || "");
             setEmail(dataKhachHang.email || "");
-            setSoDienThoai(dataKhachHang.soDienThoai || "");
+            setSoDienThoai(dataKhachHang.sdt || "");
             setSoDu(formatCurrency(dataKhachHang.soDu) || "");
         }
     }, [dataKhachHang]);
@@ -237,13 +239,11 @@ const DetailCustomer = () => {
                                     </Grid>
                                 </Grid>{" "}
                                 <Button
-                                    variant="contained"
-                                    color="primary"
-                                    fullWidth
-                                    style={{ marginTop: "20px" }}
-                                    onClick={() => navigate(-1)} // Navigate back to previous page
+                                    variant="outlined"
+                                    component={Link}
+                                    to={`../${ROUTERS.USER.INFOCUSTOMER}`}
                                 >
-                                    quay lại{" "}
+                                    Quay lại
                                 </Button>
                             </form>
                         </Paper>

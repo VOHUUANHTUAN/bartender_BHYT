@@ -1,12 +1,17 @@
 import { Button, Container, Paper, Typography } from "@mui/material";
+import { Button, Container, Paper, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { getAllNhanVien } from "../../../api/connect";
+import { useUser } from "../../../context/UserContext";
 import { getAllNhanVien } from "../../../api/connect";
 import { useUser } from "../../../context/UserContext";
 
 const NhanVienList = () => {
     const [nhanVienList, setNhanVienList] = useState([]);
+    const { user } = useUser();
     const { user } = useUser();
 
     useEffect(() => {
@@ -50,7 +55,7 @@ const NhanVienList = () => {
                         >
                             <div style={{ padding: "20px", marginTop: "20px" }}>
                                 <Typography component="h1" variant="h5">
-                                    Lịch sử giao dịch
+                                    Thông tin nhân viên{" "}
                                 </Typography>
                                 <DataGrid
                                     rows={nhanVienList}
@@ -73,7 +78,7 @@ const NhanVienList = () => {
                                 </Button>
                             </div>
                         </Paper>
-                    </Container>{" "}
+                    </Container>
                 </>
             ) : (
                 <>
