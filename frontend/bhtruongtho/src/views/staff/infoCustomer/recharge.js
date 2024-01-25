@@ -1,6 +1,6 @@
 import { Button, Container, Paper, Tab, Tabs, TextField } from "@mui/material";
 import Box from "@mui/material/Box";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import React, { memo, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getHoaDonNapTien, napTien } from "../../../api/connect";
@@ -96,29 +96,33 @@ const Recharge = () => {
         setSoTien(inputValue);
     };
 
-	const fetchHistory = async () => {
-		try {
-			setLoading(true);
-			const x = await getHoaDonNapTien(localStorage.getItem("token"));
-			setHoaDon(x);
-			console.log("Thông tin hóa đơn:", x);
-		} catch (error) {
-			try {
-				
-			} catch {
-				openSnackbar("Có lỗi xảy ra khi kết nối với máy chủ", "error");
-			} 
-		} 
-		finally {
-			setLoading(false);
-		}
-	};
-
+    const fetchHistory = async () => {
+        try {
+            setLoading(true);
+            const x = await getHoaDonNapTien(localStorage.getItem("token"));
+            setHoaDon(x);
+            console.log("Thông tin hóa đơn:", x);
+        } catch (error) {
+            try {
+            } catch {
+                openSnackbar("Có lỗi xảy ra khi kết nối với máy chủ", "error");
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
+    const formatCurrency = (amount) => {
+        const formattedAmount = new Intl.NumberFormat("vi-VN", {
+            style: "currency",
+            currency: "VND",
+        }).format(amount);
+        return formattedAmount;
+    };
     // Đổ dữ liệu vào rows trong DataGrid
     const rows = hoaDon.map((row) => ({
         maHD: row.maHD,
-        soTien: row.soTien,
-        soDu: row.soDu,
+        soTien: formatCurrency(row.soTien),
+        soDu: formatCurrency(row.soDu),
         thoiGianNap: formatDateTime(row.thoiGianNap),
         maKH: row.maKH,
         maNV: row.maNV,
@@ -227,13 +231,27 @@ const Recharge = () => {
                                 {value === 1 && (
                                     <div style={{ marginTop: "20px" }}>
                                         <Box
-                                            sx={{ height: 400, width: "100%" }}
+                                            sx={{ height: 600, width: "100%" }}
                                         >
                                             <DataGrid
                                                 rows={rows}
                                                 columns={columns}
                                                 pageSize={5}
                                                 disableRowSelectionOnClick
+                                                slots={{ toolbar: GridToolbar }}
+                                                slotProps={{
+                                                    toolbar: {
+                                                        showQuickFilter: true,
+                                                    },
+                                                }}
+                                                initialState={{
+                                                    pagination: {
+                                                        paginationModel: {
+                                                            pageSize: 5,
+                                                        },
+                                                    },
+                                                }}
+                                                pageSizeOptions={[5]}
                                                 getRowId={(row) => row.maHD}
                                             />
                                         </Box>

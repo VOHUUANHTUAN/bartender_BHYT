@@ -153,7 +153,8 @@ const ChangeInformation = () => {
         }
 
         // Kiểm tra tên không được trống
-        const nameRegex = /^[a-zA-Z]+$/;
+        const nameRegex =
+            /^[a-zA-Zàáảãạăắằẳẵặâấầẩẫậèéẻẽẹêềếểễệđìíỉĩịòóỏõọôồốổỗộơờớởỡợùúủũụưừứửữựỳỵỷỹ ]+$/u;
         if (!nameRegex.test(hoTen)) {
             return "Định dạng họ tên không đúng";
         }

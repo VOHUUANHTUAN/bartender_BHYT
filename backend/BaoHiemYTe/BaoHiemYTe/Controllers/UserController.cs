@@ -55,7 +55,7 @@ namespace BaoHiemYTe.Controllers
 
             if (existingUser != null)
             {
-                return BadRequest("Username đã tồn tại");
+                return BadRequest("Tên người dùng đã tồn tại");
             }
 
             // Nếu username chưa tồn tại, tạo tài khoản mới

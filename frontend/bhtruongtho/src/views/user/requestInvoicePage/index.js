@@ -54,7 +54,6 @@ const RequestInvoice = () => {
     //Dữ liệu nhập cần validate
     const [formData, setFormData] = useState({
         invoiceCode: "",
-        //amount: "",
         // ... other fields
     });
 
@@ -65,7 +64,7 @@ const RequestInvoice = () => {
         const formattedAmount = new Intl.NumberFormat("vi-VN", {
             style: "currency",
             currency: "VND",
-        }).Format(amount);
+        }).format(amount);
 
         return formattedAmount;
     };
@@ -171,21 +170,21 @@ const RequestInvoice = () => {
     };
     // Hàm để lấy tên gói bảo hiểm dựa trên MaGoiBH
     const getInsurancePackageName = (maGoiBHApDung) => {
-        const foundPackage = insurancePackages.Find(
+        const foundPackage = insurancePackages.find(
             (packageItem) => packageItem.maGoiBH === maGoiBHApDung
         );
         return foundPackage ? foundPackage.tenGoiBH : "Unknown";
     };
     //hàm lấy tên bệnh dựa trên mã bệnh
     const getDiseaseName = (maBenh) => {
-        const foundPackage = diseases.Find(
+        const foundPackage = diseases.find(
             (packageItem) => packageItem.maBenh === maBenh
         );
         return foundPackage.tenBenh;
     };
     //hàm lấy tên bệnh viện dựa trên mã bệnh viện
     const getHospitalName = (maBenhVien) => {
-        const foundPackage = hospitalNameList.Find(
+        const foundPackage = hospitalNameList.find(
             (packageItem) => packageItem.maBV === maBenhVien
         );
         return foundPackage.tenBV;
@@ -195,7 +194,7 @@ const RequestInvoice = () => {
     //Dùng useEffect để bắt thay đổi ở bảo hiểm, tiền
     useEffect(() => {
         //lấy tỉ lệ hoàn tiền dựa trên mã bảo hiểm
-        const selectedGoiBH = insurancePackages.Find(
+        const selectedGoiBH = insurancePackages.find(
             (packageItem) => packageItem.maGoiBH === selectedInsurancePackage
         );
         const refundRate = selectedGoiBH ? selectedGoiBH.tiLeHoanTien : 0;
@@ -268,7 +267,7 @@ const RequestInvoice = () => {
         tenBenhVien: row.tenBenhVien,
         soTienDaKham: formatCurrency(row.soTienDaKham),
         benh: row.benh,
-        thoiGianTao: dayjs(row.thoiGianTao).Format("DD/MM/YYYY HH:mm:ss"),
+        thoiGianTao: dayjs(row.thoiGianTao).format("DD/MM/YYYY HH:mm:ss"),
         tinhTrang: row.tinhTrang,
         tenGoiBHApDung: getInsurancePackageName(row.maGoiBHApDung),
         soTienHoanTra: formatCurrency(row.soTienHoanTra),
@@ -324,13 +323,13 @@ const RequestInvoice = () => {
             >
                 <div>
                     <Tabs value={value} onChange={handleChangeTab}>
-                        <Tab Label="Đơn yêu cầu" />
-                        <Tab Label="Danh sách các đơn yêu cầu đã gửi" />
+                        <Tab label="Đơn yêu cầu" />
+                        <Tab label="Danh sách các đơn yêu cầu đã gửi" />
                     </Tabs>
                     {/* Nội dung tương ứng với từng tab */}
                     {value === 0 && (
                         <div style={{ padding: "20px", marginTop: "20px" }}>
-                            <Typography component="h1" Variant="h5">
+                            <Typography component="h1" variant="h5">
                                 Đơn yêu cầu hoàn trả hóa đơn
                             </Typography>
                             <form
@@ -340,14 +339,14 @@ const RequestInvoice = () => {
                                 }}
                             >
                                 <TextField
-                                    Label="Mã hóa đơn"
+                                    label="Mã hóa đơn"
                                     name="invoiceCode"
                                     value={formData.invoiceCode}
                                     onChange={handleChangeData}
                                     fullWidth
                                     required
                                     margin="normal"
-                                    Error={invoiceCodeError}
+                                    error={invoiceCodeError}
                                     helperText={
                                         invoiceCodeError &&
                                         "Mã hóa đơn không chứa khoảng trắng và các kí tự đặc biệt trừ _@#&-"
@@ -357,7 +356,7 @@ const RequestInvoice = () => {
                                     <InputLabel>Tên bệnh viện</InputLabel>
                                     <Select
                                         value={selectedHospitalName}
-                                        Label="Tên bệnh viện"
+                                        label="Tên bệnh viện"
                                         onChange={(e) =>
                                             setSelectedHospitalName(
                                                 e.target.value
@@ -375,7 +374,7 @@ const RequestInvoice = () => {
                                     </Select>
                                 </FormControl>
                                 <TextField
-                                    Label="Số tiền"
+                                    label="Số tiền"
                                     name="amount"
                                     value={formatCurrency(amount)}
                                     //onChange={handleChangeData}
@@ -393,7 +392,7 @@ const RequestInvoice = () => {
                                     <InputLabel>Tên bệnh</InputLabel>
                                     <Select
                                         value={selectedDisease}
-                                        Label="Tên bệnh"
+                                        label="Tên bệnh"
                                         onChange={(e) =>
                                             setSelectedDisease(e.target.value)
                                         }
@@ -412,7 +411,7 @@ const RequestInvoice = () => {
                                     <InputLabel>Gói bảo hiểm</InputLabel>
                                     <Select
                                         value={selectedInsurancePackage || ""}
-                                        Label="Gói bảo hiểm"
+                                        label="Gói bảo hiểm"
                                         onChange={handleInsurancePackageChange}
                                     >
                                         {insurancePackages.map(
@@ -428,7 +427,7 @@ const RequestInvoice = () => {
                                     </Select>
                                 </FormControl>
                                 <TextField
-                                    Label="Số tiền hoàn trả"
+                                    label="Số tiền hoàn trả"
                                     value={formatCurrency(refundAmount)}
                                     fullWidth
                                     margin="normal"
@@ -436,7 +435,7 @@ const RequestInvoice = () => {
                                 />
                                 <Button
                                     type="submit"
-                                    Variant="outlined"
+                                    variant="outlined"
                                     color="primary"
                                 >
                                     Tạo yêu cầu hoàn trả
