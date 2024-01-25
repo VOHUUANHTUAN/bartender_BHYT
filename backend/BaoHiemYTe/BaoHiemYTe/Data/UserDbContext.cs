@@ -97,10 +97,6 @@ namespace BaoHiemYTe.Data
             modelBuilder.Entity<YeuCauHoanTra>()
                 .Property(y => y.SoTienHoanTra)
                 .IsRequired(false);
-            //modelBuilder.Entity<YeuCauHoanTra>()
-            //    .HasIndex(hd => hd.MaHDKhamBenh)
-            //    .IsUnique();
-            // YeuCauHoanTra
             modelBuilder.Entity<YeuCauHoanTra>()
                 .HasOne(y => y.HoaDonKhamBenh)
                 .WithMany()
