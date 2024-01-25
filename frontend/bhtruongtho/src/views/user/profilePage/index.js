@@ -1,34 +1,32 @@
-import React, { memo, useEffect, useState } from "react";
 import {
-    updateKhachHangInformation,
-    getKhachHangInformation,
-    getUserInfoByToken,
-} from "../../../api/connect";
-import { useNavigate, Link } from "react-router-dom";
-import { useUser } from "../../../context/UserContext";
-import {
-    Typography,
-    Container,
-    TextField,
     Button,
+    Container,
+    FormControl,
+    Grid,
+    InputLabel,
+    MenuItem,
     Paper,
     Select,
-    MenuItem,
-    Grid,
-    FormControl,
-    InputLabel,
+    TextField,
+    Typography,
 } from "@mui/material";
-import dayjs from "dayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { LocalizationProvider } from "@mui/x-date-pickers";
-import { SettingsAccessibilityOutlined } from "@mui/icons-material";
+import dayjs from "dayjs";
+import React, { useEffect, useState } from "react";
+import {
+    getKhachHangInformation,
+    getUserInfoByToken,
+    updateKhachHangInformation,
+} from "../../../api/connect";
 import { useSnackbar } from "../../../context/SnackbarContext";
+import { useUser } from "../../../context/UserContext";
 
 // ... (imports)
 
 const ChangeInformation = () => {
-    const { user, login, setUser } = useUser(); // Assuming this provides the user data
+    const { login } = useUser(); // Assuming this provides the user data
     const { openSnackbar } = useSnackbar();
     // Initialize SoDu and username from user data
     const [soDu, setSoDu] = useState(0);

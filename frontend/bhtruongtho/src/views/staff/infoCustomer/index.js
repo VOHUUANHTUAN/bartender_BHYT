@@ -1,24 +1,22 @@
-import React, { memo, useState, useEffect } from "react";
-import { NV_getInfoCustomer } from "../../../api/connect";
-import { useUser } from "../../../context/UserContext";
+import CreditCardIcon from "@mui/icons-material/CreditCard";
+import HistoryIcon from "@mui/icons-material/History";
+import InfoIcon from "@mui/icons-material/Info";
 import { Container, Paper, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
-import { DataGrid } from "@mui/x-data-grid";
 import IconButton from "@mui/material/IconButton";
-import InfoIcon from "@mui/icons-material/Info";
-import HistoryIcon from "@mui/icons-material/History";
-import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
-import CreditCardIcon from "@mui/icons-material/CreditCard";
-import { Link, useNavigate } from "react-router-dom";
 import Tooltip from "@mui/material/Tooltip";
 import { GridToolbar } from "@mui/x-data-grid";
+import React, { memo, useEffect, useState } from "react";
+import { NV_getInfoCustomer } from "../../../api/connect";
+import { useUser } from "../../../context/UserContext";
 
+import { DataGrid } from "@mui/x-data-grid";
+import { useNavigate } from "react-router-dom";
 const InfoCustomer = () => {
     const { user } = useUser();
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
     const [rows, setRows] = useState([]);
-
 
     const navigate = useNavigate();
     // Function to format date time without hours and minutes
@@ -47,22 +45,12 @@ const InfoCustomer = () => {
                         hoTen: row.hoTen,
                         ngaySinh: formatDateTime(row.ngaySinh),
                         gioiTinh: row.gioiTinh,
-                        // cccd: row.cccd,
-                        // diaChi: row.diaChi,
-                        // sdt: row.sdt,
-                        // email: row.email,
-                        // soDu: row.soDu,
-                        // username: row.username,
                     }))
                 );
             } catch (error) {
                 try {
-                    setSnackbarMessage(error.response.data);
-                } catch {
-                    setSnackbarMessage("Có lỗi xảy ra khi kết nối với máy chủ");
-                }
+                } catch {}
 
-                setSnackbarOpen(true);
                 setError(error);
             } finally {
                 setLoading(false);
@@ -72,9 +60,7 @@ const InfoCustomer = () => {
         fetchInfo();
     }, []);
 
-    const handleSnackbarClose = () => {
-        setSnackbarOpen(false);
-    };
+    const handleSnackbarClose = () => {};
     const handleInfoClick = (rowData) => {
         navigate(`../staff/InfoCustomer/detail/${rowData.id}`); // Sử dụng rowData.id thay vì id
     };
@@ -89,13 +75,14 @@ const InfoCustomer = () => {
     };
     const columns = [
         { field: "maKH", headerName: "Mã KH", width: 100 },
-        { field: "hoTen", headerName: "Họ và tên", width: 220 },
-        { field: "ngaySinh", headerName: "Ngày sinh", width: 120 },
-        { field: "gioiTinh", headerName: "Giới tính", width: 120 },
+        { field: "hoTen", headerName: "Họ và tên", minWidth: 220, flex: 2 },
+        { field: "ngaySinh", headerName: "Ngày sinh", minWidth: 120, flex: 2 },
+        { field: "gioiTinh", headerName: "Giới tính", minWidth: 80, flex: 1 },
         {
             field: "actions",
             headerName: "Actions",
-            width: 400,
+            minWidth: 140,
+            flex: 2,
             renderCell: (params) => (
                 <div>
                     <Tooltip title="Chi tiết">
@@ -129,54 +116,64 @@ const InfoCustomer = () => {
     }, [rows]);
 
     return (
-        <Container component="main" maxWidth="md">
-            <Paper
-                elevation={3}
-                style={{
-                    padding: "20px",
-                    marginTop: "40px",
-                    marginBottom: "100px",
-                }}
-            >
-                <div>
-                    <Box>
-                        <div
+        <>
+            {user && user.role == "Nhân viên" ? (
+                <>
+                    <Container component="main" maxWidth="md">
+                        <Paper
+                            elevation={3}
                             style={{
-                                display: "flex",
-                                alignItems: "center",
-                                marginBottom: "16px",
+                                padding: "20px",
+                                marginTop: "40px",
+                                marginBottom: "100px",
                             }}
                         >
-                            <Typography component="h1" variant="h5">
-                                Danh sách khách hàng
-                            </Typography>
-
-                        </div>
-                        <DataGrid
-                            rows={rows}
-                            columns={columns}
-                            slots={{ toolbar: GridToolbar }}
-                            slotProps={{
-                                toolbar: {
-                                    showQuickFilter: true,
-                                },
-                            }}
-                            initialState={{
-                                pagination: {
-                                    paginationModel: {
-                                        pageSize: 10,
-                                    },
-                                },
-                            }}
-                            pageSizeOptions={[10]}
-                            hideFooterSelectedRowCount
-                            disableRowSelectionOnClick
-                            getRowId={(row) => row.id}
-                        />
-                    </Box>
-                </div>
-            </Paper>
-        </Container>
+                            <div>
+                                <Box>
+                                    <div
+                                        style={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                            marginBottom: "16px",
+                                        }}
+                                    >
+                                        <Typography component="h1" variant="h5">
+                                            Danh sách khách hàng
+                                        </Typography>
+                                    </div>
+                                    <DataGrid
+                                        rows={rows}
+                                        columns={columns}
+                                        slots={{ toolbar: GridToolbar }}
+                                        slotProps={{
+                                            toolbar: {
+                                                showQuickFilter: true,
+                                            },
+                                        }}
+                                        initialState={{
+                                            pagination: {
+                                                paginationModel: {
+                                                    pageSize: 10,
+                                                },
+                                            },
+                                        }}
+                                        pageSizeOptions={[10]}
+                                        hideFooterSelectedRowCount
+                                        disableRowSelectionOnClick
+                                        getRowId={(row) => row.id}
+                                    />
+                                </Box>
+                            </div>
+                        </Paper>
+                    </Container>
+                </>
+            ) : (
+                <>
+                    <h2>404 - Page Not Found</h2>
+                    <p>The requested page does not exist.</p>
+                </>
+            )}
+        </>
     );
 };
 

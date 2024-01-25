@@ -1,10 +1,7 @@
 import { memo } from "react";
+import { Link } from "react-router-dom";
+import { HashLink as ScrollLink } from "react-router-hash-link";
 import "./style.scss";
-import { ROUTERS } from "../../../../utils/router";
-import { Link } from 'react-router-dom';
-import { HashLink as ScrollLink } from 'react-router-hash-link';
-import { useEffect } from "react";
-import { useUser } from "../../../../context/UserContext";
 
 const Footer = () => {
     return (
@@ -30,7 +27,13 @@ const Footer = () => {
                                     <Link to="">0287 3089 899</Link>
                                 </li>
                                 <li>
-                                <a href="mailto:bhtruongtho@gmail.com" target="_blank" rel="noopener noreferrer">bhtruongtho@gmail.com</a>
+                                    <a
+                                        href="mailto:bhtruongtho@gmail.com"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        bhtruongtho@gmail.com
+                                    </a>
                                 </li>
                             </ul>
                         </div>
@@ -55,26 +58,46 @@ const Footer = () => {
                             <div className="footer_about_logo">Thông tin</div>
                             <ul>
                                 <li>
-                                    <ScrollLink smooth to="/#introduction-section" duration={500}>
-                                    <div style={{ cursor: 'pointer'}}>
-                                    Giới thiệu
-                                     </div></ScrollLink>
+                                    <ScrollLink
+                                        smooth
+                                        to="/#introduction-section"
+                                        duration={500}
+                                    >
+                                        <div style={{ cursor: "pointer" }}>
+                                            Giới thiệu
+                                        </div>
+                                    </ScrollLink>
                                 </li>
                                 <li>
-                                    <ScrollLink smooth to="/contact/#contact-section" duration={500}>
-                                    Tin tức và sự kiện</ScrollLink>
+                                    <ScrollLink
+                                        smooth
+                                        to="/contact/#contact-section"
+                                        duration={500}
+                                    >
+                                        Tin tức và sự kiện
+                                    </ScrollLink>
                                 </li>
                                 <li>
-                                    <ScrollLink to="/#dieu-khoan-section" smooth={true} duration={500}>
-                                    <div style={{ cursor: 'pointer'}}>
-                                    Điều khoản và điều kiện
-                                     </div></ScrollLink>
+                                    <ScrollLink
+                                        to="/#dieu-khoan-section"
+                                        smooth={true}
+                                        duration={500}
+                                    >
+                                        <div style={{ cursor: "pointer" }}>
+                                            Điều khoản và điều kiện
+                                        </div>
+                                    </ScrollLink>
                                 </li>
                                 <li>
-                                    <ScrollLink to="/#bao-mat-section" smooth={true} duration={500}>
-                                    <div style={{ cursor: 'pointer'}}>
-                                    Chính sách bảo mật
-                                     </div></ScrollLink>
+                                    <ScrollLink
+                                        to="/#bao-mat-section"
+                                        smooth={true}
+                                        duration={500}
+                                    >
+                                        <div style={{ cursor: "pointer" }}>
+                                            Chính sách bảo mật
+                                        </div>
+                                    </ScrollLink>
                                 </li>
                             </ul>
                         </div>

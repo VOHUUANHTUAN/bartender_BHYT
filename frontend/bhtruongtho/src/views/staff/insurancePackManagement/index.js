@@ -5,11 +5,14 @@ import { Container, Paper, Button, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import "./style.scss";
+import { useUser } from "../../../context/UserContext";
 
 const InsurancePack = () => {
     const [loading, setLoading] = useState(true);
     const [goiBaoHiemList, setGoiBaoHiemList] = useState([]);
     const [selectedId, setSelectedId] = useState("");
+    const { user } = useUser();
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -39,7 +42,7 @@ const InsurancePack = () => {
         tenGoiBH: item.tenGoiBH,
         motaGoiBH: item.motaGoiBH,
         gia: formatCurrency(item.gia),
-        tiLeHoanTien: item.tiLeHoanTien + "%",
+        tiLeHoanTien: item.tiLeHoanTien + " %",
         thoiHanBaoVe: item.thoiHanBaoVe + " năm",
         tinhTrang: item.tinhTrang,
     }));
@@ -70,70 +73,95 @@ const InsurancePack = () => {
     ];
 
     return (
-        <Container component="main" maxWidth="xl">
-            <Paper
-                elevation={3}
-                style={{
-                    padding: "20px",
-                    marginTop: "40px",
-                    marginBottom: "100px",
-                }}
-            >
-                <div>
-                    <Box>
-                        <div
+        <>
+            {user && user.role == "Nhân viên" ? (
+                <>
+                    <Container component="main" maxWidth="xl">
+                        <Paper
+                            elevation={3}
                             style={{
-                                display: "flex",
-                                alignItems: "center",
-                                marginBottom: "16px",
+                                padding: "20px",
+                                marginTop: "40px",
+                                marginBottom: "100px",
                             }}
                         >
-                            <Typography component="h1" variant="h5">
-                                Danh sách gói bảo hiểm
-                            </Typography>
-                            <Button
-                                variant="outlined"
-                                component={Link}
-                                to={`add`}
-                                style={{ marginLeft: "auto" }}
-                            >
-                                Thêm gói bảo hiểm
-                            </Button>
-                        </div>
-                        <DataGrid
-                            rows={rows}
-                            columns={columns}
-                            slots={{ toolbar: GridToolbar }}
-                            slotProps={{
-                                toolbar: {
-                                    showQuickFilter: true,
-                                },
-                            }}
-                            initialState={{
-                                pagination: {
-                                    paginationModel: {
-                                        pageSize: 10,
-                                    },
-                                },
-                            }}
-                            pageSizeOptions={[10]}
-                            hideFooterSelectedRowCount
-                            onRowSelectionModelChange={(
-                                newRowSelectionModel
-                            ) => {
-                                setSelectedId(newRowSelectionModel);
-                            }}
-                            rowSelectionModel={selectedId}
-                        />
-                        <div style={{ display: 'flex', marginTop: '20px' }}>
-                            <Button component={Link} to={`detail/${selectedId}`} variant="outlined" color="primary">
-                                Xem chi tiết
-                            </Button>
-                        </div>
-                    </Box>
-                </div>
-            </Paper>
-        </Container>
+                            <div>
+                                <Box>
+                                    <div
+                                        style={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                            marginBottom: "16px",
+                                        }}
+                                    >
+                                        <Typography component="h1" variant="h5">
+                                            Danh sách gói bảo hiểm
+                                        </Typography>
+                                        <Button
+                                            variant="outlined"
+                                            component={Link}
+                                            to={`add`}
+                                            style={{ marginLeft: "auto" }}
+                                        >
+                                            Thêm gói bảo hiểm
+                                        </Button>
+                                    </div>
+                                    <DataGrid
+                                        rows={rows}
+                                        columns={columns}
+                                        slots={{ toolbar: GridToolbar }}
+                                        slotProps={{
+                                            toolbar: {
+                                                showQuickFilter: true,
+                                            },
+                                        }}
+                                        initialState={{
+                                            pagination: {
+                                                paginationModel: {
+                                                    pageSize: 10,
+                                                },
+                                            },
+                                        }}
+                                        pageSizeOptions={[10]}
+                                        hideFooterSelectedRowCount
+                                        onRowSelectionModelChange={(
+                                            newRowSelectionModel
+                                        ) => {
+                                            setSelectedId(newRowSelectionModel);
+                                        }}
+                                        rowSelectionModel={selectedId}
+                                    />
+                                    <div>
+                                        {selectedId.length > 0 && (
+                                            <div
+                                                style={{
+                                                    display: "flex",
+                                                    marginTop: "20px",
+                                                }}
+                                            >
+                                                <Button
+                                                    component={Link}
+                                                    to={`detail/${selectedId}`}
+                                                    variant="outlined"
+                                                    color="primary"
+                                                >
+                                                    Xem chi tiết
+                                                </Button>
+                                            </div>
+                                        )}
+                                    </div>
+                                </Box>
+                            </div>
+                        </Paper>
+                    </Container>
+                </>
+            ) : (
+                <>
+                    <h2>404 - Page Not Found</h2>
+                    <p>The requested page does not exist.</p>
+                </>
+            )}
+        </>
     );
 };
 

@@ -1,39 +1,21 @@
-import React, { memo, useState, useEffect } from "react";
-import {
-    getHoaDonDKbyTinhTrang,
-    phatThanhToanTreHan,
-} from "../../../api/connect";
-import { useUser } from "../../../context/UserContext";
-import {
-    Container,
-    Paper,
-    TextField,
-    Typography,
-    Select,
-    MenuItem,
-    FormControl,
-    InputLabel,
-    InputAdornment,
-    Tabs,
-    Tab,
-} from "@mui/material";
-import Box from "@mui/material/Box";
-import { DataGrid } from "@mui/x-data-grid";
-import Button from "@mui/material/Button";
 import PaymentIcon from "@mui/icons-material/Payment";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import { Container, Paper, Tab, Tabs } from "@mui/material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import { DataGrid } from "@mui/x-data-grid";
+import React, { memo, useEffect, useState } from "react";
+import { getHoaDonDKbyTinhTrang } from "../../../api/connect";
+import { useUser } from "../../../context/UserContext";
 // Import useNavigate
-import { useSnackbar } from "../../../context/SnackbarContext";
 import { useNavigate } from "react-router-dom";
+import { useSnackbar } from "../../../context/SnackbarContext";
 const Pay = () => {
     const { openSnackbar } = useSnackbar();
     // Sử dụng useNavigate để chuyển hướng
     const navigate = useNavigate();
     //user context
-    const { user } = useUser();
     //error và loading
-    const [error, setError] = useState(null);
-    const [loading, setLoading] = useState(false);
     const [value, setValue] = useState(0);
     const [rows1, setRows1] = useState([]); // State để lưu dữ liệu từ API
     const [rows2, setRows2] = useState([]); // State để lưu dữ liệu từ API
@@ -65,7 +47,6 @@ const Pay = () => {
     useEffect(() => {
         const fetchChuaThanhToan = async () => {
             try {
-                setLoading(true);
                 // Gọi API phatThanhToanTreHan trước
                 // const phatThanhToanTreHanResult = await phatThanhToanTreHan(
                 // 	localStorage.getItem("token")
@@ -100,10 +81,7 @@ const Pay = () => {
                         "error"
                     );
                 }
-
-                setError(error);
             } finally {
-                setLoading(false);
             }
         };
 
@@ -115,8 +93,6 @@ const Pay = () => {
     useEffect(() => {
         const fetchDaThanhToan = async () => {
             try {
-                setLoading(true);
-
                 const hoadonTT = await getHoaDonDKbyTinhTrang(
                     localStorage.getItem("token"),
                     "Đã thanh toán"
@@ -146,10 +122,7 @@ const Pay = () => {
                         "error"
                     );
                 }
-
-                setError(error);
             } finally {
-                setLoading(false);
             }
         };
 

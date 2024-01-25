@@ -18,6 +18,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import { ROUTERS } from "../../../utils/router";
 import { Link } from "react-router-dom";
 import { Container, Paper, TextField, Button, Typography } from "@mui/material";
+import { useUser } from "../../../context/UserContext";
 import { useSnackbar } from "../../../context/SnackbarContext";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -46,7 +47,9 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 const AddInsPack = () => {
     //user context
     const { openSnackbar } = useSnackbar();
-    //error và loading
+    //error và loading    const { user } = useUser();
+    const { user } = useUser();
+
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
     //khai báo các biến
@@ -59,15 +62,15 @@ const AddInsPack = () => {
             ...prevFormData,
             [fieldName]: e.target.value,
         }));
-        //regex cho mo ta goi bao hiem
-        if (e.target.name === "MoTa") {
-            const moTaRegex = /^[a-zA-Z0-9\s&.'-]{3,255}$/;
-            setMoTaError(!moTaRegex.test(e.target.value));
-        }
         //regex cho ten
         // if (e.target.name === "Ten") {
-        //     const tenRegex = /^[a-zA-Z0-9\s&.'-]{3,255}$/;
-        //     setTenError(!tenRegex.test(e.target.value));
+        //   const tenRegex = /^[\p{L}\s&.'-]{3,255}$/;
+        //   setTenError(!tenRegex.test(e.target.value));
+        // }
+        // //regex cho mo ta goi bao hiem
+        // if (e.target.name === "Mota") {
+        //   const moTaRegex = /^[a-zA-Z0-9\s&.'-]{3,255}$/;
+        //   setMoTaError(!moTaRegex.test(e.target.value));
         // }
         //regex cho số tiền
         if (e.target.name === "Gia") {
@@ -155,11 +158,11 @@ const AddInsPack = () => {
             }
 
             //thông báo thành công
-            openSnackbar(responseData);
+            openSnackbar(responseData, "success");
         } catch (error) {
             // Xử lý các lỗi khác (ví dụ: mất kết nối)
             //thông báo lỗi
-            openSnackbar(error.response.data);
+            openSnackbar(error.response.data, "error");
         } finally {
             setLoading(false);
         }
@@ -183,21 +186,21 @@ const AddInsPack = () => {
         Gia: "Giá",
         DoTuoi: "Độ Tuổi",
         TiLeHoanTien: "Tỉ Lệ Hoàn Tiền",
-        ThoiHanBaoVe: "Thời Hạn Bảo Vệ",
+        ThoiHanBaoVe: "Thời Hạn Bảo Vệ (năm)",
     };
     //thông báo lỗi
-    const [tenError, setTenError] = useState(false);
-    const [moTaError, setMoTaError] = useState(false);
+    // const [tenError, setTenError] = useState(false);
+    // const [moTaError, setMoTaError] = useState(false);
     const [giaError, setGiaError] = useState(false);
     const [tiLeHoanTienError, setTiLeHoanTienError] = useState(false);
     const [thoiHanBaoVeError, setThoiHanBaoVeError] = useState(false);
 
     const getError = (fieldName) => {
         switch (fieldName) {
-            case "Ten":
-                return tenError;
-            case "MoTa":
-                return moTaError;
+            // case "Ten":
+            //   return tenError;
+            // case "Mota":
+            //   return moTaError;
             case "Gia":
                 return giaError;
             case "TiLeHoanTien":
@@ -213,7 +216,7 @@ const AddInsPack = () => {
         switch (fieldName) {
             case "Ten":
                 return "Tên không hợp lệ"; // Replace with the actual error message
-            case "MoTa":
+            case "Mota":
                 return "Mô tả chứa kí tự không hợp lệ"; // Replace with the actual error message
             case "Gia":
                 return "Giá tiền chỉ chứa số"; // Replace with the actual error message
@@ -244,8 +247,7 @@ const AddInsPack = () => {
             return "Thời hạn không được để trống";
         }
         if (
-            tenError ||
-            moTaError ||
+            //tenError || moTaError ||
             giaError ||
             tiLeHoanTienError ||
             thoiHanBaoVeError
@@ -275,170 +277,217 @@ const AddInsPack = () => {
     };
 
     return (
-        <Container component="main" maxWidth="md">
-            <Paper
-                elevation={3}
-                style={{
-                    padding: "20px",
-                    marginTop: "40px",
-                    marginBottom: "100px",
-                }}
-            >
-                <div
-                    style={{
-                        display: "flex",
-                        alignItems: "center",
-                        marginBottom: "16px",
-                    }}
-                >
-                    <Typography component="h1" variant="h5" color="primary">
-                        Tạo gói bảo hiểm
-                    </Typography>
-                </div>
-                <div>
-                    <form
-                        onSubmit={(e) => {
-                            e.preventDefault();
-                            handleSubmitAddIns(e);
-                        }}
-                    >
-                        <div>
-                            <TableContainer component={Paper}>
-                                <Table
-                                    sx={{ minWidth: 700 }}
-                                    aria-label="customized table"
-                                >
-                                    <TableHead>
-                                        <TableRow>
-                                            <StyledTableCell
-                                                style={{ width: "30%" }}
-                                            ></StyledTableCell>
-                                            <StyledTableCell align="center"></StyledTableCell>
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {Object.entries(formData).map(
-                                            ([fieldName, value]) => (
-                                                <StyledTableRow key={fieldName}>
-                                                    <StyledTableCell
-                                                        component="th"
-                                                        scope="row"
-                                                    >
-                                                        {fieldNames[fieldName]}
-                                                    </StyledTableCell>
-                                                    <StyledTableCell align="right">
-                                                        {fieldName ===
-                                                        "DoTuoi" ? (
-                                                            <div
-                                                                style={{
-                                                                    width: "80%",
-                                                                }}
-                                                            >
-                                                                <Slider
-                                                                    value={age}
-                                                                    onChange={
-                                                                        handleSliderChange
-                                                                    }
-                                                                    valueLabelDisplay="auto"
-                                                                    valueLabelFormat={(
-                                                                        value
-                                                                    ) =>
-                                                                        `Độ Tuổi: ${value}`
-                                                                    }
-                                                                    aria-labelledby="range-slider"
-                                                                    min={18}
-                                                                    max={80}
-                                                                />
-                                                            </div>
-                                                        ) : (
-                                                            <TextField
-                                                                variant="outlined"
-                                                                fullWidth
-                                                                name={fieldName}
-                                                                value={value}
-                                                                onChange={(e) =>
-                                                                    handleInputChange(
-                                                                        e,
-                                                                        fieldName
-                                                                    )
-                                                                }
-                                                                error={getError(
-                                                                    fieldName
-                                                                )}
-                                                                helperText={
-                                                                    getError(
-                                                                        fieldName
-                                                                    ) &&
-                                                                    getErrorMessage(
-                                                                        fieldName
-                                                                    )
-                                                                }
-                                                            />
-                                                        )}
-                                                    </StyledTableCell>
-                                                </StyledTableRow>
-                                            )
-                                        )}
-                                    </TableBody>
-                                </Table>
-                            </TableContainer>
-                            <div style={{ marginTop: "20px" }}>
-                                <Autocomplete
-                                    multiple
-                                    id="tags-outlined"
-                                    options={allBenh.map(
-                                        (option) => option.tenBenh
-                                    )}
-                                    value={selectedValues}
-                                    onChange={handleSelectChange}
-                                    filterSelectedOptions
-                                    freeSolo
-                                    renderTags={(value, getTagProps) =>
-                                        value.map((option, index) => (
-                                            <Chip
-                                                variant="outlined"
-                                                label={option}
-                                                {...getTagProps({ index })}
-                                            />
-                                        ))
-                                    }
-                                    renderInput={(params) => (
-                                        <TextField
-                                            {...params}
-                                            label="Chọn bệnh"
-                                            placeholder="Tên bệnh"
-                                        />
-                                    )}
-                                />
-                            </div>
+        <>
+            {user && user.role == "Nhân viên" ? (
+                <>
+                    <Container component="main" maxWidth="md">
+                        <Paper
+                            elevation={3}
+                            style={{
+                                padding: "20px",
+                                marginTop: "40px",
+                                marginBottom: "100px",
+                            }}
+                        >
                             <div
                                 style={{
                                     display: "flex",
-                                    justifyContent: "center",
-                                    marginTop: "20px",
+                                    alignItems: "center",
+                                    marginBottom: "16px",
                                 }}
                             >
-                                <Button
-                                    variant="outlined"
+                                <Typography
+                                    component="h1"
+                                    variant="h5"
                                     color="primary"
-                                    type="submit"
-                                    style={{ marginRight: "10px" }}
                                 >
-                                    Tạo
-                                </Button>
-                                <Button
-                                    variant="outlined"
-                                    component={Link}
-                                    to={`../${ROUTERS.USER.INSURANCEPACKM}`}
-                                >
-                                    Quay lại
-                                </Button>
+                                    Tạo gói bảo hiểm
+                                </Typography>
                             </div>
-                        </div>
-                    </form>
-                </div>
-            </Paper>
-        </Container>
+                            <div>
+                                <form
+                                    onSubmit={(e) => {
+                                        e.preventDefault();
+                                        handleSubmitAddIns(e);
+                                    }}
+                                >
+                                    <div>
+                                        <TableContainer component={Paper}>
+                                            <Table
+                                                sx={{ minWidth: 700 }}
+                                                aria-label="customized table"
+                                            >
+                                                <TableHead>
+                                                    <TableRow>
+                                                        <StyledTableCell
+                                                            style={{
+                                                                width: "30%",
+                                                            }}
+                                                        ></StyledTableCell>
+                                                        <StyledTableCell align="center"></StyledTableCell>
+                                                    </TableRow>
+                                                </TableHead>
+                                                <TableBody>
+                                                    {Object.entries(
+                                                        formData
+                                                    ).map(
+                                                        ([
+                                                            fieldName,
+                                                            value,
+                                                        ]) => (
+                                                            <StyledTableRow
+                                                                key={fieldName}
+                                                            >
+                                                                <StyledTableCell
+                                                                    component="th"
+                                                                    scope="row"
+                                                                >
+                                                                    {
+                                                                        fieldNames[
+                                                                            fieldName
+                                                                        ]
+                                                                    }
+                                                                </StyledTableCell>
+                                                                <StyledTableCell align="right">
+                                                                    {fieldName ===
+                                                                    "DoTuoi" ? (
+                                                                        <div
+                                                                            style={{
+                                                                                width: "80%",
+                                                                            }}
+                                                                        >
+                                                                            <Slider
+                                                                                value={
+                                                                                    age
+                                                                                }
+                                                                                onChange={
+                                                                                    handleSliderChange
+                                                                                }
+                                                                                valueLabelDisplay="auto"
+                                                                                valueLabelFormat={(
+                                                                                    value
+                                                                                ) =>
+                                                                                    `Độ Tuổi: ${value}`
+                                                                                }
+                                                                                aria-labelledby="range-slider"
+                                                                                min={
+                                                                                    18
+                                                                                }
+                                                                                max={
+                                                                                    80
+                                                                                }
+                                                                            />
+                                                                        </div>
+                                                                    ) : (
+                                                                        <TextField
+                                                                            variant="outlined"
+                                                                            fullWidth
+                                                                            name={
+                                                                                fieldName
+                                                                            }
+                                                                            value={
+                                                                                value
+                                                                            }
+                                                                            onChange={(
+                                                                                e
+                                                                            ) =>
+                                                                                handleInputChange(
+                                                                                    e,
+                                                                                    fieldName
+                                                                                )
+                                                                            }
+                                                                            error={getError(
+                                                                                fieldName
+                                                                            )}
+                                                                            helperText={
+                                                                                getError(
+                                                                                    fieldName
+                                                                                ) &&
+                                                                                getErrorMessage(
+                                                                                    fieldName
+                                                                                )
+                                                                            }
+                                                                        />
+                                                                    )}
+                                                                </StyledTableCell>
+                                                            </StyledTableRow>
+                                                        )
+                                                    )}
+                                                </TableBody>
+                                            </Table>
+                                        </TableContainer>
+                                        <div style={{ marginTop: "20px" }}>
+                                            <Autocomplete
+                                                multiple
+                                                id="tags-outlined"
+                                                options={allBenh.map(
+                                                    (option) => option.tenBenh
+                                                )}
+                                                value={selectedValues}
+                                                onChange={handleSelectChange}
+                                                filterSelectedOptions
+                                                freeSolo
+                                                renderTags={(
+                                                    value,
+                                                    getTagProps
+                                                ) =>
+                                                    value.map(
+                                                        (option, index) => (
+                                                            <Chip
+                                                                variant="outlined"
+                                                                label={option}
+                                                                {...getTagProps(
+                                                                    { index }
+                                                                )}
+                                                            />
+                                                        )
+                                                    )
+                                                }
+                                                renderInput={(params) => (
+                                                    <TextField
+                                                        {...params}
+                                                        label="Chọn bệnh"
+                                                        placeholder="Tên bệnh"
+                                                    />
+                                                )}
+                                            />
+                                        </div>
+                                        <div
+                                            style={{
+                                                display: "flex",
+                                                justifyContent: "center",
+                                                marginTop: "20px",
+                                            }}
+                                        >
+                                            <Button
+                                                variant="outlined"
+                                                color="primary"
+                                                type="submit"
+                                                style={{ marginRight: "10px" }}
+                                            >
+                                                Tạo
+                                            </Button>
+                                            <Button
+                                                variant="outlined"
+                                                component={Link}
+                                                to={`../${ROUTERS.USER.INSURANCEPACKM}`}
+                                            >
+                                                Quay lại
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </Paper>
+                    </Container>
+                </>
+            ) : (
+                <>
+                    <h2>404 - Page Not Found</h2>
+                    <p>The requested page does not exist.</p>
+                </>
+            )}
+        </>
     );
 };
 export default memo(AddInsPack);

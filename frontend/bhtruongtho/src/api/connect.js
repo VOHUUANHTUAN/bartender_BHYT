@@ -32,6 +32,7 @@ const END_POINT = {
     GETSOTIENKHAM: "GetSoTienKham",
     RECHARGE: "KhachHang/NapTien",
     HOADONNAPTIEN: "NhanVien/GetHoaDonNapTien",
+    THONGTINTRANGCHUSTAFF: "NhanVien/ThongTinTongHop",
     LICHSUTHANHTOAN: "HoaDonThanhToanDK/LichSuThanhToan",
 };
 
@@ -64,6 +65,14 @@ export const getUserInfoByToken = (token) => {
         },
     });
 };
+//Hàm lấy thông tin đăng nhập của user
+export const getStaffHompageInfo = (token) => {
+    return axiosClient.get(`${END_POINT.THONGTINTRANGCHUSTAFF}`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+};
 
 // Hàm lấy thông tin cá nhân khách hàng
 export const getKhachHangInformation = (token) => {
@@ -90,8 +99,12 @@ export const updateKhachHangInformation = (token, khachHangData) => {
     });
 };
 
-export const getGoiBHByMaGBH = (MaGBH) => {
-    return axiosClient.get(`${END_POINT.GOIBAOHIEM}/${MaGBH}`);
+export const getGoiBHByMaGBH = (MaGBH, token) => {
+    return axiosClient.get(`${END_POINT.GOIBAOHIEM}/${MaGBH}`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
 };
 
 export const getBenhByMaGBH = (MaGBH) => {

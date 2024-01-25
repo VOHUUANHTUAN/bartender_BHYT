@@ -1,24 +1,23 @@
-import React, { memo, useState, useEffect } from "react";
+import {
+    Button,
+    FormLabel,
+    Grid,
+    Input,
+    Paper,
+    Typography,
+} from "@mui/material";
+import dayjs from "dayjs";
+import React, { memo, useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import {
     getDonDangKyByID,
     getNhanVienByID,
-    putDonDangKyByID,
     getUserInfoByToken,
+    putDonDangKyByID,
 } from "../../../api/connect";
-import { useParams, Link } from "react-router-dom";
 import { ROUTERS } from "../../../utils/router";
 
-import {
-    Grid,
-    Paper,
-    Typography,
-    Button,
-    Input,
-    FormLabel,
-} from "@mui/material";
-import dayjs from "dayjs";
 import { useSnackbar } from "../../../context/SnackbarContext";
-import { style } from "@mui/system";
 
 const DetailPage = () => {
     const [loading, setLoading] = useState(true);
@@ -53,7 +52,7 @@ const DetailPage = () => {
                 );
                 setCurrentuser(data.username);
             } catch (error) {
-                openSnackbar('Lỗi trong quá trình lấy user', 'error')
+                openSnackbar("Lỗi trong quá trình lấy user", "error");
             } finally {
                 setLoading(false);
             }
@@ -71,10 +70,10 @@ const DetailPage = () => {
                     );
                     setDonDangKy(data);
                 } else {
-                    openSnackbar('Lỗi trong quá trình lấy dữ liệu', 'error')
+                    openSnackbar("Lỗi trong quá trình lấy dữ liệu", "error");
                 }
             } catch (error) {
-                openSnackbar('Lỗi trong quá trình lấy dữ liệu', 'error')
+                openSnackbar("Lỗi trong quá trình lấy dữ liệu", "error");
             } finally {
                 setLoading(false);
             }
@@ -231,16 +230,18 @@ const DetailPage = () => {
         }
     };
 
-
     return (
-
         <div className="container__body">
             {loading ? (
                 <p>Loading...</p>
             ) : (
                 <Paper
                     elevation={3}
-                    style={{ padding: "20px", marginTop: "40px", marginBottom: "100px" }}
+                    style={{
+                        padding: "20px",
+                        marginTop: "40px",
+                        marginBottom: "100px",
+                    }}
                 >
                     <Grid container spacing={2} justifyContent="flex-end">
                         <Grid item xs={12} sm={5}>
@@ -296,15 +297,16 @@ const DetailPage = () => {
                                             Họ Tên: {donDangKy.khachHang.hoTen}
                                         </Typography>
                                         <Typography variant="body1">
-                                            Địa Chỉ: {donDangKy.khachHang.diaChi}
+                                            Địa Chỉ:{" "}
+                                            {donDangKy.khachHang.diaChi}
                                         </Typography>
                                         <Typography variant="body1">
-                                            Số điện thoại: {donDangKy.khachHang.sdt}
+                                            Số điện thoại:{" "}
+                                            {donDangKy.khachHang.sdt}
                                         </Typography>
                                         <Typography variant="body1">
                                             Email: {donDangKy.khachHang.email}
                                         </Typography>
-
                                     </>
                                 ) : (
                                     <Typography variant="body1">
@@ -352,9 +354,9 @@ const DetailPage = () => {
                                     <Typography variant="body1">
                                         Thời gian bắt đầu:{" "}
                                         {donDangKy.thoiGianBD
-                                            ? dayjs(donDangKy.thoiGianBD).format(
-                                                "DD/MM/YYYY"
-                                            )
+                                            ? dayjs(
+                                                  donDangKy.thoiGianBD
+                                              ).format("DD/MM/YYYY")
                                             : "Chưa kích hoạt"}
                                     </Typography>
                                 </div>
@@ -371,8 +373,8 @@ const DetailPage = () => {
                                         Thời gian hết hạn:{" "}
                                         {donDangKy.thoiGianHetHan
                                             ? dayjs(
-                                                donDangKy.thoiGianHetHan
-                                            ).format("DD/MM/YYYY")
+                                                  donDangKy.thoiGianHetHan
+                                              ).format("DD/MM/YYYY")
                                             : "Chưa kích hoạt"}
                                     </Typography>
                                 </div>
@@ -412,7 +414,8 @@ const DetailPage = () => {
                                     }}
                                 >
                                     <Typography variant="body1">
-                                        Tình trạng hiện tại: {donDangKy.tinhTrang}
+                                        Tình trạng hiện tại:{" "}
+                                        {donDangKy.tinhTrang}
                                     </Typography>
                                 </div>
                                 <Typography variant="body1">
@@ -478,7 +481,14 @@ const DetailPage = () => {
                                     Từ chối
                                 </Button>
                             </Grid>
-                            <Grid item xs={4} style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                            <Grid
+                                item
+                                xs={4}
+                                style={{
+                                    display: "flex",
+                                    justifyContent: "flex-end",
+                                }}
+                            >
                                 <Button
                                     variant="outlined"
                                     style={{
@@ -491,7 +501,6 @@ const DetailPage = () => {
                                 </Button>
                             </Grid>
                         </Grid>
-
                     </Grid>
                 </Paper>
             )}

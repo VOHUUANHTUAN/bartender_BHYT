@@ -24,16 +24,14 @@ import {
 import Box from "@mui/material/Box";
 import { useSnackbar } from "../../../context/SnackbarContext";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import './style.scss';
-import dayjs from 'dayjs';
+import "./style.scss";
+import dayjs from "dayjs";
 
 const RequestInvoice = () => {
     //user context
     const { openSnackbar } = useSnackbar();
     const { user } = useUser();
     //error và loading
-    const [error, setError] = useState(null);
-    const [loading, setLoading] = useState(false);
     //khai báo các biến
     const [amount, setAmount] = useState("");
     const [hospitalNameList, setHospitalNameList] = useState([]);
@@ -67,8 +65,8 @@ const RequestInvoice = () => {
         const formattedAmount = new Intl.NumberFormat("vi-VN", {
             style: "currency",
             currency: "VND",
-        }).format(amount);
-    
+        }).Format(amount);
+
         return formattedAmount;
     };
 
@@ -110,7 +108,6 @@ const RequestInvoice = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                setLoading(true);
                 //Nếu đã chọn bệnh viện và nhập mã hóa đơn
                 if (selectedHospitalName && formData.invoiceCode !== "") {
                     // Gọi API
@@ -122,16 +119,14 @@ const RequestInvoice = () => {
                         );
                         // Gọi API thành công, thiết lập giá trị cho amount
                         setAmount(soTienKhamBenh);
-                    } catch (error) {
+                    } catch (Error) {
                         // Xử lý lỗi khi không thể gọi được API
-                        openSnackbar(error.response.data, "error");
+                        openSnackbar(Error.response.data, "error");
                         setAmount("");
                     }
                 }
-            } catch (error) {
-                setError(error);
+            } catch (Error) {
             } finally {
-                setLoading(false);
             }
         };
         fetchData();
@@ -140,7 +135,6 @@ const RequestInvoice = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                setLoading(true);
                 //API cho tab1
                 // Gọi API để lấy dữ liệu về gói Bảo hiểm
                 const goiBHByUs = await getGoiBHByCus(
@@ -165,10 +159,8 @@ const RequestInvoice = () => {
                     localStorage.getItem("token")
                 );
                 setRequestList(yCHTByUs);
-            } catch (error) {
-                setError(error);
+            } catch (Error) {
             } finally {
-                setLoading(false);
             }
         };
         fetchData();
@@ -179,21 +171,21 @@ const RequestInvoice = () => {
     };
     // Hàm để lấy tên gói bảo hiểm dựa trên MaGoiBH
     const getInsurancePackageName = (maGoiBHApDung) => {
-        const foundPackage = insurancePackages.find(
+        const foundPackage = insurancePackages.Find(
             (packageItem) => packageItem.maGoiBH === maGoiBHApDung
         );
         return foundPackage ? foundPackage.tenGoiBH : "Unknown";
     };
     //hàm lấy tên bệnh dựa trên mã bệnh
     const getDiseaseName = (maBenh) => {
-        const foundPackage = diseases.find(
+        const foundPackage = diseases.Find(
             (packageItem) => packageItem.maBenh === maBenh
         );
         return foundPackage.tenBenh;
     };
     //hàm lấy tên bệnh viện dựa trên mã bệnh viện
     const getHospitalName = (maBenhVien) => {
-        const foundPackage = hospitalNameList.find(
+        const foundPackage = hospitalNameList.Find(
             (packageItem) => packageItem.maBV === maBenhVien
         );
         return foundPackage.tenBV;
@@ -203,7 +195,7 @@ const RequestInvoice = () => {
     //Dùng useEffect để bắt thay đổi ở bảo hiểm, tiền
     useEffect(() => {
         //lấy tỉ lệ hoàn tiền dựa trên mã bảo hiểm
-        const selectedGoiBH = insurancePackages.find(
+        const selectedGoiBH = insurancePackages.Find(
             (packageItem) => packageItem.maGoiBH === selectedInsurancePackage
         );
         const refundRate = selectedGoiBH ? selectedGoiBH.tiLeHoanTien : 0;
@@ -238,7 +230,7 @@ const RequestInvoice = () => {
             return;
         }
         // Handle form submission logic here
-        setLoading(true);
+
         const yeuCauData = {
             // Populate with the necessary data
             maHDKhamBenh: formData.invoiceCode,
@@ -254,12 +246,11 @@ const RequestInvoice = () => {
             const responseData = await createRequest(yeuCauData);
             //thông báo thành công
             openSnackbar(responseData, "success");
-        } catch (error) {
+        } catch (Error) {
             // Xử lý các lỗi khác (ví dụ: mất kết nối)
             //thông báo lỗi
-            openSnackbar(error.response.data, "error");
+            openSnackbar(Error.response.data, "error");
         } finally {
-            setLoading(false);
         }
     };
 
@@ -277,7 +268,7 @@ const RequestInvoice = () => {
         tenBenhVien: row.tenBenhVien,
         soTienDaKham: formatCurrency(row.soTienDaKham),
         benh: row.benh,
-        thoiGianTao:  dayjs(row.thoiGianTao).format('DD/MM/YYYY HH:mm:ss'),
+        thoiGianTao: dayjs(row.thoiGianTao).Format("DD/MM/YYYY HH:mm:ss"),
         tinhTrang: row.tinhTrang,
         tenGoiBHApDung: getInsurancePackageName(row.maGoiBHApDung),
         soTienHoanTra: formatCurrency(row.soTienHoanTra),
@@ -303,16 +294,21 @@ const RequestInvoice = () => {
             width: 150,
         },
         {
-            field: 'tinhTrang',
-            headerName: 'Tình Trạng',
+            field: "tinhTrang",
+            headerName: "Tình Trạng",
             width: 160,
-            cellClassName: (params) => `status-cell ${params.value.replace(/\s/g, '').toLowerCase()}`,
+            cellClassName: (params) =>
+                `status-cell ${params.value.replace(/\s/g, "").toLowerCase()}`,
             renderCell: (params) => (
-              <div className={`bordered-cell ${params.value.replace(/\s/g, '').toLowerCase()}`}>
-                {params.value}
-              </div>
+                <div
+                    className={`bordered-cell ${params.value
+                        .replace(/\s/g, "")
+                        .toLowerCase()}`}
+                >
+                    {params.value}
+                </div>
             ),
-          },
+        },
         { field: "thoiGianTao", headerName: "Thời Gian Tạo", width: 200 },
     ];
 
@@ -328,13 +324,13 @@ const RequestInvoice = () => {
             >
                 <div>
                     <Tabs value={value} onChange={handleChangeTab}>
-                        <Tab label="Đơn yêu cầu" />
-                        <Tab label="Danh sách các đơn yêu cầu đã gửi" />
+                        <Tab Label="Đơn yêu cầu" />
+                        <Tab Label="Danh sách các đơn yêu cầu đã gửi" />
                     </Tabs>
                     {/* Nội dung tương ứng với từng tab */}
                     {value === 0 && (
                         <div style={{ padding: "20px", marginTop: "20px" }}>
-                            <Typography component="h1" variant="h5">
+                            <Typography component="h1" Variant="h5">
                                 Đơn yêu cầu hoàn trả hóa đơn
                             </Typography>
                             <form
@@ -344,24 +340,24 @@ const RequestInvoice = () => {
                                 }}
                             >
                                 <TextField
-                                    label="Mã hóa đơn"
+                                    Label="Mã hóa đơn"
                                     name="invoiceCode"
                                     value={formData.invoiceCode}
                                     onChange={handleChangeData}
                                     fullWidth
                                     required
                                     margin="normal"
-                                    error={invoiceCodeError}
+                                    Error={invoiceCodeError}
                                     helperText={
                                         invoiceCodeError &&
-                                        "Mã hóa đơn bắt đầu bằng chữ cái hoặc số và có ít nhất 6 kí tự"
+                                        "Mã hóa đơn không chứa khoảng trắng và các kí tự đặc biệt trừ _@#&-"
                                     }
                                 />
                                 <FormControl style={{ width: "100%" }}>
                                     <InputLabel>Tên bệnh viện</InputLabel>
                                     <Select
                                         value={selectedHospitalName}
-                                        label="Tên bệnh viện"
+                                        Label="Tên bệnh viện"
                                         onChange={(e) =>
                                             setSelectedHospitalName(
                                                 e.target.value
@@ -379,7 +375,7 @@ const RequestInvoice = () => {
                                     </Select>
                                 </FormControl>
                                 <TextField
-                                    label="Số tiền"
+                                    Label="Số tiền"
                                     name="amount"
                                     value={formatCurrency(amount)}
                                     //onChange={handleChangeData}
@@ -397,7 +393,7 @@ const RequestInvoice = () => {
                                     <InputLabel>Tên bệnh</InputLabel>
                                     <Select
                                         value={selectedDisease}
-                                        label="Tên bệnh"
+                                        Label="Tên bệnh"
                                         onChange={(e) =>
                                             setSelectedDisease(e.target.value)
                                         }
@@ -416,7 +412,7 @@ const RequestInvoice = () => {
                                     <InputLabel>Gói bảo hiểm</InputLabel>
                                     <Select
                                         value={selectedInsurancePackage || ""}
-                                        label="Gói bảo hiểm"
+                                        Label="Gói bảo hiểm"
                                         onChange={handleInsurancePackageChange}
                                     >
                                         {insurancePackages.map(
@@ -432,7 +428,7 @@ const RequestInvoice = () => {
                                     </Select>
                                 </FormControl>
                                 <TextField
-                                    label="Số tiền hoàn trả"
+                                    Label="Số tiền hoàn trả"
                                     value={formatCurrency(refundAmount)}
                                     fullWidth
                                     margin="normal"
@@ -440,7 +436,7 @@ const RequestInvoice = () => {
                                 />
                                 <Button
                                     type="submit"
-                                    variant="outlined"
+                                    Variant="outlined"
                                     color="primary"
                                 >
                                     Tạo yêu cầu hoàn trả

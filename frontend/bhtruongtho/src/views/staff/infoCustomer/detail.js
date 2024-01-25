@@ -1,27 +1,28 @@
-import React, { memo, useState, useEffect } from "react";
+import React, { memo, useEffect, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { getKhachHangInformationByID } from "../../../api/connect";
-import { useParams, useNavigate, Link } from "react-router-dom";
 
 import { ROUTERS } from "../../../utils/router";
 
 import {
-    Container,
-    Paper,
-    Typography,
-    TextField,
-    Grid,
-    FormControl,
-    InputLabel,
-    Select,
-    MenuItem,
     Button,
+    Container,
+    FormControl,
+    Grid,
+    InputLabel,
+    MenuItem,
+    Paper,
+    Select,
+    TextField,
+    Typography,
 } from "@mui/material";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import dayjs from "dayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { useSnackbar } from "../../../context/SnackbarContext";
 
+import dayjs from "dayjs";
+import { useUser } from "../../../context/UserContext";
 
 const DetailCustomer = () => {
     const { id } = useParams(); // Sử dụng destructuring để lấy id từ params
@@ -39,6 +40,7 @@ const DetailCustomer = () => {
     const [soDu, setSoDu] = useState("");
     const navigate = useNavigate();
     const { openSnackbar } = useSnackbar();
+    const { user } = useUser();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -49,7 +51,7 @@ const DetailCustomer = () => {
                 );
                 setDataKhachHang(khachHangData);
             } catch (error) {
-                openSnackbar('Lỗi trong quá trình lấy dữ liệu', 'error')
+                openSnackbar("Lỗi trong quá trình lấy dữ liệu", "error");
             } finally {
                 setLoading(false);
             }
@@ -228,7 +230,11 @@ const DetailCustomer = () => {
                             />
                         </Grid>
                     </Grid>{" "}
-                    <Button variant="outlined" component={Link} to={`../${ROUTERS.USER.INFOCUSTOMER}`}>
+                    <Button
+                        variant="outlined"
+                        component={Link}
+                        to={`../${ROUTERS.USER.INFOCUSTOMER}`}
+                    >
                         Quay lại
                     </Button>
                 </form>
