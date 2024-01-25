@@ -4,7 +4,6 @@ using BaoHiemYTe.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace BaoHiemYTe.Controllers
 {
@@ -76,7 +75,7 @@ namespace BaoHiemYTe.Controllers
             var role = tokenService.GetRoleFromToken(HttpContext.Request);
             if (role != "Nhân viên")
             {
-                return Unauthorized("Unauthorized: Role is missing or invalid");
+                return Unauthorized("Unauthorized: role is missing or invalid");
             }
             try
             {
@@ -147,7 +146,7 @@ namespace BaoHiemYTe.Controllers
                     username = newNhanVienDTO.Username,
                     password = newNhanVienDTO.Password,
                     role = newNhanVienDTO.Role,
-                    FirstLogin = true
+                    FirstLogin = false
                 };
 
                 // Thêm người dùng mới vào cơ sở dữ liệu
@@ -238,53 +237,5 @@ namespace BaoHiemYTe.Controllers
             }
         }
 
-
-        [HttpGet("ThongTinTongHop")]
-        public async Task<ActionResult<ThongTinTongHopDTO>> GetThongTinTongHop()
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            // Check for the presence and validity of the token
-            var tokenService = new TokenService();
-            var username = tokenService.GetUsernameFromToken(HttpContext.Request);
-            if (string.IsNullOrEmpty(username))
-            {
-                return Unauthorized("Unauthorized: Token is missing or invalid");
-            }
-            var role = tokenService.GetRoleFromToken(HttpContext.Request);
-            if (role != "Nhân viên")
-            {
-                return Unauthorized("Unauthorized: Role is missing or invalid");
-            }
-            var donDangKyChuaDuyet = await userDbContext.DonDangKy.CountAsync(d => d.TinhTrang == "Chờ duyệt");
-            var goiBaoHiemDangCungCap = await userDbContext.GoiBaoHiem.CountAsync(g => g.TinhTrang == "Đang cung cấp");
-            var yeuCauHoanTraChuaDuyet = await userDbContext.YeuCauHoanTra.CountAsync(y => y.TinhTrang == "Chờ duyệt");
-            var khachHangTinhTrang1 = await userDbContext.KhachHang.CountAsync();
-            var baoCaoTaiChinhGiaTri1000000 = 1000000;
-
-            var thongTinTongHopDTO = new ThongTinTongHopDTO
-            {
-                DonDangKyChuaDuyet = donDangKyChuaDuyet,
-                GoiBaoHiemDangCungCap = goiBaoHiemDangCungCap,
-                YeuCauHoanTraChuaDuyet = yeuCauHoanTraChuaDuyet,
-                KhachHangTinhTrang1 = khachHangTinhTrang1,
-                BaoCaoTaiChinhGiaTri1000000 = baoCaoTaiChinhGiaTri1000000
-            };
-
-            return thongTinTongHopDTO;
-        }
-    
-
-    public class ThongTinTongHopDTO
-    {
-        public int DonDangKyChuaDuyet { get; set; }
-        public int GoiBaoHiemDangCungCap { get; set; }
-        public int YeuCauHoanTraChuaDuyet { get; set; }
-        public int KhachHangTinhTrang1 { get; set; }
-        public int BaoCaoTaiChinhGiaTri1000000 { get; set; }
     }
-}
 }
