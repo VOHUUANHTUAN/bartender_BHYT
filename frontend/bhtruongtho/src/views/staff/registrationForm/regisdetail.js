@@ -1,20 +1,20 @@
-import React, { memo, useState, useEffect } from "react";
+import {
+    Button,
+    FormLabel,
+    Grid,
+    Input,
+    Paper,
+    Typography,
+} from "@mui/material";
+import dayjs from "dayjs";
+import React, { memo, useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import {
     getDonDangKyByID,
     getNhanVienByID,
-    putDonDangKyByID,
     getUserInfoByToken,
+    putDonDangKyByID,
 } from "../../../api/connect";
-import { useParams } from "react-router-dom";
-import {
-    Grid,
-    Paper,
-    Typography,
-    Button,
-    Input,
-    FormLabel,
-} from "@mui/material";
-import dayjs from "dayjs";
 import { useSnackbar } from "../../../context/SnackbarContext";
 
 const DetailPage = () => {

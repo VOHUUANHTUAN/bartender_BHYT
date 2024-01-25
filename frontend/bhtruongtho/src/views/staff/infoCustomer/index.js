@@ -1,16 +1,15 @@
-import React, { memo, useState, useEffect } from "react";
-import { NV_getInfoCustomer } from "../../../api/connect";
-import { useUser } from "../../../context/UserContext";
+import CreditCardIcon from "@mui/icons-material/CreditCard";
+import HistoryIcon from "@mui/icons-material/History";
+import InfoIcon from "@mui/icons-material/Info";
 import { Container, Paper, Snackbar } from "@mui/material";
 import Box from "@mui/material/Box";
-import { DataGrid } from "@mui/x-data-grid";
 import IconButton from "@mui/material/IconButton";
-import InfoIcon from "@mui/icons-material/Info";
-import HistoryIcon from "@mui/icons-material/History";
-import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
-import CreditCardIcon from "@mui/icons-material/CreditCard";
-import { Link, useNavigate } from "react-router-dom";
 import Tooltip from "@mui/material/Tooltip";
+import { DataGrid } from "@mui/x-data-grid";
+import React, { memo, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { NV_getInfoCustomer } from "../../../api/connect";
+import { useUser } from "../../../context/UserContext";
 const InfoCustomer = () => {
     const { user } = useUser();
     const [error, setError] = useState(null);
@@ -134,50 +133,64 @@ const InfoCustomer = () => {
     }, [rows]);
 
     return (
-        <Container
-            component="main"
-            maxWidth="md"
-            style={{
-                display: "flex",
-                flexDirection: "column",
-                height: "100vh",
-            }}
-        >
-            <Paper
-                elevation={3}
-                style={{
-                    padding: "20px",
-                    marginTop: "20px",
-                    flexGrow: 1, // Đảm bảo chiều dài của Paper mở rộng theo chiều dài của Container
-                }}
-            >
-                <div style={{ padding: "20px", marginTop: "20px" }}>
-                    <Box sx={{ height: 400, width: "100%" }}>
-                        <DataGrid
-                            rows={rows}
-                            columns={columns}
-                            initialState={{
-                                pagination: {
-                                    paginationModel: {
-                                        pageSize: 5,
-                                    },
-                                },
+        <>
+            {user && user.role == "Nhân viên" ? (
+                <>
+                    <Container
+                        component="main"
+                        maxWidth="md"
+                        style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            height: "100vh",
+                        }}
+                    >
+                        <Paper
+                            elevation={3}
+                            style={{
+                                padding: "20px",
+                                marginTop: "20px",
+                                flexGrow: 1, // Đảm bảo chiều dài của Paper mở rộng theo chiều dài của Container
                             }}
-                            pageSizeOptions={[5]}
-                            disableRowSelectionOnClick
-                            getRowId={(row) => row.id}
+                        >
+                            <div style={{ padding: "20px", marginTop: "20px" }}>
+                                <Box sx={{ height: 400, width: "100%" }}>
+                                    <DataGrid
+                                        rows={rows}
+                                        columns={columns}
+                                        initialState={{
+                                            pagination: {
+                                                paginationModel: {
+                                                    pageSize: 5,
+                                                },
+                                            },
+                                        }}
+                                        pageSizeOptions={[5]}
+                                        disableRowSelectionOnClick
+                                        getRowId={(row) => row.id}
+                                    />
+                                </Box>
+                            </div>
+                        </Paper>
+                        <Snackbar
+                            open={snackbarOpen}
+                            autoHideDuration={5000}
+                            onClose={handleSnackbarClose}
+                            message={snackbarMessage}
+                            anchorOrigin={{
+                                vertical: "top",
+                                horizontal: "right",
+                            }}
                         />
-                    </Box>
-                </div>
-            </Paper>
-            <Snackbar
-                open={snackbarOpen}
-                autoHideDuration={5000}
-                onClose={handleSnackbarClose}
-                message={snackbarMessage}
-                anchorOrigin={{ vertical: "top", horizontal: "right" }}
-            />
-        </Container>
+                    </Container>
+                </>
+            ) : (
+                <>
+                    <h2>404 - Page Not Found</h2>
+                    <p>The requested page does not exist.</p>
+                </>
+            )}
+        </>
     );
 };
 

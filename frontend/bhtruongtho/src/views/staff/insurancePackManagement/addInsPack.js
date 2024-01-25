@@ -1,3 +1,4 @@
+
 import React, { memo, useState, useEffect } from 'react';
 import { getAllBenh, addBenhForGBH, getGoiBHByNV, addInsPack } from "../../../api/connect";
 import { styled } from '@mui/material/styles';
@@ -19,7 +20,31 @@ import {
   Button,
   Typography,
 } from "@mui/material";
+import React, { memo, useState, useEffect } from 'react';
+import { getAllBenh, addBenhForGBH, getGoiBHByNV, addInsPack } from "../../../api/connect";
+import { styled } from '@mui/material/styles';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Slider from '@mui/material/Slider';
+import Chip from '@mui/material/Chip';
+import Autocomplete from '@mui/material/Autocomplete';
+import { ROUTERS } from "../../../utils/router";
+import { Link } from 'react-router-dom';
+import {
+  Container,
+  Paper,
+  TextField,
+  Button,
+  Typography,
+} from "@mui/material";
+
 import { useSnackbar } from "../../../context/SnackbarContext";
+import { ROUTERS } from "../../../utils/router";
+import { useUser } from "../../../context/UserContext";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${theme.palette.mode === 'light' ? 'head' : 'body'}`]: {
@@ -39,6 +64,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const AddInsPack = () => {
+
   //user context
   const { openSnackbar } = useSnackbar();
   //error và loading
@@ -203,6 +229,7 @@ const AddInsPack = () => {
     }
   };
 
+
   const getErrorMessage = (fieldName) => {
     switch (fieldName) {
       case "Ten":
@@ -266,6 +293,9 @@ const AddInsPack = () => {
   
 
   return (
+    <>
+        {user && user.role == "Nhân viên" ? (
+            <> 
     <Container component="main" maxWidth="md">
       <Paper
         elevation={3}
@@ -368,6 +398,14 @@ const AddInsPack = () => {
       </Paper>
       
     </Container>
+     </>
+            ) : (
+                <>
+                    <h2>404 - Page Not Found</h2>
+                    <p>The requested page does not exist.</p>
+                </>
+            )}
+        </>
   );
 }
 export default memo(AddInsPack);

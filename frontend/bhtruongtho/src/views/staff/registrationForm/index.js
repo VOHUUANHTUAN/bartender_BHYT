@@ -1,19 +1,21 @@
-import React, { memo, useState, useEffect } from "react";
+import { Button, Container, Paper } from "@mui/material";
 import Box from "@mui/material/Box";
 import { DataGrid } from "@mui/x-data-grid";
-import { Link } from "react-router-dom";
 import dayjs from "dayjs";
-import { Container, Paper, Typography, Button } from "@mui/material";
+import React, { memo, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 import { getDonDangKyList } from "../../../api/connect";
 
 import "./style.scss";
+import { useUser } from "../../../context/UserContext";
 
 const ListDonDangKy = () => {
     const [loading, setLoading] = useState(true);
     const [donDangKyList, setDonDangKyList] = useState([]);
     const [selectedIds, setSelectedIds] = useState([]);
     const [error, setError] = useState(null); // New state for handling errors
+    const { user } = useUser();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -123,48 +125,61 @@ const ListDonDangKy = () => {
     ];
 
     return (
-        <Container component="main" maxWidth="xl">
-            <Paper
-                elevation={3}
-                style={{
-                    padding: "20px 20px 70px 20px ",
-                    margin: "30px 0px 100px 0px",
-                }}
-            >
-                <Box
-                    sx={{
-                        height: 700,
-                        width: "100%",
-                        flexGrow: 1,
-                    }}
-                >
-                    <DataGrid
-                        rows={rows}
-                        columns={columns}
-                        pageSize={5}
-                        hideFooterPagination
-                        hideFooterSelectedRowCount
-                        onRowSelectionModelChange={(newRowSelectionModel) => {
-                            setSelectedIds(newRowSelectionModel);
-                        }}
-                        rowSelectionModel={selectedIds}
-                    />
-                    <div>
-                        {selectedIds.length > 0 && (
-                            <Button
-                                component={Link}
-                                to={`detail/${selectedIds[0]}`}
-                                variant="contained"
-                                color="primary"
-                                style={{ marginTop: "10px" }}
+        <>
+            {user && user.role == "Nhân viên" ? (
+                <>
+                    <Container component="main" maxWidth="xl">
+                        <Paper
+                            elevation={3}
+                            style={{
+                                padding: "20px 20px 70px 20px ",
+                                margin: "30px 0px 100px 0px",
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    height: 700,
+                                    width: "100%",
+                                    flexGrow: 1,
+                                }}
                             >
-                                Xem
-                            </Button>
-                        )}
-                    </div>
-                </Box>
-            </Paper>
-        </Container>
+                                <DataGrid
+                                    rows={rows}
+                                    columns={columns}
+                                    pageSize={5}
+                                    hideFooterPagination
+                                    hideFooterSelectedRowCount
+                                    onRowSelectionModelChange={(
+                                        newRowSelectionModel
+                                    ) => {
+                                        setSelectedIds(newRowSelectionModel);
+                                    }}
+                                    rowSelectionModel={selectedIds}
+                                />
+                                <div>
+                                    {selectedIds.length > 0 && (
+                                        <Button
+                                            component={Link}
+                                            to={`detail/${selectedIds[0]}`}
+                                            variant="contained"
+                                            color="primary"
+                                            style={{ marginTop: "10px" }}
+                                        >
+                                            Xem
+                                        </Button>
+                                    )}
+                                </div>
+                            </Box>
+                        </Paper>
+                    </Container>
+                </>
+            ) : (
+                <>
+                    <h2>404 - Page Not Found</h2>
+                    <p>The requested page does not exist.</p>
+                </>
+            )}
+        </>
     );
 };
 

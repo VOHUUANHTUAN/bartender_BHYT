@@ -1,3 +1,4 @@
+
 import React, { memo, useState, useEffect } from 'react';
 import { getGoiBHByNV } from '../../../api/connect';
 import { Link } from 'react-router-dom';
@@ -10,11 +11,14 @@ import {
 import Box from '@mui/material/Box';
 import { DataGrid, GridToolbar  } from '@mui/x-data-grid';
 import './style.scss';
+import { useUser } from "../../../context/UserContext";
 
 const InsurancePack = () => {
   const [loading, setLoading] = useState(true);
   const [goiBaoHiemList, setGoiBaoHiemList] = useState([]);
   const [selectedId, setSelectedId] = useState('');
+   const { user } = useUser();
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -50,6 +54,7 @@ const InsurancePack = () => {
   }));
 
 
+
   const columns = [
     { field: 'maGoiBH', headerName: 'Mã Gói BH', width: 100 },
     { field: 'tenGoiBH', headerName: 'Tên Gói BH', width: 200 },
@@ -71,6 +76,9 @@ const InsurancePack = () => {
   ];
   
   return (
+  <>
+        {user && user.role == "Nhân viên" ? (
+            <> 
     <Container component="main" maxWidth="xl">
     <Paper
       elevation={3}
@@ -121,6 +129,14 @@ const InsurancePack = () => {
     </div>
     </Paper>
     </Container>
+     </>
+            ) : (
+                <>
+                    <h2>404 - Page Not Found</h2>
+                    <p>The requested page does not exist.</p>
+                </>
+            )}
+        </>
   );
 };
 

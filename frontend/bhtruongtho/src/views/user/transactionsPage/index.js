@@ -1,33 +1,25 @@
-import React, { useState, useEffect } from "react";
-import { KH_getBillList } from "../../../api/connect";
-import { useUser } from "../../../context/UserContext";
-import { Container, Paper, Typography, Button } from "@mui/material";
+import { Button, Container, Paper, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
+import React, { useEffect, useState } from "react";
+import { KH_getBillList } from "../../../api/connect";
 // import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import dayjs from "dayjs";
-import { Link, useNavigate } from "react-router-dom";
-import { useSnackbar } from "../../../context/SnackbarContext";
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { useNavigate } from "react-router-dom";
 const BillList = () => {
-    const { openSnackbar } = useSnackbar();
-    const [error, setError] = useState(null);
-    const [loading, setLoading] = useState(false);
     const [billList, setBillList] = useState([]);
 
     const navigate = useNavigate();
     useEffect(() => {
         const fetchBillList = async () => {
             try {
-                setLoading(true);
                 const billData = await KH_getBillList(
                     localStorage.getItem("token")
                 );
                 console.log(billData);
                 setBillList(billData);
             } catch (error) {
-                setError(error);
             } finally {
-                setLoading(false);
             }
         };
         fetchBillList();
@@ -148,6 +140,8 @@ const BillList = () => {
                             pageSize={5}
                             autoWidth
                             disableRowSelectionOnClick
+                            hideFooterPagination
+                            hideFooterSelectedRowCount
                             getRowId={(row) => row.id}
                             sortModel={sortModel}
                             onSortModelChange={(newSortModel) =>

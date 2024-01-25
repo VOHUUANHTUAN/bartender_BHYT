@@ -11,10 +11,11 @@ const images = importAll(
 );
 
 const ProductPage = () => {
-    const [goiBHs, setgoiBHs] = useState([]);
+    const [goiBHs, setGoiBHs] = useState([]);
     const fetchData = async () => {
-        setgoiBHs(await getGoiBHAPI());
+        setGoiBHs(await getGoiBHAPI());
     };
+
     useEffect(() => {
         fetchData();
     }, []);
@@ -27,15 +28,15 @@ const ProductPage = () => {
 
         return formattedAmount;
     };
+
     const [currentPage, setCurrentPage] = useState(1);
-    const goiBHsPerPage = 6; // Số gói Bảo hiểm trên mỗi trang
-    // Tính toán vị trí bắt đầu và kết thúc của danh sách gói Bảo hiểm trên trang hiện tại
+    const goiBHsPerPage = 6;
+
     const startIndex = (currentPage - 1) * goiBHsPerPage;
     const endIndex = startIndex + goiBHsPerPage;
     const displayedGoiBHs = goiBHs.slice(startIndex, endIndex);
-    // Tính toán số trang dựa trên số lượng gói Bảo hiểm
     const totalPages = Math.ceil(goiBHs.length / goiBHsPerPage);
-    // Xử lý sự kiện thay đổi trang
+
     const handlePageChange = (event, newPage) => {
         setCurrentPage(newPage);
     };

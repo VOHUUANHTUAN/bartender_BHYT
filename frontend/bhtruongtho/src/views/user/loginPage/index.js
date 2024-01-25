@@ -1,5 +1,4 @@
 // Login.js
-import React, { useEffect, useState } from "react";
 import {
     Button,
     Container,
@@ -8,6 +7,7 @@ import {
     TextField,
     Typography,
 } from "@mui/material";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { logingettoken } from "../../../api/connect";
 import { useSnackbar } from "../../../context/SnackbarContext";
@@ -15,15 +15,12 @@ import { useUser } from "../../../context/UserContext";
 
 const Login = () => {
     const { openSnackbar } = useSnackbar();
-    const [usernameError, setUsernameError] = useState(false);
-    const [passwordError, setPasswordError] = useState(false);
     const { user, login } = useUser();
     const [formData, setFormData] = useState({
         username: "",
         password: "",
     });
 
-    const [loginError, setLoginError] = useState(null); // Thêm state để theo dõi lỗi đăng nhập
     const navigate = useNavigate();
 
     const validateForm = () => {
@@ -108,11 +105,6 @@ const Login = () => {
                         required
                         name="username"
                         value={formData.username}
-                        error={usernameError}
-                        helperText={
-                            usernameError &&
-                            "Username chỉ được chứa chữ cái và số, dấu _ @ # &"
-                        }
                         onChange={(e) =>
                             setFormData({
                                 ...formData,
@@ -129,11 +121,6 @@ const Login = () => {
                         required
                         name="password"
                         value={formData.password}
-                        error={passwordError}
-                        helperText={
-                            passwordError &&
-                            "Password chỉ được chứa chữ cái và số, dấu _ @ # &"
-                        }
                         onChange={(e) =>
                             setFormData({
                                 ...formData,
@@ -141,15 +128,7 @@ const Login = () => {
                             })
                         }
                     />
-                    {loginError && (
-                        <Typography
-                            color="error"
-                            variant="body2"
-                            style={{ marginBottom: "10px" }}
-                        >
-                            {loginError}
-                        </Typography>
-                    )}
+
                     <Button
                         type="submit"
                         variant="contained"
