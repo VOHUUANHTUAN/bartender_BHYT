@@ -1,7 +1,7 @@
 import React, { memo, useState, useEffect } from "react";
 import { NV_getInfoCustomer } from "../../../api/connect";
 import { useUser } from "../../../context/UserContext";
-import { Container, Paper, Snackbar } from "@mui/material";
+import { Container, Paper, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import { DataGrid } from "@mui/x-data-grid";
 import IconButton from "@mui/material/IconButton";
@@ -11,13 +11,14 @@ import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import { Link, useNavigate } from "react-router-dom";
 import Tooltip from "@mui/material/Tooltip";
+import { GridToolbar } from "@mui/x-data-grid";
+
 const InfoCustomer = () => {
     const { user } = useUser();
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
     const [rows, setRows] = useState([]);
-    const [snackbarOpen, setSnackbarOpen] = useState(false);
-    const [snackbarMessage, setSnackbarMessage] = useState("");
+
 
     const navigate = useNavigate();
     // Function to format date time without hours and minutes
@@ -91,12 +92,6 @@ const InfoCustomer = () => {
         { field: "hoTen", headerName: "Họ và tên", width: 220 },
         { field: "ngaySinh", headerName: "Ngày sinh", width: 120 },
         { field: "gioiTinh", headerName: "Giới tính", width: 120 },
-        // { field: "cccd", headerName: "CCCD", width: 150 },
-        // { field: "diaChi", headerName: "Địa chỉ", width: 200 },
-        // { field: "sdt", headerName: "Số điện thoại", width: 150 },
-        // { field: "email", headerName: "Email", width: 200 },
-        // { field: "soDu", headerName: "Số dư", width: 120 },
-        // { field: "username", headerName: "Username", width: 120 },
         {
             field: "actions",
             headerName: "Actions",
@@ -134,49 +129,53 @@ const InfoCustomer = () => {
     }, [rows]);
 
     return (
-        <Container
-            component="main"
-            maxWidth="md"
-            style={{
-                display: "flex",
-                flexDirection: "column",
-                height: "100vh",
-            }}
-        >
+        <Container component="main" maxWidth="md">
             <Paper
                 elevation={3}
                 style={{
                     padding: "20px",
-                    marginTop: "20px",
-                    flexGrow: 1, // Đảm bảo chiều dài của Paper mở rộng theo chiều dài của Container
+                    marginTop: "40px",
+                    marginBottom: "100px",
                 }}
             >
-                <div style={{ padding: "20px", marginTop: "20px" }}>
-                    <Box sx={{ height: 400, width: "100%" }}>
+                <div>
+                    <Box>
+                        <div
+                            style={{
+                                display: "flex",
+                                alignItems: "center",
+                                marginBottom: "16px",
+                            }}
+                        >
+                            <Typography component="h1" variant="h5">
+                                Danh sách khách hàng
+                            </Typography>
+
+                        </div>
                         <DataGrid
                             rows={rows}
                             columns={columns}
+                            slots={{ toolbar: GridToolbar }}
+                            slotProps={{
+                                toolbar: {
+                                    showQuickFilter: true,
+                                },
+                            }}
                             initialState={{
                                 pagination: {
                                     paginationModel: {
-                                        pageSize: 5,
+                                        pageSize: 10,
                                     },
                                 },
                             }}
-                            pageSizeOptions={[5]}
+                            pageSizeOptions={[10]}
+                            hideFooterSelectedRowCount
                             disableRowSelectionOnClick
                             getRowId={(row) => row.id}
                         />
                     </Box>
                 </div>
             </Paper>
-            <Snackbar
-                open={snackbarOpen}
-                autoHideDuration={5000}
-                onClose={handleSnackbarClose}
-                message={snackbarMessage}
-                anchorOrigin={{ vertical: "top", horizontal: "right" }}
-            />
         </Container>
     );
 };

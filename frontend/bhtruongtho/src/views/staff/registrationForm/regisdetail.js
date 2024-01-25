@@ -5,7 +5,9 @@ import {
     putDonDangKyByID,
     getUserInfoByToken,
 } from "../../../api/connect";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
+import { ROUTERS } from "../../../utils/router";
+
 import {
     Grid,
     Paper,
@@ -16,6 +18,7 @@ import {
 } from "@mui/material";
 import dayjs from "dayjs";
 import { useSnackbar } from "../../../context/SnackbarContext";
+import { style } from "@mui/system";
 
 const DetailPage = () => {
     const [loading, setLoading] = useState(true);
@@ -50,7 +53,7 @@ const DetailPage = () => {
                 );
                 setCurrentuser(data.username);
             } catch (error) {
-                console.error("Error fetching Nhan Vien data:", error);
+                openSnackbar('Lỗi trong quá trình lấy user', 'error')
             } finally {
                 setLoading(false);
             }
@@ -68,10 +71,10 @@ const DetailPage = () => {
                     );
                     setDonDangKy(data);
                 } else {
-                    console.error("No selected ID found.");
+                    openSnackbar('Lỗi trong quá trình lấy dữ liệu', 'error')
                 }
             } catch (error) {
-                console.error("Error fetching Don Dang Ky data:", error);
+                openSnackbar('Lỗi trong quá trình lấy dữ liệu', 'error')
             } finally {
                 setLoading(false);
             }
@@ -108,15 +111,23 @@ const DetailPage = () => {
         fetchUserData();
     }, []); // Thêm snackbarOpen vào dependencies
     const updateStatus_accept = async () => {
-        console.log(donDangKy);
-        console.log("donDangKy.tinhTrang:", donDangKy.tinhTrang);
-
         try {
             if (donDangKy.tinhTrang === "Chờ duyệt") {
+                const updatedDonDangKy = {
+                    ...donDangKy,
+                    tinhTrang: "Chờ thanh toán",
+                    DS_HoaDonThanhToanDK: calculatePaymentDetails(
+                        donDangKy.thoiGianBD,
+                        donDangKy.thoiGianHetHan,
+                        donDangKy.tongGia,
+                        donDangKy.soKyHanThanhToan
+                    ),
+                };
+
                 await putDonDangKyByID(
                     params.id,
                     {
-                        tinhTrang: "Chờ thanh toán",
+                        ...updatedDonDangKy,
                         maNV,
                         diaChi,
                         thoiGianDuyet,
@@ -124,15 +135,11 @@ const DetailPage = () => {
                         hoTen,
                         sdt,
                         liDoTuChoi: "",
-                        DS_HoaDonThanhToanDK: calculatePaymentDetails(
-                            donDangKy.thoiGianBD,
-                            donDangKy.thoiGianHetHan,
-                            donDangKy.tongGia,
-                            donDangKy.soKyHanThanhToan
-                        ),
                     },
                     localStorage.getItem("token")
                 );
+
+                setDonDangKy(updatedDonDangKy); // Update the local state with the new data
 
                 openSnackbar("Cập nhật thành công!", "success");
             } else {
@@ -143,6 +150,7 @@ const DetailPage = () => {
             openSnackbar("Có lỗi xảy ra khi cập nhật!", "error");
         }
     };
+
     const toggleDenialReasonInput = () => {
         setShowDenialReasonInput(!showDenialReasonInput);
     };
@@ -180,8 +188,6 @@ const DetailPage = () => {
     };
 
     const updateStatus_denied = async () => {
-        console.log("donDangKy.tinhTrang:", donDangKy.tinhTrang);
-
         try {
             if (donDangKy.tinhTrang === "Chờ duyệt") {
                 if (showDenialReasonInput) {
@@ -191,20 +197,25 @@ const DetailPage = () => {
                         return;
                     }
 
+                    const updatedDonDangKy = {
+                        ...donDangKy,
+                        tinhTrang: "Bị từ chối",
+                        maNV,
+                        diaChi,
+                        email,
+                        hoTen,
+                        sdt,
+                        thoiGianDuyet,
+                        liDoTuChoi: reasonForDenial,
+                    };
+
                     await putDonDangKyByID(
                         params.id,
-                        {
-                            tinhTrang: "Bị từ chối",
-                            maNV,
-                            diaChi,
-                            email,
-                            hoTen,
-                            sdt,
-                            thoiGianDuyet,
-                            liDoTuChoi: reasonForDenial, // Thêm lí do từ chối vào dữ liệu cập nhật
-                        },
+                        updatedDonDangKy,
                         localStorage.getItem("token")
                     );
+
+                    setDonDangKy(updatedDonDangKy); // Update the local state with the new data
 
                     openSnackbar("Cập nhật thành công!", "success");
                 } else {
@@ -220,259 +231,269 @@ const DetailPage = () => {
         }
     };
 
+
     return (
+
         <div className="container__body">
             {loading ? (
                 <p>Loading...</p>
             ) : (
-                <Grid container spacing={2} justifyContent="flex-end">
-                    <Grid item xs={12} sm={5}>
-                        <Paper elevation={3} style={{ padding: 16 }}>
-                            <Typography
-                                variant="h4"
-                                style={{
-                                    paddingBottom: "10px",
-                                    color: "rgb(25, 118, 210)",
-                                }}
+                <Paper
+                    elevation={3}
+                    style={{ padding: "20px", marginTop: "40px", marginBottom: "100px" }}
+                >
+                    <Grid container spacing={2} justifyContent="flex-end">
+                        <Grid item xs={12} sm={5}>
+                            <Paper elevation={3} style={{ padding: 16 }}>
+                                <Typography
+                                    variant="h4"
+                                    style={{
+                                        paddingBottom: "10px",
+                                        color: "rgb(25, 118, 210)",
+                                    }}
+                                >
+                                    Thông tin gói bảo hiểm
+                                </Typography>
+                                {donDangKy.goiBaoHiem ? (
+                                    <>
+                                        <Typography variant="body1">
+                                            Tên gói bảo hiểm:{" "}
+                                            {donDangKy.goiBaoHiem.tenGoiBH}
+                                        </Typography>
+                                        <Typography variant="body1">
+                                            Mô tả gói bảo hiểm:{" "}
+                                            {donDangKy.goiBaoHiem.motaGoiBH}
+                                        </Typography>
+                                        <Typography variant="body1">
+                                            Giá:{" "}
+                                            {formatCurrency(
+                                                donDangKy.goiBaoHiem.gia
+                                            )}
+                                        </Typography>
+                                    </>
+                                ) : (
+                                    <Typography variant="body1">
+                                        Goi Bao Hiem information not available.
+                                    </Typography>
+                                )}
+                            </Paper>
+                            <Paper
+                                elevation={3}
+                                style={{ marginTop: 16, padding: 16 }}
                             >
-                                Thông tin gói bảo hiểm
-                            </Typography>
-                            {donDangKy.goiBaoHiem ? (
-                                <>
+                                <Typography
+                                    variant="h4"
+                                    style={{
+                                        paddingBottom: "10px",
+                                        color: "rgb(25, 118, 210)",
+                                    }}
+                                >
+                                    Thông tin khách hàng
+                                </Typography>
+                                {donDangKy.khachHang ? (
+                                    <>
+                                        <Typography variant="body1">
+                                            Họ Tên: {donDangKy.khachHang.hoTen}
+                                        </Typography>
+                                        <Typography variant="body1">
+                                            Địa Chỉ: {donDangKy.khachHang.diaChi}
+                                        </Typography>
+                                        <Typography variant="body1">
+                                            Số điện thoại: {donDangKy.khachHang.sdt}
+                                        </Typography>
+                                        <Typography variant="body1">
+                                            Email: {donDangKy.khachHang.email}
+                                        </Typography>
+
+                                    </>
+                                ) : (
                                     <Typography variant="body1">
-                                        Tên gói bảo hiểm:{" "}
-                                        {donDangKy.goiBaoHiem.tenGoiBH}
+                                        Khach Hang information not available.
                                     </Typography>
+                                )}
+                            </Paper>
+                        </Grid>
+                        <Grid item xs={12} sm={7}>
+                            <Paper elevation={3} style={{ padding: 16 }}>
+                                <Typography
+                                    variant="h4"
+                                    style={{
+                                        paddingBottom: "10px",
+                                        color: "rgb(25, 118, 210)",
+                                    }}
+                                >
+                                    Thông tin đơn đăng kí {params.id}{" "}
+                                </Typography>
+
+                                <div
+                                    style={{
+                                        marginBottom: "10px",
+                                        backgroundColor: "#f0f0f0",
+                                        padding: "8px",
+                                        borderRadius: "4px",
+                                    }}
+                                >
                                     <Typography variant="body1">
-                                        Mô tả gói bảo hiểm:{" "}
-                                        {donDangKy.goiBaoHiem.motaGoiBH}
-                                    </Typography>
-                                    <Typography variant="body1">
-                                        Giá:{" "}
-                                        {formatCurrency(
-                                            donDangKy.goiBaoHiem.gia
+                                        Thời gian đăng ký:{" "}
+                                        {dayjs(donDangKy.thoiGianDK).format(
+                                            "DD/MM/YYYY HH:mm:ss"
                                         )}
                                     </Typography>
-                                </>
-                            ) : (
-                                <Typography variant="body1">
-                                    Goi Bao Hiem information not available.
-                                </Typography>
-                            )}
-                        </Paper>
-                        <Paper
-                            elevation={3}
-                            style={{ marginTop: 16, padding: 16 }}
-                        >
-                            <Typography
-                                variant="h4"
-                                style={{
-                                    paddingBottom: "10px",
-                                    color: "rgb(25, 118, 210)",
-                                }}
-                            >
-                                Thông tin khách hàng
-                            </Typography>
-                            {donDangKy.khachHang ? (
-                                <>
-                                    <Typography variant="body1">
-                                        Họ Tên: {donDangKy.khachHang.hoTen}
-                                    </Typography>
-                                    <Typography variant="body1">
-                                        Địa Chỉ: {donDangKy.khachHang.diaChi}
-                                    </Typography>
-                                    <Typography variant="body1">
-                                        Số điện thoại: {donDangKy.khachHang.sdt}
-                                    </Typography>
-                                    <Typography variant="body1">
-                                        Email: {donDangKy.khachHang.email}
-                                    </Typography>
+                                </div>
 
-                                    {/* Add more properties as needed */}
-                                </>
-                            ) : (
-                                <Typography variant="body1">
-                                    Khach Hang information not available.
-                                </Typography>
-                            )}
-                        </Paper>
-                    </Grid>
-                    <Grid item xs={12} sm={7}>
-                        <Paper elevation={3} style={{ padding: 16 }}>
-                            <Typography
-                                variant="h4"
-                                style={{
-                                    paddingBottom: "10px",
-                                    color: "rgb(25, 118, 210)",
-                                }}
-                            >
-                                Thông tin đơn đăng kí {params.id}{" "}
-                            </Typography>
+                                <div
+                                    style={{
+                                        marginBottom: "10px",
+                                        backgroundColor: "#f0f0f0",
+                                        padding: "8px",
+                                        borderRadius: "4px",
+                                    }}
+                                >
+                                    <Typography variant="body1">
+                                        Thời gian bắt đầu:{" "}
+                                        {donDangKy.thoiGianBD
+                                            ? dayjs(donDangKy.thoiGianBD).format(
+                                                "DD/MM/YYYY"
+                                            )
+                                            : "Chưa kích hoạt"}
+                                    </Typography>
+                                </div>
 
-                            <div
-                                style={{
-                                    marginBottom: "10px",
-                                    backgroundColor: "#f0f0f0",
-                                    padding: "8px",
-                                    borderRadius: "4px",
-                                }}
-                            >
+                                <div
+                                    style={{
+                                        marginBottom: "10px",
+                                        backgroundColor: "#f0f0f0",
+                                        padding: "8px",
+                                        borderRadius: "4px",
+                                    }}
+                                >
+                                    <Typography variant="body1">
+                                        Thời gian hết hạn:{" "}
+                                        {donDangKy.thoiGianHetHan
+                                            ? dayjs(
+                                                donDangKy.thoiGianHetHan
+                                            ).format("DD/MM/YYYY")
+                                            : "Chưa kích hoạt"}
+                                    </Typography>
+                                </div>
+
+                                <div
+                                    style={{
+                                        marginBottom: "10px",
+                                        backgroundColor: "#f0f0f0",
+                                        padding: "8px",
+                                        borderRadius: "4px",
+                                    }}
+                                >
+                                    <Typography variant="body1">
+                                        Số kỳ hạn: {donDangKy.soKyHanThanhToan}
+                                    </Typography>
+                                </div>
+
+                                <div
+                                    style={{
+                                        marginBottom: "10px",
+                                        backgroundColor: "#f0f0f0",
+                                        padding: "8px",
+                                        borderRadius: "4px",
+                                    }}
+                                >
+                                    <Typography variant="body1">
+                                        Tổng giá:{" "}
+                                        {formatCurrency(donDangKy.tongGia)}
+                                    </Typography>
+                                </div>
+
+                                <div
+                                    style={{
+                                        backgroundColor: "#f0f0f0",
+                                        padding: "8px",
+                                        borderRadius: "4px",
+                                    }}
+                                >
+                                    <Typography variant="body1">
+                                        Tình trạng hiện tại: {donDangKy.tinhTrang}
+                                    </Typography>
+                                </div>
                                 <Typography variant="body1">
-                                    Thời gian đăng ký:{" "}
-                                    {dayjs(donDangKy.thoiGianDK).format(
-                                        "DD/MM/YYYY HH:mm:ss"
+                                    {showDenialReasonInput && (
+                                        <div
+                                            style={{
+                                                backgroundColor: "#f0f0f0",
+                                                padding: "8px",
+                                                borderRadius: "4px",
+                                                marginTop: "10px",
+                                                display: "flex",
+                                                flexDirection: "column",
+                                            }}
+                                        >
+                                            <FormLabel
+                                                htmlFor="denialReason"
+                                                style={{ marginBottom: "4px" }}
+                                            >
+                                                Lí do từ chối:
+                                            </FormLabel>
+                                            <Input
+                                                type="text"
+                                                id="denialReason"
+                                                value={reasonForDenial}
+                                                onChange={(e) =>
+                                                    setReasonForDenial(
+                                                        e.target.value
+                                                    )
+                                                }
+                                                style={{
+                                                    width: "100%",
+                                                    padding: "8px",
+                                                    boxSizing: "border-box",
+                                                    borderRadius: "4px",
+                                                    border: "1px solid #ccc",
+                                                }}
+                                            />
+                                        </div>
                                     )}
                                 </Typography>
-                            </div>
-
-                            <div
-                                style={{
-                                    marginBottom: "10px",
-                                    backgroundColor: "#f0f0f0",
-                                    padding: "8px",
-                                    borderRadius: "4px",
-                                }}
-                            >
-                                <Typography variant="body1">
-                                    Thời gian bắt đầu:{" "}
-                                    {donDangKy.thoiGianBD
-                                        ? dayjs(donDangKy.thoiGianBD).format(
-                                              "DD/MM/YYYY"
-                                          )
-                                        : "Chưa kích hoạt"}
-                                </Typography>
-                            </div>
-
-                            <div
-                                style={{
-                                    marginBottom: "10px",
-                                    backgroundColor: "#f0f0f0",
-                                    padding: "8px",
-                                    borderRadius: "4px",
-                                }}
-                            >
-                                <Typography variant="body1">
-                                    Thời gian hết hạn:{" "}
-                                    {donDangKy.thoiGianHetHan
-                                        ? dayjs(
-                                              donDangKy.thoiGianHetHan
-                                          ).format("DD/MM/YYYY")
-                                        : "Chưa kích hoạt"}
-                                </Typography>
-                            </div>
-
-                            <div
-                                style={{
-                                    marginBottom: "10px",
-                                    backgroundColor: "#f0f0f0",
-                                    padding: "8px",
-                                    borderRadius: "4px",
-                                }}
-                            >
-                                <Typography variant="body1">
-                                    Số kỳ hạn: {donDangKy.soKyHanThanhToan}
-                                </Typography>
-                            </div>
-
-                            <div
-                                style={{
-                                    marginBottom: "10px",
-                                    backgroundColor: "#f0f0f0",
-                                    padding: "8px",
-                                    borderRadius: "4px",
-                                }}
-                            >
-                                <Typography variant="body1">
-                                    Tổng giá:{" "}
-                                    {formatCurrency(donDangKy.tongGia)}
-                                </Typography>
-                            </div>
-
-                            <div
-                                style={{
-                                    backgroundColor: "#f0f0f0",
-                                    padding: "8px",
-                                    borderRadius: "4px",
-                                }}
-                            >
-                                <Typography variant="body1">
-                                    Tình trạng hiện tại: {donDangKy.tinhTrang}
-                                </Typography>
-                            </div>
-                            <Typography variant="body1">
-                                {showDenialReasonInput && (
-                                    <div
-                                        style={{
-                                            backgroundColor: "#f0f0f0",
-                                            padding: "8px",
-                                            borderRadius: "4px",
-                                            marginTop: "10px",
-                                            display: "flex",
-                                            flexDirection: "column",
-                                        }}
-                                    >
-                                        <FormLabel
-                                            htmlFor="denialReason"
-                                            style={{ marginBottom: "4px" }}
-                                        >
-                                            Lí do từ chối:
-                                        </FormLabel>
-                                        <Input
-                                            type="text"
-                                            id="denialReason"
-                                            value={reasonForDenial}
-                                            onChange={(e) =>
-                                                setReasonForDenial(
-                                                    e.target.value
-                                                )
-                                            }
-                                            style={{
-                                                width: "100%",
-                                                padding: "8px",
-                                                boxSizing: "border-box",
-                                                borderRadius: "4px",
-                                                border: "1px solid #ccc",
-                                            }}
-                                        />
-                                    </div>
-                                )}
-                            </Typography>
-                        </Paper>
-                    </Grid>
-                    <Grid container spacing={2} style={{ padding: 16 }}>
-                        <Grid item xs={6}>
-                            <Button
-                                variant="contained"
-                                style={{
-                                    marginBottom: "10px",
-                                    backgroundColor: "rgb(25, 118, 210)",
-                                }}
-                                onClick={updateStatus_accept}
-                            >
-                                Duyệt đơn
-                            </Button>
+                            </Paper>
                         </Grid>
-                        <Grid
-                            item
-                            xs={6}
-                            style={{
-                                display: "flex",
-                                justifyContent: "flex-end",
-                            }}
-                        >
-                            <Button
-                                variant="contained"
-                                style={{
-                                    marginBottom: "10px",
-                                    backgroundColor: "rgb(25, 118, 210)",
-                                }}
-                                onClick={updateStatus_denied}
-                            >
-                                Từ chối
-                            </Button>
+                        <Grid container spacing={3} style={{ padding: 16 }}>
+                            <Grid item xs={4}>
+                                <Button
+                                    variant="outlined"
+                                    style={{
+                                        marginBottom: "10px",
+                                    }}
+                                    onClick={updateStatus_accept}
+                                >
+                                    Duyệt đơn
+                                </Button>
+                            </Grid>
+                            <Grid item xs={4}>
+                                <Button
+                                    variant="outlined"
+                                    style={{
+                                        marginBottom: "10px",
+                                    }}
+                                    onClick={updateStatus_denied}
+                                >
+                                    Từ chối
+                                </Button>
+                            </Grid>
+                            <Grid item xs={4} style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                                <Button
+                                    variant="outlined"
+                                    style={{
+                                        marginBottom: "10px",
+                                    }}
+                                    component={Link}
+                                    to={`../${ROUTERS.USER.DONDANGKY}`}
+                                >
+                                    Quay lại
+                                </Button>
+                            </Grid>
                         </Grid>
+
                     </Grid>
-                </Grid>
+                </Paper>
             )}
         </div>
     );

@@ -1,11 +1,12 @@
 import React, { memo, useState, useEffect } from 'react';
 import { putYeuCauHoanTraByID, getNhanVienByID, getAllYeuCauHoanTraBYID, getUserInfoByToken } from '../../../api/connect';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { useUser } from "../../../context/UserContext";
 import { Grid, Paper, Typography, Select, MenuItem, Button, TableContainer, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
 import MuiAlert from '@mui/material/Alert';
 import dayjs from 'dayjs';
 import { useSnackbar } from "../../../context/SnackbarContext";
+import { ROUTERS } from "../../../utils/router";
 
 
 const DetailPage = () => {
@@ -152,13 +153,19 @@ const DetailPage = () => {
                                     ))}
 
                                     <TableRow>
-                                        <TableCell style={{ textAlign: 'left' }}>
-                                            <Button variant="contained" color="primary" onClick={updateStatus}>
+                                        <TableCell style={{ textAlign: 'left', display: 'flex', justifyContent: 'space-between' }}>
+                                            <Button variant="outlined" component={Link} to={`../${ROUTERS.USER.YEUCAUHOANTRA}`}>
+                                                Quay lại
+                                            </Button>
+                                        </TableCell>
+                                        <TableCell style={{ textAlign: 'right' }}>
+                                            <Button variant="outlined" onClick={updateStatus}>
                                                 Duyệt
                                             </Button>
                                         </TableCell>
-                                        <TableCell></TableCell>
                                     </TableRow>
+
+
                                 </TableBody>
                             </Table>
                         </TableContainer>

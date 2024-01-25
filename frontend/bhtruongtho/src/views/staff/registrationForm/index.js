@@ -1,9 +1,10 @@
 import React, { memo, useState, useEffect } from "react";
 import Box from "@mui/material/Box";
-import { DataGrid } from "@mui/x-data-grid";
 import { Link } from "react-router-dom";
 import dayjs from "dayjs";
 import { Container, Paper, Typography, Button } from "@mui/material";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { useSnackbar } from "../../../context/SnackbarContext";
 
 import { getDonDangKyList } from "../../../api/connect";
 
@@ -13,7 +14,7 @@ const ListDonDangKy = () => {
     const [loading, setLoading] = useState(true);
     const [donDangKyList, setDonDangKyList] = useState([]);
     const [selectedIds, setSelectedIds] = useState([]);
-    const [error, setError] = useState(null); // New state for handling errors
+    const { openSnackbar } = useSnackbar();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -23,8 +24,7 @@ const ListDonDangKy = () => {
                 );
                 setDonDangKyList(data);
             } catch (error) {
-                console.error("Error fetching data:", error);
-                setError("Error fetching data. Please try again."); // Set error state
+                openSnackbar('Lỗi trong quá trình lấy dữ liệu', 'error')
             } finally {
                 setLoading(false);
             }
@@ -92,12 +92,12 @@ const ListDonDangKy = () => {
         {
             field: "soKyHanThanhToan",
             headerName: "Số kỳ hạn",
-            minWidth: 160,
+            minWidth: 100,
             flex: 1,
         },
         { field: "tongGia", headerName: "Tổng Giá", minWidth: 120, flex: 1 },
-        { field: "maKH", headerName: "Mã KH", minWidth: 80, flex: 1 },
-        { field: "maNV", headerName: "Mã NV", minWidth: 80, flex: 1 },
+        { field: "maKH", headerName: "Mã KH", minWidth: 75, flex: 1 },
+        { field: "maNV", headerName: "Mã NV", minWidth: 75, flex: 1 },
         {
             field: "liDoTuChoi",
             headerName: "Lí do từ chối",
@@ -127,42 +127,58 @@ const ListDonDangKy = () => {
             <Paper
                 elevation={3}
                 style={{
-                    padding: "20px 20px 70px 20px ",
-                    margin: "30px 0px 100px 0px",
+                    padding: "20px",
+                    marginTop: "40px",
+                    marginBottom: "100px",
                 }}
             >
-                <Box
-                    sx={{
-                        height: 700,
-                        width: "100%",
-                        flexGrow: 1,
-                    }}
-                >
-                    <DataGrid
-                        rows={rows}
-                        columns={columns}
-                        pageSize={5}
-                        hideFooterPagination
-                        hideFooterSelectedRowCount
-                        onRowSelectionModelChange={(newRowSelectionModel) => {
-                            setSelectedIds(newRowSelectionModel);
-                        }}
-                        rowSelectionModel={selectedIds}
-                    />
-                    <div>
-                        {selectedIds.length > 0 && (
-                            <Button
-                                component={Link}
-                                to={`detail/${selectedIds[0]}`}
-                                variant="contained"
-                                color="primary"
-                                style={{ marginTop: "10px" }}
-                            >
-                                Xem
+                <div>
+                    <Box
+                    >
+                        <div
+                            style={{
+                                display: "flex",
+                                alignItems: "center",
+                                marginBottom: "16px",
+                            }}
+                        >
+                            <Typography component="h1" variant="h5">
+                                Danh sách đơn đăng kí
+                            </Typography>
+
+                        </div>
+                        <DataGrid
+                            rows={rows}
+                            columns={columns}
+                            slots={{ toolbar: GridToolbar }}
+                            slotProps={{
+                                toolbar: {
+                                    showQuickFilter: true,
+                                },
+                            }}
+                            initialState={{
+                                pagination: {
+                                    paginationModel: {
+                                        pageSize: 10,
+                                    },
+                                },
+                            }}
+                            pageSizeOptions={[10]}
+                            hideFooterSelectedRowCount
+                            onRowSelectionModelChange={(
+                                newRowSelectionModel
+                            ) => {
+                                setSelectedIds(newRowSelectionModel);
+                            }}
+                            rowSelectionModel={selectedIds}
+                        />
+                        <div style={{ display: 'flex', marginTop: '20px' }}>
+                            <Button component={Link} to={`detail/${selectedIds}`} variant="outlined" color="primary">
+                                Xem chi tiết
                             </Button>
-                        )}
-                    </div>
-                </Box>
+                        </div>
+                    </Box>
+                </div>
             </Paper>
         </Container>
     );

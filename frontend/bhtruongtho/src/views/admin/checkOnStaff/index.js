@@ -46,8 +46,7 @@ const NhanVienList = () => {
             >
                 <div style={{ padding: "20px", marginTop: "20px" }}>
                     <Typography component="h1" variant="h5">
-                        Lịch sử giao dịch
-                    </Typography>
+                        Thông tin nhân viên                    </Typography>
                     <DataGrid
                         rows={nhanVienList}
                         columns={columns}
