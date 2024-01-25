@@ -7,6 +7,20 @@ import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import "./style.scss";
 import { useUser } from "../../../context/UserContext";
 
+import React, { memo, useState, useEffect } from 'react';
+import { getGoiBHByNV } from '../../../api/connect';
+import { Link } from 'react-router-dom';
+import {
+  Container,
+  Paper,
+  Button,
+  Typography,
+} from "@mui/material";
+import Box from '@mui/material/Box';
+import { DataGrid, GridToolbar  } from '@mui/x-data-grid';
+import './style.scss';
+import { useUser } from "../../../context/UserContext";
+
 const InsurancePack = () => {
     const [loading, setLoading] = useState(true);
     const [goiBaoHiemList, setGoiBaoHiemList] = useState([]);
@@ -24,6 +38,22 @@ const InsurancePack = () => {
                 setLoading(false);
             }
         };
+  const [loading, setLoading] = useState(true);
+  const [goiBaoHiemList, setGoiBaoHiemList] = useState([]);
+  const [selectedId, setSelectedId] = useState('');
+   const { user } = useUser();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await getGoiBHByNV(localStorage.getItem("token"));
+        setGoiBaoHiemList(data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
         fetchData();
     }, []);

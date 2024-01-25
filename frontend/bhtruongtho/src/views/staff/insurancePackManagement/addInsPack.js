@@ -18,7 +18,8 @@ import Autocomplete from "@mui/material/Autocomplete";
 import { ROUTERS } from "../../../utils/router";
 import { Link } from "react-router-dom";
 import { Container, Paper, TextField, Button, Typography } from "@mui/material";
-import { useUser } from "../../../context/UserContext";
+import React from "react";
+
 import { useSnackbar } from "../../../context/SnackbarContext";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -47,9 +48,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 const AddInsPack = () => {
     //user context
     const { openSnackbar } = useSnackbar();
-    //error và loading    const { user } = useUser();
-    const { user } = useUser();
-
+    //error và loading
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
     //khai báo các biến
@@ -62,17 +61,7 @@ const AddInsPack = () => {
             ...prevFormData,
             [fieldName]: e.target.value,
         }));
-        //regex cho ten
-        // if (e.target.name === "Ten") {
-        //   const tenRegex = /^[\p{L}\s&.'-]{3,255}$/;
-        //   setTenError(!tenRegex.test(e.target.value));
-        // }
-        // //regex cho mo ta goi bao hiem
-        // if (e.target.name === "Mota") {
-        //   const moTaRegex = /^[a-zA-Z0-9\s&.'-]{3,255}$/;
-        //   setMoTaError(!moTaRegex.test(e.target.value));
-        // }
-        //regex cho số tiền
+
         if (e.target.name === "Gia") {
             const giaRegex = /^\d+(\.\d{1,2})?$/;
             setGiaError(!giaRegex.test(e.target.value));
@@ -189,18 +178,12 @@ const AddInsPack = () => {
         ThoiHanBaoVe: "Thời Hạn Bảo Vệ (năm)",
     };
     //thông báo lỗi
-    // const [tenError, setTenError] = useState(false);
-    // const [moTaError, setMoTaError] = useState(false);
     const [giaError, setGiaError] = useState(false);
     const [tiLeHoanTienError, setTiLeHoanTienError] = useState(false);
     const [thoiHanBaoVeError, setThoiHanBaoVeError] = useState(false);
 
     const getError = (fieldName) => {
         switch (fieldName) {
-            // case "Ten":
-            //   return tenError;
-            // case "Mota":
-            //   return moTaError;
             case "Gia":
                 return giaError;
             case "TiLeHoanTien":
