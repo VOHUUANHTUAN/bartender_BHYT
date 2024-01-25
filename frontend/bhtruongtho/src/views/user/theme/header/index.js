@@ -1,25 +1,25 @@
-import { useState, useEffect } from "react";
-import "./style.scss";
-import { ROUTERS } from "../../../../utils/router";
-import { Link, useNavigate, useLocation } from "react-router-dom";
-import { useUser } from "../../../../context/UserContext";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import * as React from "react";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import Box from "@mui/material/Box";
-import LockIcon from "@mui/icons-material/Lock";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import Divider from "@mui/material/Divider";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 import EventIcon from "@mui/icons-material/Event";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import Tooltip from "@mui/material/Tooltip";
+import LockIcon from "@mui/icons-material/Lock";
 import Logout from "@mui/icons-material/Logout";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
-import { getUserInfoByToken } from "../../../../api/connect";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
 import ReceiptIcon from "@mui/icons-material/Receipt";
+import Box from "@mui/material/Box";
+import Divider from "@mui/material/Divider";
+import IconButton from "@mui/material/IconButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import Tooltip from "@mui/material/Tooltip";
+import Typography from "@mui/material/Typography";
+import * as React from "react";
+import { useEffect, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { getUserInfoByToken } from "../../../../api/connect";
+import { useUser } from "../../../../context/UserContext";
+import { ROUTERS } from "../../../../utils/router";
+import "./style.scss";
 const Header = () => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -73,7 +73,7 @@ const Header = () => {
         }
     };
 
-    const [menus, setMenus] = useState([
+    const [menus] = useState([
         {
             name: "Trang chủ",
             path: ROUTERS.USER.HOME,
@@ -88,13 +88,6 @@ const Header = () => {
         },
     ]);
 
-    const handleHomeClick = () => {
-        if (user && user.role === "Nhân viên") {
-            navigate(ROUTERS.USER.STAFF);
-        } else {
-            navigate(ROUTERS.USER.HOME);
-        }
-    };
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
@@ -123,7 +116,7 @@ const Header = () => {
                         </div>
                         {shouldShowLayoutStaff && shouldShowLayoutAdmin ? (
                             <>
-                                <div className="col-xl-6 col-lg-6 col-md-9 col-sm-12">
+                                <div className="col-xl-6 col-lg-6 col-md-6 col-sm-12">
                                     <nav className="header_menu">
                                         <ul>
                                             {menus?.map((menu, menuKey) => (
@@ -144,7 +137,7 @@ const Header = () => {
                                         </ul>
                                     </nav>
                                 </div>
-                                <div className="col-xl-3 col-lg-3 col-md-12 col-sm-12 header_top_right">
+                                <div className="col-xl-3 col-lg-3 col-md-3 col-sm-12 header_top_right">
                                     {/* <span>Đăng ký tư vấn</span> */}
                                     <ul>
                                         {localStorage.getItem("token") ? (
@@ -349,7 +342,7 @@ const Header = () => {
                                 </div>{" "}
                             </>
                         ) : (
-                            <div className="col-xl-9 col-lg-9 col-md-9 col-sm-9 header_top_right">
+                            <div className="col-xl-9 col-lg-9 col-md-9 col-sm-3 header_top_right">
                                 {/* <span>Đăng ký tư vấn</span> */}
                                 <ul>
                                     {localStorage.getItem("token") ? (

@@ -1,22 +1,20 @@
-import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import TextField from "@mui/material/TextField";
-import Container from "@mui/material/Container";
-import Paper from "@mui/material/Paper";
-import Typography from "@mui/material/Typography";
-import Grid from "@mui/material/Grid";
-import Button from "@mui/material/Button";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import Grid from "@mui/material/Grid";
 import InputAdornment from "@mui/material/InputAdornment";
-import { getHoaDonDKDaThanhToanDetail } from "../../../api/connect";
-import { useNavigate } from "react-router-dom";
+import Paper from "@mui/material/Paper";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
 import dayjs from "dayjs";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { getHoaDonDKDaThanhToanDetail } from "../../../api/connect";
 const PaidDetail = () => {
     const params = useParams();
     const [detail, setDetail] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
     const [showDetails, setShowDetails] = useState(false);
     const [showReason, setShowReason] = useState(false);
     //hàm format định dạng thời gian Output: 04/10/2023 08:30
@@ -46,7 +44,6 @@ const PaidDetail = () => {
                 const HD = await getHoaDonDKDaThanhToanDetail(maHD);
                 setDetail(HD);
             } catch (error) {
-                setError(error);
             } finally {
                 setLoading(false);
             }

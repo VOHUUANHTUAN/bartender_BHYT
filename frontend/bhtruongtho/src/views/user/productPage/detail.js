@@ -1,8 +1,8 @@
 import { memo, useEffect, useState } from "react";
-import { getGoiBHByMaGBH, getBenhByMaGBH } from "../../../api/connect";
-import "./style.scss";
 import { Link, useParams } from "react-router-dom";
+import { getBenhByMaGBH, getGoiBHByMaGBH } from "../../../api/connect";
 import { ROUTERS } from "../../../utils/router";
+import "./style.scss";
 
 const importAll = (r) => r.keys().map(r);
 const images = importAll(
