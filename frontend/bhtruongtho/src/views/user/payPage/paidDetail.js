@@ -199,7 +199,7 @@ const PaidDetail = () => {
                                 <Grid container spacing={2}>
                                     <Grid item xs={4}>
                                         <TextField
-                                            label="Số kỳ hạn thanh toán/năm"
+                                            label="Số kỳ hạn thanh toán"
                                             value={detail.soKyHanThanhToan}
                                             fullWidth
                                             InputProps={{

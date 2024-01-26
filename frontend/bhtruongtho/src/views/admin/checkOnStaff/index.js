@@ -16,7 +16,6 @@ const NhanVienList = () => {
                     localStorage.getItem("token")
                 );
                 console.log(response);
-                // Add a unique 'id' property to each row
                 const enhancedData = response.map((row, index) => ({
                     ...row,
                     id: index + 1,
