@@ -147,7 +147,7 @@ namespace BaoHiemYTe.Controllers
                     username = newNhanVienDTO.Username,
                     password = newNhanVienDTO.Password,
                     role = newNhanVienDTO.Role,
-                    FirstLogin = true
+                    FirstLogin = false
                 };
 
                 // Thêm người dùng mới vào cơ sở dữ liệu

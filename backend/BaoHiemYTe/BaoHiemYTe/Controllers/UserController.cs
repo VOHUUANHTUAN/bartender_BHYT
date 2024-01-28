@@ -20,7 +20,6 @@ namespace BaoHiemYTe.Controllers
             this.userDbContext = userDbContext;
         }
 
-        //====================================================READ============================================
 
         [HttpGet]
         public IActionResult GetAll()
@@ -55,7 +54,7 @@ namespace BaoHiemYTe.Controllers
 
             if (existingUser != null)
             {
-                return BadRequest("Username đã tồn tại");
+                return BadRequest("Tên người dùng đã tồn tại");
             }
 
             // Nếu username chưa tồn tại, tạo tài khoản mới
@@ -72,67 +71,6 @@ namespace BaoHiemYTe.Controllers
 
             return Ok("Đăng ký người dùng thành công");
         }
-        //[HttpPost]
-
-        //public async Task<IActionResult> post ([FromBody] UserDTO userDto)
-        //{
-        //    if (userDto == null)
-        //    {
-        //        return BadRequest("Dữ liệu không hợp lệ");
-        //    }
-
-        //    // Kiểm tra xem username đã tồn tại hay chưa
-        //    var existingUser = await userDbContext.Users.FirstOrDefaultAsync(u => u.username == userDto.username);
-
-        //    if (existingUser != null)
-        //    {
-        //        return BadRequest("Username đã tồn tại");
-        //    }
-
-        //    // Nếu username chưa tồn tại, tạo tài khoản mới
-        //    var newUser = new User
-        //    {
-        //        username = userDto.username,
-        //        password = userDto.password,
-        //        role = userDto.role,
-        //        FirstLogin = userDto.FirstLogin
-        //    };
-
-        //    userDbContext.Users.Add(newUser);
-        //    await userDbContext.SaveChangesAsync();
-
-        //    return Ok("Đăng ký người dùng thành công");
-        //}
-        //[HttpPost("register")]
-        //public async Task<IActionResult> Register([FromBody] UserDTO userDto)
-        //{
-        //    if (userDto == null)
-        //    {
-        //        return BadRequest("Dữ liệu không hợp lệ");
-        //    }
-
-        //    // Kiểm tra xem username đã tồn tại hay chưa
-        //    var existingUser = await userDbContext.Users.FirstOrDefaultAsync(u => u.username == userDto.username);
-
-        //    if (existingUser != null)
-        //    {
-        //        return BadRequest("Username đã tồn tại");
-        //    }
-
-        //    // Nếu username chưa tồn tại, tạo tài khoản mới
-        //    var newUser = new User
-        //    {
-        //        username = userDto.username,
-        //        password = userDto.password,
-        //        role = "Khách hàng",
-        //        FirstLogin = true
-        //    };
-
-        //    userDbContext.Users.Add(newUser);
-        //    await userDbContext.SaveChangesAsync();
-
-        //    return Ok("Đăng ký người dùng thành công");
-        //}
 
 
         [HttpPut("{username}/changepassword")]
