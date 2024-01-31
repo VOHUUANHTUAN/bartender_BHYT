@@ -259,7 +259,6 @@ namespace BaoHiemYTe.Controllers
         [HttpPut("CapNhat/{id}")]
         public IActionResult CapNhatTinhTrangThoiGianDuyet(int id, [FromBody] CapNhatYeuCauHoanTraDTO capNhatDTO)
         {
-
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -277,6 +276,7 @@ namespace BaoHiemYTe.Controllers
             {
                 return Unauthorized("Unauthorized: role is missing or invalid");
             }
+
             try
             {
                 // Lấy thông tin YeuCauHoanTra từ ID
@@ -287,6 +287,12 @@ namespace BaoHiemYTe.Controllers
                     return NotFound($"Không tìm thấy yêu cầu hoàn trả có ID {id}");
                 }
 
+                // Kiểm tra nếu tình trạng đã duyệt
+                if (yeuCauHoanTra.TinhTrang == "Đã duyệt")
+                {
+                    return BadRequest("Yêu cầu hoàn trả đã được duyệt trước đó");
+                }
+
                 // Cập nhật thông tin
                 yeuCauHoanTra.TinhTrang = capNhatDTO.TinhTrang;
                 yeuCauHoanTra.ThoiGianDuyet = capNhatDTO.ThoiGianDuyet;
@@ -294,6 +300,32 @@ namespace BaoHiemYTe.Controllers
 
                 // Lưu vào database
                 userDbContext.SaveChanges();
+
+                // Nếu đã duyệt, tạo hoá đơn hoàn trả và cập nhật số dư của khách hàng
+                if (yeuCauHoanTra.TinhTrang == "Đã hoàn tiền")
+                {
+                    int soTienHoanTra = yeuCauHoanTra.SoTienHoanTra ?? 0; // Default to 0 if SoTienHoanTra is null
+
+                    var hoaDonHoanTra = new HoaDonHoanTra
+                    {
+                        SoTien = soTienHoanTra,
+                        ThoiGianTao = DateTime.Now,
+                        MaYC = yeuCauHoanTra.MaYC
+                    };
+
+                    // Lưu hoá đơn hoàn trả vào database
+                    userDbContext.HoaDonHoanTra.Add(hoaDonHoanTra);
+                    userDbContext.SaveChanges();
+
+                    // Cập nhật số dư của khách hàng
+                    var khachHang = userDbContext.KhachHang.FirstOrDefault(kh => kh.MaKH == yeuCauHoanTra.MaKH);
+                    if (khachHang != null)
+                    {
+                        khachHang.SoDu += soTienHoanTra; // Tăng số dư
+                        userDbContext.SaveChanges();
+                    }
+                }
+
 
                 return Ok("Cập nhật thông tin yêu cầu hoàn trả thành công");
             }
